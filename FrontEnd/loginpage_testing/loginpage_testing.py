@@ -36,6 +36,14 @@ def login_admin():
 def login_successful():
     return render_template('loginpage_successful.html')
 
+@app.route('/login/new_user', methods=['GET', 'POST'])
+def login_new_user():
+    if request.method == 'POST':
+        # Handle new user registration
+        # Redirect to the login page on successful registration
+        return redirect(url_for('index'))
+    return render_template('loginpage_newuser.html')
+
 # Query Page
 @app.route('/query', methods=['GET', 'POST'])
 def query_page():
