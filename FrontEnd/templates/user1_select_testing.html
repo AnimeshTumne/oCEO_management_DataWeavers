@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Status</title>
+    <!-- Include Bootstrap CSS if you're using it -->
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+    <!-- custom css file -->
+    <!-- <link rel="stylesheet", href="user1_select_testing.css"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='user1_select_testing.css') }}">
+    
+</head>
+<body>
+    <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Application Status- User 1</h1>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Application ID</th>
+                    <th>Faculty Approved</th>
+                    <!-- <th>OCEO Coordinator Approved</th> -->
+                    <!-- <th>SA Approved</th> -->
+                    <!-- <th>Dean Approved</th> -->
+                    <!-- <th>Statement of Motivation</th> -->
+                    <th>Roll Number</th>
+                    <th>Job ID</th>
+                    <th>Approved</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Yes</td>
+                    <!-- <td>Yes</td> -->
+                    <!-- <td>Yes</td> -->
+                    <!-- <td>Yes</td> -->
+                    <!-- <td>Yes</td> -->
+                    <td>2018CS10321</td>
+                    <td>1</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Yes</td>
+                    <!-- <td>Yes</td> -->
+                    <!-- <td>Yes</td> -->
+                    <!-- <td>Yes</td> -->
+                    <!-- <td>Yes</td> -->
+                    <td>2018CS10321</td>
+                    <td>2</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Yes</td>
+                    <!-- <td>Yes</td> -->
+                    <!-- <td>Yes</td> -->
+                    <!-- <td>Yes</td> -->
+                    <!-- <td>Yes</td> -->
+                    <td>2018CS10321</td>
+                    <td>3</td>
+                    <td>Yes</td>
+                </tr>
+                {% for application in application_status %}
+                <tr>
+                    <td>{{ application[0] }}</td>
+                    <td>{{ application[1] }}</td>
+                    <!-- <td>{{ application[2] }}</td> -->
+                    <!-- <td>{{ application[3] }}</td> -->
+                    <!-- <td>{{ application[4] }}</td> -->
+                    <!-- <td>{{ application[5] }}</td> -->
+                    <td>{{ application[6] }}</td>
+                    <td>{{ application[7] }}</td>
+                    <td>{{ application[8] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- Include Bootstrap JS and jQuery if you're using them -->
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script> -->
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+    <!-- Include your custom JavaScript file if needed -->
+    <!-- <script src="static/scripts.js"></script> -->
+</body>
+</html>
