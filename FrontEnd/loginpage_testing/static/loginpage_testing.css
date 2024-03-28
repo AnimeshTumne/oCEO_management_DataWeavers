@@ -4,7 +4,13 @@ body {
     padding: 50px;
 }
 
+h1{
+    margin-bottom: 20px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
 h2 {
+    font-family: 'Courier New', Courier, monospace;
     margin-bottom: 20px;
 }
 
@@ -14,6 +20,7 @@ h2 {
 }
 
 .btn {
+    font-family: 'Courier New', Courier, monospace;
     margin: 0 10px;
     padding: 10px 20px;
     font-size: 16px;
