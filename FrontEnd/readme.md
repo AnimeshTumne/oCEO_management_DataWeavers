@@ -1,12 +1,11 @@
 # Front End development:
 
-*involved collaborators:* 
+*Involved collaborators:* 
 - Animesh Tumne
 - Balagopal Moharana
 
-*How to use?*
-Currently, there are two folders:
-
+#### *How to use?* 
+Currently, there are two folders: \
 To see how we can connect our database to the FrontEnd, peek into the user1_testing folder
 - run user1_select_testing.py
 - After running, you can have a look at how various SQL queries can be integrated into the existing framework.
