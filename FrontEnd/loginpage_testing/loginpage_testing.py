@@ -4,16 +4,37 @@ from werkzeug.security import generate_password_hash
 import os
 import flask_mysqldb as mysql
 from flask_mysqldb import MySQL
+from flask_sqlalchemy import SQLAlchemy
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+db = SQLAlchemy()
+# change the following to better suit our database:
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    roll_number = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(120), nullable=False)
+    role = db.Column(db.String(20), nullable=False)
+
 # --------------------------------------------------------------------------------------------------------------------------------------
 
 app = Flask(__name__)
+
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'oceoAdmin'
+app.config['MYSQL_PASSWORD'] = 'oceoAdmin'
+app.config['MYSQL_DB'] = 'oceo_management'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+db.init_app(app)
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
 # Home Page - Select User Type
 @app.route('/')
 def index():
-    return render_template('loginpage_testing.html')
+    return render_template('testing.html')
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
@@ -24,7 +45,7 @@ def login_student():
         # Handle student login authentication
         # Redirect to the query page on successful login
         return redirect(url_for('query_page'))
-    return render_template('loginpage_student.html')
+    return render_template('student.html')
 
 @app.route('/login/professor', methods=['GET', 'POST'])
 def login_professor():
@@ -32,51 +53,85 @@ def login_professor():
         # Handle professor login authentication
         # Redirect to the query page on successful login
         return redirect(url_for('query_page'))
-    return render_template('loginpage_professor.html')
+    return render_template('professor.html')
 
 @app.route('/login/admin', methods=['GET', 'POST'])
 def login_admin():
     if request.method == 'POST':
         # Handle admin login authentication
-        # Redirect to the query page on successful login
-        return redirect(url_for('query_page'))
-    return render_template('loginpage_admin.html')
+        admin_username = request.form['username']
+        admin_password = request.form['password']
+
+        # Check if admin credentials are valid
+        if admin_username == 'oceoAdmin' and admin_password == 'oceoAdmin':
+            # Redirect to the query page on successful login
+            return redirect(url_for('query_page'))
+        else:
+            # Invalid credentials, show error message
+            error_message = "Invalid admin credentials"
+            return render_template('loginpage_admin.html', error_message=error_message)
+        # return redirect(url_for('query_page'))
+    return render_template('admin.html')
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
 @app.route('/login/new_user', methods=['GET', 'POST'])
 def login_new_user():
+    
     if request.method == 'POST':
-        # Handle new user registration
-        # username = request.form['username']
-        # password = request.form['password']
-        
-        # # Execute the CREATE USER query using the form data
-        # query = f"CREATE USER {username} IDENTIFIED BY '{password}'"
-        # # Execute the query using your database library
-        # # For example, if you are using MySQL library:
-        # cur = mysql.connection.cursor()
-        # cur.execute(query)
-        # mysql.connection.commit()
-        # cur.close()
-        # Redirect to the query page on successful registration
+        cursor = mysql.connection.cursor()
+        roll_number = request.form['rollNumber']
+        email = request.form['email']
+        password = request.form['password']
+        user_type = request.form['userType']
+
+        # Hash password
+        # hashed_password = generate_password_hash(password)
+        hashed_password = password
+
+        # Create new user instance
+        new_user = User(roll_number=roll_number, email=email, password=hashed_password, role=user_type)
+        cursor.execute(f"CREATE USER {roll_number} IDENTIFIED BY '{hashed_password}';")
+        cursor.commit()
+        cursor.close()
+        # Add new user to the database
+        # db.session.add(new_user)
+        # db.session.commit()
+
+        # Redirect to the login page after successful registration
         return redirect(url_for('nu_aftersubmit'))
-    return render_template('loginpage_newuser.html')
+
+    return render_template('newuser.html')
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
 @app.route('/login/nu_aftersubmit', methods=['GET', 'POST'])
 def nu_aftersubmit():
-    return render_template('loginpage_aftersubmit.html')
+    return render_template('aftersubmit.html')
 
 # Query Page
-# @app.route('/query', methods=['GET', 'POST'])
-# def query_page():
-#     if request.method == 'POST':
-#         # Handle SELECT query execution
-#         # Display result if successful, otherwise prompt user to input another query
-#         return render_template('query_result.html', result=result)
-#     return render_template('query.html')
+@app.route('/query', methods=['GET', 'POST'])
+def query_page():
+    if request.method == 'POST':
+        # Handle SELECT query execution
+        query = request.form.get('query')
+        # result = db.session.execute(query)
+        # return render_template('loginpage_queryresult.html', result=result)
+        return redirect(url_for('query_result', result=query))
+        
+    return render_template('query.html')
+
+# Query Input Page
+@app.route('/query/input', methods=['GET', 'POST'])
+def query_input():
+    result = request.args.get('result')
+    return render_template('queryinput.html', result=result)
+
+# Query Result Page
+@app.route('/query/result', methods=['GET', 'POST'])
+def query_result():
+    result = request.args.get('result')
+    return render_template('queryresult.html', result=result)
 
 if __name__ == '__main__':
     app.run(debug=True)
