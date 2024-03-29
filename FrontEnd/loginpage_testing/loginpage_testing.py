@@ -26,8 +26,9 @@ app.config['MYSQL_USER'] = 'oceoAdmin'
 app.config['MYSQL_PASSWORD'] = 'oceoAdmin'
 app.config['MYSQL_DB'] = 'oceo_management'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-db.init_app(app)
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+# db.init_app(app)
+db = MySQL(app)
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
@@ -63,12 +64,12 @@ def login_admin():
         admin_password = request.form['password']
 
         # Check if admin credentials are valid
-        if admin_username == 'oceoAdmin' and admin_password == 'oceoAdmin':
+        if admin_username == 'admin' and admin_password == 'admin':
             # Redirect to the query page on successful login
             return redirect(url_for('query_page'))
         else:
             # Invalid credentials, show error message
-            error_message = "Invalid admin credentials"
+            error_message = "Invalid admin credentials. Please input correct username and password."
             return render_template('admin.html', error_message=error_message)
             # change the above to redirect to one with an error message
         # return redirect(url_for('query_page'))
@@ -115,10 +116,14 @@ def nu_aftersubmit():
 def query_page():
     if request.method == 'POST':
         # Handle SELECT query execution
-        query = request.form.get('query')
-        # result = db.session.execute(query)
-        # return render_template('loginpage_queryresult.html', result=result)
-        return redirect(url_for('query_result', result=query))
+        query = request.form.get(query)
+        
+        # Execute the query and get the result
+        result = db.session.execute(query)
+        # Convert the result to a list of dictionaries
+        # result = [dict(row) for row in result]
+        # Pass the result to the query result page for display
+        return redirect(url_for('query_result', result=result))
         
     return render_template('query.html')
 
