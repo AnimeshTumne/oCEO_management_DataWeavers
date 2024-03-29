@@ -40,28 +40,24 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Query Result</h1>
-        <table>
-            <thead>
-                <tr>
-                    {% for column in result %}
-                    <th>{{ column }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                <!-- BEGIN: Loop through query result and generate table rows -->
-                {% for row in result %}
-                <tr>
-                    {% for value in row %}
-                    <td>{{ value }}</td>
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-                <!-- END: Loop through query result and generate table rows -->
-            </tbody>
-        </table>
-    </div>
+    <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Application Status- User 1</h1>
+    <table>
+    <tbody>
+        {% for field in allData %}
+        <tr>
+            {% for element in field %}
+                <td>{{ element }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+    <!-- Include Bootstrap JS and jQuery if you're using them -->
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script> -->
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+    <!-- Include your custom JavaScript file if needed -->
+    <!-- <script src="static/scripts.js"></script> -->
 </body>
 </html>
+
+

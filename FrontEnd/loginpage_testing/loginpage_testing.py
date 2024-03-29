@@ -5,7 +5,7 @@ import os
 import flask_mysqldb as mysql
 from flask_mysqldb import MySQL
 from flask_sqlalchemy import SQLAlchemy
-
+import json
 # --------------------------------------------------------------------------------------------------------------------------------------
 
 app = Flask(__name__)
@@ -119,23 +119,19 @@ def query_page():
         cursor = db.connection.cursor()
         # Handle SELECT query execution
         # query = request.form.get("query")
-        # Check if the database is connected
-        # if db.ping():
-        #     print("Database is connected.")
-        # else:
-        #     print("Database is not connected.")
         query = "SELECT * FROM application_status;"
         # Execute the query and get the result
         # result = db.execute(query)
         cursor.execute(query)
-        data = cursor.fetchall()
+        allData = cursor.fetchall()
         # print(data)
         cursor.close()
         # Convert the result to a list of dictionaries
-        # result = [dict(row) for row in result]
+        # data = [dict(row) for row in data]
         # Pass the result to the query result page for display
         # return render_template('queryresult.html', application_status=data)
-        return redirect(url_for('query_result', query=data))
+        # print(type(allData))
+        return redirect(url_for('query_result', body=json.dumps(allData)))
         # return render_template('queryinput.html', result=query)
         
     return render_template('query.html')
@@ -149,15 +145,18 @@ def query_input():
 # Query Result Page
 @app.route('/query/result', methods=['GET', 'POST'])
 def query_result():
-    query = request.args.get('query')
-    # query = 'select * from application_status'
+    data = json.loads(request.args.get("body")) # data is list type
 
-    cursor = db.connection.cursor()
+    # query = 'select * from application_status'
+    # Separate the query string into individual tuples
+
+    # query = [tuple(q.split(',')) for q in query]
+    # cursor = db.connection.cursor()
     # cursor.execute(query)
     # result = cursor.fetchall()
     # cursor.close()
 
-    return render_template('queryresult.html', application_status=query)
+    return render_template('queryresult.html', allData=data)
 
 if __name__ == '__main__':
     app.run(debug=True)
