@@ -9,8 +9,8 @@ app = Flask(__name__)
 
 # MySQL Configuration - currently configured to user1
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'user1'
-app.config['MYSQL_PASSWORD'] = 'password1'
+app.config['MYSQL_USER'] = 'oceoAdmin'
+app.config['MYSQL_PASSWORD'] = 'oceoAdmin'
 app.config['MYSQL_DB'] = 'oceo_management'
 mysql = MySQL(app)
 

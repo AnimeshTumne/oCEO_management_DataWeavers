@@ -8,17 +8,6 @@ from flask_sqlalchemy import SQLAlchemy
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
-db = SQLAlchemy()
-# change the following to better suit our database:
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    roll_number = db.Column(db.String(20), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(120), nullable=False)
-    role = db.Column(db.String(20), nullable=False)
-
-# --------------------------------------------------------------------------------------------------------------------------------------
-
 app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = 'localhost'
@@ -30,6 +19,17 @@ app.config['MYSQL_DB'] = 'oceo_management'
 # db.init_app(app)
 db = MySQL(app)
 
+# db = SQLAlchemy()
+# change the following to better suit our database:
+# class User(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     roll_number = db.Column(db.String(20), unique=True, nullable=False)
+#     email = db.Column(db.String(120), unique=True, nullable=False)
+#     password = db.Column(db.String(120), nullable=False)
+#     role = db.Column(db.String(20), nullable=False)
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# MySQL Configuration - currently configured to oceoAdmin
 # --------------------------------------------------------------------------------------------------------------------------------------
 
 # Home Page - Select User Type
@@ -92,7 +92,7 @@ def login_new_user():
         hashed_password = password
 
         # Create new user instance
-        new_user = User(roll_number=roll_number, email=email, password=hashed_password, role=user_type)
+        # new_user = User(roll_number=roll_number, email=email, password=hashed_password, role=user_type)
         cursor.execute(f"CREATE USER {roll_number} IDENTIFIED BY '{hashed_password}';")
         cursor.commit()
         cursor.close()
@@ -114,16 +114,29 @@ def nu_aftersubmit():
 # Query Page
 @app.route('/query', methods=['GET', 'POST'])
 def query_page():
-    if request.method == 'POST':
+    
+    if request.method == 'GET':
+        cursor = db.connection.cursor()
         # Handle SELECT query execution
-        query = request.form.get(query)
-        
+        # query = request.form.get("query")
+        # Check if the database is connected
+        # if db.ping():
+        #     print("Database is connected.")
+        # else:
+        #     print("Database is not connected.")
+        query = "SELECT * FROM application_status;"
         # Execute the query and get the result
-        result = db.session.execute(query)
+        # result = db.execute(query)
+        cursor.execute(query)
+        data = cursor.fetchall()
+        # print(data)
+        cursor.close()
         # Convert the result to a list of dictionaries
         # result = [dict(row) for row in result]
         # Pass the result to the query result page for display
-        return redirect(url_for('query_result', result=result))
+        # return render_template('queryresult.html', application_status=data)
+        return redirect(url_for('query_result', query=data))
+        # return render_template('queryinput.html', result=query)
         
     return render_template('query.html')
 
@@ -136,8 +149,15 @@ def query_input():
 # Query Result Page
 @app.route('/query/result', methods=['GET', 'POST'])
 def query_result():
-    result = request.args.get('result')
-    return render_template('queryresult.html', result=result)
+    query = request.args.get('query')
+    # query = 'select * from application_status'
+
+    cursor = db.connection.cursor()
+    # cursor.execute(query)
+    # result = cursor.fetchall()
+    # cursor.close()
+
+    return render_template('queryresult.html', application_status=query)
 
 if __name__ == '__main__':
     app.run(debug=True)
