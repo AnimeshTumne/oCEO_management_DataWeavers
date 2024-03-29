@@ -69,7 +69,8 @@ def login_admin():
         else:
             # Invalid credentials, show error message
             error_message = "Invalid admin credentials"
-            return render_template('loginpage_admin.html', error_message=error_message)
+            return render_template('admin.html', error_message=error_message)
+            # change the above to redirect to one with an error message
         # return redirect(url_for('query_page'))
     return render_template('admin.html')
 
