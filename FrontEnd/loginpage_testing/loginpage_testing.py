@@ -58,21 +58,22 @@ def login_student():
 def after_login_student():
     # four buttons - personal info, jobs available, applied jobs, logout
     if request.method == 'GET':
+        testvar = request.args['submit_button']
         # personal info button
-        if request.form['submit_button'] == 'personal_info':
+        if testvar == 'personal_info':
             return redirect(url_for('student_personal_info'))
         # jobs available button
-        elif request.form['submit_button'] == 'jobs_available':
+        elif testvar == 'jobs_available':
             return redirect(url_for('student_jobs_available'))
         # isime apply job ka button chahiye
 
         # applied jobs button
-        elif request.form['submit_button'] == 'applied_jobs':
+        elif testvar == 'applied_jobs':
             return redirect(url_for('student_applied_jobs'))
         # isime remove application ka button bhi chahiye (?)
 
         # logout button
-        elif request.form['submit_button'] == 'logout':
+        elif testvar == 'logout':
             # isme upar auth ka sambhaalna padenga
             return redirect(url_for('index'))
         
@@ -83,14 +84,14 @@ def student_personal_info():
     # show personal info of the student by querying the database
     cursor = db.connection.cursor()
     roll_number = request.form['rollNumber']
-    cursor.execute(f"SELECT FROM applied_student WHERE roll_number = {roll_number};")
+    cursor.execute(f"SELECT FROM view_student WHERE roll_number = {roll_number};")
     data = cursor.fetchall()
     cursor.close()
     # add button to change data
     if request.method == 'POST':
         if request.form['submit_button'] == 'change_data':
             return redirect(url_for('student_personal_info_change'))
-    return render_template('student_personal_info.html', data=data)
+    return render_template('student/personal_info.html', data=data)
 
 @app.route('/student/personal_info_change', methods=['GET', 'POST'])
 def student_personal_info_change():
@@ -98,7 +99,7 @@ def student_personal_info_change():
     if request.method == 'POST':
         # change the personal info of the student in the database
         return redirect(url_for('student_personal_info'))
-    return render_template('student_personal_info_change.html')
+    return render_template('student/personal_info_change.html')
 
 # query the database and find jobs available that student can apply to
 @app.route('/student/jobs_available', methods=['GET', 'POST'])
@@ -112,7 +113,7 @@ def student_jobs_available():
     if request.method == 'POST':
         if request.form['submit_button'] == 'apply_job':
             return redirect(url_for('student_apply_job'))
-    return render_template('student_jobs_available.html', job_data=job_data)
+    return render_template('student/jobs_available.html', job_data=job_data)
 
 @app.route('/student/applied_jobs', methods=['GET', 'POST'])
 def student_applied_jobs():
@@ -121,7 +122,7 @@ def student_applied_jobs():
     if request.method == 'POST':
         if request.form['submit_button'] == 'cancel_application':
             return redirect(url_for('student_cancel_application'))
-    return render_template('student_applied_jobs.html')
+    return render_template('student/applied_jobs.html')
 
 @app.route('/student/apply_job', methods=['GET', 'POST'])
 def student_apply_job():
@@ -129,7 +130,7 @@ def student_apply_job():
     if request.method == 'POST':
         # apply for the job in the database
         return redirect(url_for('student_jobs_available'))
-    return render_template('student_apply_job.html')
+    return render_template('student/apply_job.html')
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
@@ -181,7 +182,7 @@ def login_new_user():
 
         cursor.execute(f"CREATE USER {roll_number} IDENTIFIED BY '{hashed_password}';")
         # if user_type == 'student':
-        #     cursor.execute(f"GRANT SELECT ON view_student* TO {roll_number};")
+        #     cursor.execute(f"GRANT SELECT ON view_student TO {roll_number};")
         # elif user_type == 'professor':
         #     cursor.execute(f"GRANT SELECT ON view_professor* TO {roll_number};")
         # elif user_type == 'Admin':
