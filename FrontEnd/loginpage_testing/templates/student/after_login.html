@@ -1,0 +1,28 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Student Login</title>
+</head>
+<body>
+    <button class='btn' onclick="window.location.href='/student/personal_info'" type="button">Personal Info</button>
+    <button class='btn' onclick="window.location.href='/student/jobs_available'" type="button" data-attribute="jobs_available">Jobs Available</button>
+    <button class='btn' onclick="window.location.href='/student/applied_jobs'" type="button" data-attribute="applied_jobs">Applied Jobs</button>
+    <button class='btn' onclick="window.location.href='/index'" type="button" data-attribute="logout">Logout</button>
+
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Login</title>
+</head>
+<body>
+    <form action="{{url_for('after_login_student')}}" method="GET">
+        <button class='btn' name="submit_button" value="personal_info" type="submit" onclick="window.location.href='/student/personal_info'">Personal Info</button>
+        <button class='btn' name="submit_button" value="jobs_available" type="submit" onclick="window.location.href='/student/jobs_available'">Jobs Available</button>
+        <button class='btn' name="submit_button" value="applied_jobs" type="submit" onclick="window.location.href='/student/applied_jobs'">Applied Jobs</button>
+        <button class='btn' name="submit_button" value="logout" type="submit" onclick="window.location.href='/index'">Logout</button>
+    </form>
+</body>
+</html>

@@ -6,8 +6,11 @@ import flask_mysqldb as mysql
 from flask_mysqldb import MySQL
 from flask_sqlalchemy import SQLAlchemy
 import json
+from datetime import date
+import pymysql
 # --------------------------------------------------------------------------------------------------------------------------------------
 
+# connecting to the database
 app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = 'localhost'
@@ -32,21 +35,103 @@ db = MySQL(app)
 # MySQL Configuration - currently configured to oceoAdmin
 # --------------------------------------------------------------------------------------------------------------------------------------
 
-# Home Page - Select User Type
+# Home Page - Select User Type, and if not, register for a new account
 @app.route('/')
 def index():
     return render_template('testing.html')
 
 # --------------------------------------------------------------------------------------------------------------------------------------
-
-# Login Pages
+# Student:
 @app.route('/login/student', methods=['GET', 'POST'])
 def login_student():
     if request.method == 'POST':
         # Handle student login authentication
         # Redirect to the query page on successful login
-        return redirect(url_for('query_page'))
+        # return redirect(url_for('query_page'))
+        # on successful login, redirect to a page with the student's details like, personal info, jobs available, applied jobs, etc
+        return redirect(url_for('after_login_student'))
     return render_template('student.html')
+
+# the below url, /student and all urls linked through here, should only be
+# accessible after the student has logged in i.e. after authorisation
+@app.route('/student', methods=['GET', 'POST'])
+def after_login_student():
+    # four buttons - personal info, jobs available, applied jobs, logout
+    if request.method == 'GET':
+        # personal info button
+        if request.form['submit_button'] == 'personal_info':
+            return redirect(url_for('student_personal_info'))
+        # jobs available button
+        elif request.form['submit_button'] == 'jobs_available':
+            return redirect(url_for('student_jobs_available'))
+        # isime apply job ka button chahiye
+
+        # applied jobs button
+        elif request.form['submit_button'] == 'applied_jobs':
+            return redirect(url_for('student_applied_jobs'))
+        # isime remove application ka button bhi chahiye (?)
+
+        # logout button
+        elif request.form['submit_button'] == 'logout':
+            # isme upar auth ka sambhaalna padenga
+            return redirect(url_for('index'))
+        
+    return render_template('student/after_login.html')
+
+@app.route('/student/personal_info', methods=['GET', 'POST'])
+def student_personal_info():
+    # show personal info of the student by querying the database
+    cursor = db.connection.cursor()
+    roll_number = request.form['rollNumber']
+    cursor.execute(f"SELECT FROM applied_student WHERE roll_number = {roll_number};")
+    data = cursor.fetchall()
+    cursor.close()
+    # add button to change data
+    if request.method == 'POST':
+        if request.form['submit_button'] == 'change_data':
+            return redirect(url_for('student_personal_info_change'))
+    return render_template('student_personal_info.html', data=data)
+
+@app.route('/student/personal_info_change', methods=['GET', 'POST'])
+def student_personal_info_change():
+    # change personal info of the student by querying the database
+    if request.method == 'POST':
+        # change the personal info of the student in the database
+        return redirect(url_for('student_personal_info'))
+    return render_template('student_personal_info_change.html')
+
+# query the database and find jobs available that student can apply to
+@app.route('/student/jobs_available', methods=['GET', 'POST'])
+def student_jobs_available():
+    # show jobs available for the student by querying the database
+    cursor = db.connection.cursor()
+    cursor.execute(f"SELECT * FROM job WHERE is_position_open = 1;")
+    job_data = cursor.fetchall()
+    cursor.close()
+    # add button to apply for a job
+    if request.method == 'POST':
+        if request.form['submit_button'] == 'apply_job':
+            return redirect(url_for('student_apply_job'))
+    return render_template('student_jobs_available.html', job_data=job_data)
+
+@app.route('/student/applied_jobs', methods=['GET', 'POST'])
+def student_applied_jobs():
+    # show jobs applied by the student by querying the database
+    # add button to cancel the application
+    if request.method == 'POST':
+        if request.form['submit_button'] == 'cancel_application':
+            return redirect(url_for('student_cancel_application'))
+    return render_template('student_applied_jobs.html')
+
+@app.route('/student/apply_job', methods=['GET', 'POST'])
+def student_apply_job():
+    # apply for a job by querying the database
+    if request.method == 'POST':
+        # apply for the job in the database
+        return redirect(url_for('student_jobs_available'))
+    return render_template('student_apply_job.html')
+
+# --------------------------------------------------------------------------------------------------------------------------------------
 
 @app.route('/login/professor', methods=['GET', 'POST'])
 def login_professor():
@@ -56,8 +141,8 @@ def login_professor():
         return redirect(url_for('query_page'))
     return render_template('professor.html')
 
-@app.route('/login/admin', methods=['GET', 'POST'])
-def login_admin():
+@app.route('/login/others', methods=['GET', 'POST'])
+def login_others():
     if request.method == 'POST':
         # Handle admin login authentication
         admin_username = request.form['username']
@@ -70,10 +155,10 @@ def login_admin():
         else:
             # Invalid credentials, show error message
             error_message = "Invalid admin credentials. Please input correct username and password."
-            return render_template('admin.html', error_message=error_message)
+            return render_template('others.html', error_message=error_message)
             # change the above to redirect to one with an error message
         # return redirect(url_for('query_page'))
-    return render_template('admin.html')
+    return render_template('others.html')
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
@@ -91,9 +176,26 @@ def login_new_user():
         # hashed_password = generate_password_hash(password)
         hashed_password = password
 
-        # Create new user instance
-        # new_user = User(roll_number=roll_number, email=email, password=hashed_password, role=user_type)
+        # --------------------------------------------------------------------------------------------------------------------------------------
+        # Add new user to the database, and grant appropriate view accesses to the particular user by type:
+
         cursor.execute(f"CREATE USER {roll_number} IDENTIFIED BY '{hashed_password}';")
+        # if user_type == 'student':
+        #     cursor.execute(f"GRANT SELECT ON view_student* TO {roll_number};")
+        # elif user_type == 'professor':
+        #     cursor.execute(f"GRANT SELECT ON view_professor* TO {roll_number};")
+        # elif user_type == 'Admin':
+        #     cursor.execute(f"GRANT SELECT ON view_admin* TO {roll_number};")
+        # elif user_type == 'Dean':
+        #     cursor.execute(f"GRANT SELECT ON view_dean* TO {roll_number};")
+        # elif user_type == 'saJs':
+        #     cursor.execute(f"GRANT SELECT ON view_SAJS* TO {roll_number};")
+        # elif user_type == 'oceoCoordinator':
+        #     cursor.execute(f"GRANT SELECT ON view_oceoCoordinator* TO {roll_number};")
+        # upper code is very basic - change as needed
+
+        # --------------------------------------------------------------------------------------------------------------------------------------
+
         cursor.commit()
         cursor.close()
         # Add new user to the database
@@ -101,7 +203,8 @@ def login_new_user():
         # db.session.commit()
 
         # Redirect to the login page after successful registration
-        return redirect(url_for('nu_aftersubmit'))
+        # return redirect(url_for('nu_aftersubmit'))
+        return redirect(url_for('index'))
 
     return render_template('newuser.html')
 
@@ -111,27 +214,46 @@ def login_new_user():
 def nu_aftersubmit():
     return render_template('aftersubmit.html')
 
+# --------------------------------------------------------------------------------------------------------------------------------------
+
 # Query Page
 @app.route('/query', methods=['GET', 'POST'])
 def query_page():
     
-    if request.method == 'GET':
+    if request.method == 'POST':
         cursor = db.connection.cursor()
-        # Handle SELECT query execution
-        # query = request.form.get("query")
-        query = "SELECT * FROM application_status;"
-        # Execute the query and get the result
-        # result = db.execute(query)
+        query = request.form['query']
+
+        # try:
+        #     cursor.execute(query)
+        #     # If there are no syntax errors, the query is valid
+        #     valid_query = True
+        # except pymysql.Error as e:
+        #     # If there is a syntax error, the query is invalid
+        #     valid_query = False
+        #     error_message = str(e)
+        #     return render_template('query.html', error_message=error_message)
+
         cursor.execute(query)
+        
         allData = cursor.fetchall()
-        # print(data)
+        
+        # Convert the date attribute to a string representation
+        # allData = [{k: str(v) if isinstance(v, date) else v for k, v in row.items()} for row in allData]
+        
         cursor.close()
-        # Convert the result to a list of dictionaries
-        # data = [dict(row) for row in data]
-        # Pass the result to the query result page for display
-        # return render_template('queryresult.html', application_status=data)
-        # print(type(allData))
-        return redirect(url_for('query_result', body=json.dumps(allData)))
+        
+        # if query.lower().startswith('insert'):
+        db.connection.commit()  # Commit the insert query
+            
+        if allData:
+            json_string = json.dumps(allData, default=lambda o: str(o) if isinstance(o, (date)) else None)
+            return redirect(url_for('query_result', body=json_string))
+        else:
+            return redirect(url_for('nu_aftersubmit'))
+            return redirect(url_for('query_input', result="query qyert qyetr"))
+
+        # return redirect(url_for('query_result', body=json.dumps(allData)))
         # return render_template('queryinput.html', result=query)
         
     return render_template('query.html')
