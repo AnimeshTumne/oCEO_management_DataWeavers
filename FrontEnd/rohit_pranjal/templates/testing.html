@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select User Type</title>
+    <!-- Include Bootstrap CSS if you're using it -->
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='loginpage_testing.css') }}">
+</head>
+<body>
+    <!-- <h2>Select User Type: </h2>
+    <div class="btn-container">
+        <button class="btn" onclick="window.location.href='/loginpage_professor.html'">Professor</button>
+        <button class="btn" onclick="window.location.href='/loginpage_admin.html'">Admin</button>
+        <button class="btn" onclick="window.location.href='/loginpage_student.html'">Student</button>
+    </div> -->
+    <h1>Welcome to oCEO Management System!</h1>
+    <h2>Please Select User Type:</h2>
+    <div class="btn-container">
+        <button class="btn" onclick="window.location.href='/login/professor'">Professor</button>
+        <button class="btn" onclick="window.location.href='/login/admin'">Admin</button>
+        <button class="btn" onclick="window.location.href='/login/student'">Student</button>
+        <button class="btn" onclick="window.location.href='/login/new_user'">New User</button>
+    </div>
+</body>
+
+<script>
+    // Checking if error message is passed from Flask
+    var errorMessage = "{{ error_message }}" || null;
+
+    // Function that displays error message as a popup dialogue
+    function displayErrorMessage() {
+        if (errorMessage) {
+            alert(errorMessage);
+        }
+    }
+    // Calling the function to display error message
+    displayErrorMessage();
+</script>
+</html>
