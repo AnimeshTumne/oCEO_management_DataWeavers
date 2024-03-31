@@ -77,7 +77,7 @@ def after_login_student():
             # isme upar auth ka sambhaalna padenga
             return redirect(url_for('index'))
         
-    return render_template('student/after_login.html')
+    return render_template('student/after_login.html', studentName='Admin/name')
 
 @app.route('/student/personal_info', methods=['GET', 'POST'])
 def student_personal_info():
