@@ -12,3 +12,5 @@ Todo:
 - `bank_details` frontend (Remaining)
 - `time_card` frontend (Done)
 - `/my_jobs` page   (Done)
+
+- USE the lastest Commited rohit_pranjal folder
