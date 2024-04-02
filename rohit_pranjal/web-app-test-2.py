@@ -377,15 +377,16 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 
-# Todo: dropdown menu renders job_ids and job_roles
-# Todo: add and remove some fields in the /apply_job page
-# Todo: unsure if application_id captured by each cancel button correctly
 
 
-# todo: image
-# todo: password_change
-# todo: bank_details
-# todo: time_card
-# todo: /my_jobs section
+# Under testings: job application section
+# Under review: using CREATE USER and GRANT querires (e.g. to protect tables, etc.)
+
+
+# todo: image testing and rendering on frontend
+# todo: `password_change` feature
+# todo: bank_details frontend
+# todo: time_card frontend
+# todo: /my_jobs page
 
 
