@@ -10,5 +10,5 @@ Todo:
 - image testing and rendering on frontend
 - `password_change` feature
 - `bank_details` frontend
-- `time_card` frontend
-- `/my_jobs` page
+- `time_card` frontend (Done)
+- `/my_jobs` page   (Done)
