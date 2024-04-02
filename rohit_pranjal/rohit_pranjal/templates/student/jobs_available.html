@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Jobs</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .apply-job {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Available Jobs</h1>
+    <form action="{{url_for('student_jobs_available')}}" method='POST'>
+        <input type="submit" name='submit_button' value="Apply Job" class="apply-job">
+    </form>
+    <table>
+        <thead>
+            <tr>
+            {% for columnName in job_head %}
+                <th>{{ columnName }}</th>
+            {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in job_data %}
+            <tr>
+                {% for field in job %}
+                    <td>{{ field }}</td>
+                   
+                {% endfor %}
+                <td>
+                    <form action="/student/jobs_available" method="post">
+                        <input type="hidden" name="job_id" value="{{ job_data[0][0] }}">
+                        <button type="submit" name="submit_button" value="Apply">Apply</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+</body>
+</html>

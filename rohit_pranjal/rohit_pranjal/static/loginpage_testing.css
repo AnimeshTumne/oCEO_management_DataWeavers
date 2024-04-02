@@ -1,0 +1,109 @@
+/* html {
+  background-image: url(IITGN-campus.jpeg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin-block-start: 15rem;
+}
+
+/* */
+html {
+  background-image: url(IITGN-campus.jpeg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  /* Add a semi-transparent overlay */
+  background-color: rgba(0, 0, 0, 0.5);
+  background-blend-mode: darken;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin-block-start: 15rem;
+  color: rgba(255, 255, 255, 0.903); /* Change the text color to white for better contrast */
+}
+
+/* h1, h2 {
+    font-family: 'Open Sans', sans-serif; }/* Change the font to 'Open Sans' */
+
+/* .btn {
+    font-family: 'Open Sans', sans-serif; 
+    background-color: #009688;
+    display: inline-block;
+  }
+   */
+/* .btn:hover {
+    background-color: #00796b;
+  } */
+
+h1 {
+  margin-bottom: 20px;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  font-size: 35px;
+}
+
+h2 {
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  margin-bottom: 20px;
+  font-size: 25px;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.btn {
+  font-family: "Courier New", Courier, monospace;
+  
+  margin: 10px 10px;
+  padding: 10px 20px;
+  font-size: 20px;
+  cursor: pointer; 
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+*/ #animated-text {
+  visibility: hidden;
+}
+
+h2 span,
+.btn span,
+#animated-text span {
+  animation: fadeIn 0.5s linear forwards;
+  visibility: hidden;
+}
+
+@keyframes fadeIn {
+  100% {
+    visibility: visible;
+  }
+}
+/* .btn-container {
+    visibility: hidden;
+    animation: fadeIn 0.5s linear forwards;
+    animation-delay: calc(var(--i) * 0.5s); 
+  } */
