@@ -8,7 +8,7 @@ Under review:
 
 Todo:
 - image testing and rendering on frontend
-- `password_change` feature
-- `bank_details` frontend
+- `password_change` feature (Done)
+- `bank_details` frontend 
 - `time_card` frontend (Done)
 - `/my_jobs` page   (Done)
