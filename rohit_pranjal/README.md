@@ -13,4 +13,4 @@ Todo:
 - `time_card` frontend (Done)
 - `/my_jobs` page   (Done)
 
-- USE the lastest Commited rohit_pranjal folder
+- USE the latest Commited rohit_pranjal folder
