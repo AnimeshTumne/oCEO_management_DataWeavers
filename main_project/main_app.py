@@ -201,6 +201,52 @@ def student_personal_info():
     else:
         return redirect(url_for('errorpage'))
 
+@app.route('/student/personal_info/bank_details', methods=['GET', 'POST'])
+def student_bank_details():
+    if "roll_number" in session:
+        
+        if request.method == 'POST':
+            if request.form['submit_button'] == 'Edit':
+                return redirect(url_for('student_edit_bank_details'))
+
+        cursor = db.connection.cursor()
+        roll_number = session['roll_number']
+        cursor.execute(f"SELECT bank_name, account_number, IFSC_code FROM bank_details WHERE roll_number = '{roll_number}';")
+        fetched_data = cursor.fetchall()
+        cursor.close()
+        return render_template('student/bank_details.html', bank_data=fetched_data)
+    else:
+        return redirect(url_for('errorpage'))
+
+@app.route('/student/edit_bank_details', methods=['GET', 'POST'])
+def student_edit_bank_details():
+    if "roll_number" in session:
+
+        if request.method == 'POST':
+            roll_number = session['roll_number']
+
+            bank_name = request.form.get('bank_name')
+            account_number = request.form.get('account_number')
+            ifsc_code = request.form.get('ifsc_code')
+
+            # --------------------
+            cursor = db.connection.cursor()
+            cursor.execute(f"SELECT count(*) FROM bank_details WHERE roll_number = {roll_number};")
+            is_existing_roll_number = cursor.fetchone()[0]
+
+            if is_existing_roll_number:
+                cursor.execute(f"UPDATE bank_details SET bank_name = '{bank_name}', account_number = {account_number}, IFSC_code = '{ifsc_code}' WHERE roll_number = {roll_number};")
+            else:
+                cursor.execute(f"INSERT INTO bank_details (roll_number, bank_name, account_number, IFSC_code) VALUES ({roll_number}, '{bank_name}', {account_number}, '{ifsc_code}');")
+            # --------------------
+
+            db.connection.commit()
+            cursor.close()
+            return redirect(url_for('student_bank_details'))
+        return render_template('student/edit_bank_details.html')
+    else:
+        return redirect(url_for('errorpage'))
+
 @app.route('/student/update_profile', methods=['GET', 'POST'])
 def student_personal_info_change():
     if "roll_number" in session:
