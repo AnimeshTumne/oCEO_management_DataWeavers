@@ -19,6 +19,8 @@ app.config["MYSQL_DB"] = "oceo_management"
 
 db = MySQL(app)
 
+
+
 def generate_random_password(regex):
     while True:
         password = generate_random_string()
@@ -41,6 +43,15 @@ def index():
         passwords.append("'" + hashed_password + "'")
     
     cur = db.connection.cursor()
+
+    # added query to add password column in applied_student table
+    query_add_column_password = "ALTER TABLE applied_student ADD COLUMN IF NOT EXISTS password VARCHAR(255);"
+    cur.execute(query_add_column_password)
+    
+    # rename column Approved to approval
+    query_rename_approved_column = "ALTER TABLE application_status RENAME COLUMN Approved TO approval;"
+    cur.execute(query_rename_approved_column)
+
 
     query_fetch_roll_numbers = "SELECT roll_number FROM applied_student;"
     cur.execute(query_fetch_roll_numbers)
