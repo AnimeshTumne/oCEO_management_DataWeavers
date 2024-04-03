@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .container {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        .textbox {
+            width: 300px;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form action="{{ url_for('query_page', result=query) }}" method="POST">
+            <label class="label" for="query">Input your query here:</label>
+            <br>
+            <input class="textbox" type="text" id="query" name="query">
+            <br>
+            <button class="button" type="button" onclick="viewQuery()">View Query</button>
+            <button class="button" type="submit">Submit</button>
+        </form> 
+        <button class="button" onclick="window.location.href='/logout/admin'">Click here to logout</button>
+    </div>
+
+    <script>
+        function viewQuery() {
+            const queryInput = document.getElementById('query');
+            alert(queryInput.value);
+        }
+    </script>
+
+    <script>
+        const form = document.querySelector('form');
+        const queryInput = document.getElementById('query');
+        // const popup = document.getElementById('popup');
+        // const queryResult = document.getElementById('queryResult');
+        
+        form.addEventListener('inputQuery', function(event) {
+            event.preventDefault();
+            alert(queryInput.value);
+        });
+        
+    </script>
+</body>
+</html>

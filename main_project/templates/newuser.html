@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New User Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+    </style>
+    <script>
+        function validateForm() {
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirmPassword").value;
+
+            // Check if password and confirm password match
+            if (password !== confirmPassword) {
+                alert("Password and Confirm Password do not match.");
+                return false;
+            }
+
+            // Check if password meets the requirements
+            var passwordRegex = /^(?=.[!@#$%^&])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+            if (!passwordRegex.test(password)) {
+                alert("Password must be 8 characters long and contain at least one special character.");
+                return false;
+            }
+           
+        }
+    </script>
+</head>
+<body>
+    <h1>New User Registration</h1>
+    <!-- <form onsubmit="return validateForm()"> -->
+        <form onsubmit="return " method="POST">
+        <label for="roll_number">Roll Number/Employee ID:</label>
+        <input type="text" id="roll_number" name="roll_number" required><br><br>
+        <label for="first_name">First Name:</label>
+        <input type="text" id="text" name="first_name" required><br><br>
+        <label for="middle_name">Middle Name:</label>
+        <input type="text" id="text" name="middle_name" ><br><br>
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="text" name="last_name"><br><br>
+        
+
+        <label for="email">Email ID:</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+            
+        <label for="confirmPassword">Confirm Password:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required><br><br>
+        <input type="text" id="on_probation" name="on_probation" required><br><br>
+        <label for="userType">User Type:</label>
+            <input type="radio" id="other" name="userType" value="other" required>
+            <label for="other">Other</label>
+            <input type="radio" id="professor" name="userType" value="professor" required>
+            <label for="professor">Professor</label>
+            <input type="radio" id="student" name="userType" value="student" required>
+            <label for="student">Student</label><br><br>
+            <div id="extraFields"></div>
+        <input type="submit" value="Register">
+    </form>
+</body>
+<script>
+    document.getElementById('userType').addEventListener('change', function() {
+        var extraFields = document.getElementById('extraFields');
+        if (this.value === 'student') {
+            extraFields.innerHTML = `
+                <label for="cpi">Enter CPI:</label>
+                <input type="text" id="cpi" name="cpi"><br>
+                <label for="last_sem_spi">Enter Last Sem SPI:</label>
+                <input type="text" id="last_sem_spi" name="last_sem_spi"><br>
+                <label for="on_probation">Are You On Probation:</label>
+                <select id="on_probation" name="on_probation">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            `;
+        } else {
+            extraFields.innerHTML = '';
+        }
+    });
+    </script>
+</html>
