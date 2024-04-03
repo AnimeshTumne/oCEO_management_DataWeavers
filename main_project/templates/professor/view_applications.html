@@ -82,6 +82,7 @@
     <table>
         <thead>
             <tr>
+                <th>Job ID</th>
             {% for columnName in application_head %}
                 <th>{{ columnName }}</th>
             {% endfor %}
@@ -90,14 +91,17 @@
         <tbody>
             {% for job in application_data %}
             <tr>
+                <td>{{ job_id }}</td>
                 {% for field in job %}
                     <td>{{ field }}</td>
                    
                 {% endfor %}
                 <td>
-                    <form action="/professor/view_applications" method="post">
-                        <input type="hidden" name="job_id" value="{{ job[0] }}">
+                    <form action="/professor/view_applications/{{job_id}}" method="post">
+                        <input type="hidden" name="application_id" value="{{ job[0]}}">
+                        <input type="hidden" name="job_id" value="{{ job_id }}">
                         <button type="submit" name="submit_button" value="approve">approve</button>
+                        <button type="submit" name="submit_button" value="reject">reject</button>
                     </form>
                 </td>
             </tr>
