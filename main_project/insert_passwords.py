@@ -45,19 +45,19 @@ def index():
     cur = db.connection.cursor()
     
     # added query to add password column in applied_student table
-    query_add_column_password = "ALTER TABLE applied_student ADD COLUMN password VARCHAR(255);"
-    # cur.execute(query_add_column_password)
+    query_add_column_password = "ALTER TABLE faculty ADD COLUMN password VARCHAR(255);"
+    cur.execute(query_add_column_password)
     # rename column Approved to approval
     query_rename_approved_column = "ALTER TABLE application_status RENAME COLUMN Approved TO approval;"
     # cur.execute(query_rename_approved_column)
 
 
-    query_fetch_roll_numbers = "SELECT roll_number FROM applied_student;"
+    query_fetch_roll_numbers = "SELECT faculty_id FROM faculty;"
     cur.execute(query_fetch_roll_numbers)
     roll_numbers = [int(row[0]) for row in cur.fetchall()]
 
-    for i in range(70):
-        query_insert_pwd = f"UPDATE applied_student SET password={passwords[i]} WHERE roll_number={roll_numbers[i]};"
+    for i in range(50):
+        query_insert_pwd = f"UPDATE faculty SET password={passwords[i]} WHERE faculty_id={roll_numbers[i]};"
         cur.execute(query_insert_pwd)
         db.connection.commit()  
 

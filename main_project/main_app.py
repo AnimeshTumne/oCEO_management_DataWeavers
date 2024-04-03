@@ -58,6 +58,21 @@ def register():
                 cursor.close()
                 return redirect(url_for("index"))
 
+        elif userType == "professor":
+            sql = f"SELECT count(*) FROM faculty WHERE email_id='{email}'"
+            cursor.execute(sql)
+            isPresent = cursor.fetchone()[0]
+
+            if isPresent==1:
+                error_message = ("User already exists. Please choose a different username.")
+                return render_template("newuser.html", error_message=error_message)
+            else:
+                hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
+                sql = f"INSERT INTO faculty (faculty_id, first_name, middle_name, last_name, email_id, password, dept_name) VALUES ({new_roll_number},'{first_name}','{middle_name}','{last_name}','{email}','{hashed_password}', 'Not Added');"
+                cursor.execute(sql)
+                db.connection.commit()
+                cursor.close()
+                return redirect(url_for("index"))
         # TODO non-student new user
         else:
             return redirect(url_for("errorpage"))
@@ -66,9 +81,12 @@ def register():
 
 # ------------------------------------------------------------------------------------------------------
 # check the credentials of the user 
-def authenticate(email, password):
+def authenticate(email, password, userType):
     cursor = db.connection.cursor()
-    sql = f"SELECT password FROM applied_student WHERE email_id='{email}'"
+    if userType == "student":
+        sql = f"SELECT password FROM applied_student WHERE email_id='{email}'"
+    elif userType == "professor":
+        sql = f"SELECT password FROM faculty WHERE email_id='{email}'"
     cursor.execute(sql)
     result = cursor.fetchone()
     cursor.close()
@@ -90,7 +108,7 @@ def login_student():
         roll_number = cursor.fetchone()[0]
         cursor.close()
 
-        if authenticate(email, password):
+        if authenticate(email, password, "student"):
             # ACTIVATES THE SESSION (logged in)
             session["roll_number"] = roll_number
             return redirect(url_for("after_login_student"))
@@ -112,7 +130,7 @@ def login_professor():
         faculty_id = cursor.fetchone()[0]
         cursor.close()
 
-        if authenticate(email, password):
+        if authenticate(email, password, "professor"):
             # ACTIVATES THE SESSION (logged in)
             session["faculty_id"] = faculty_id
             return redirect(url_for("after_login_professor"))
@@ -484,8 +502,6 @@ def student_my_jobs():
     else:
         return redirect(url_for('errorpage'))
 
-
-
 @app.route('/student/timecard/<job_id>', methods=['GET', 'POST'])
 def student_timecard(job_id):
     if "roll_number" in session:
@@ -504,7 +520,6 @@ def student_timecard(job_id):
         cursor.close()
         return render_template('student/timecard.html', timecard_data = timecard_data, timecard_head = column_names,job_id=job_id)
 
-        
 @app.route('/student/submit_timecard/<job_id>', methods=['GET', 'POST'])
 def submit_timecard(job_id):
     if "roll_number" in session:
@@ -558,7 +573,8 @@ def logout():
     session.pop('roll_number', None)
     return redirect(url_for('index'))
 
-        
+# ------------- END OF STUDENT -------------------------------------------------------------------------
+
 # ------------- START OF PROF --------------------------------------------------------------------------
 
 @app.route('/professor', methods=['GET', 'POST']) # professor homepage
@@ -569,10 +585,10 @@ def after_login_professor():
             match testvar:
                 case 'personal_info':
                     return redirect(url_for('professor_personal_info'))
-                case 'jobs_posted':
-                    return redirect(url_for('professor_jobs_posted'))
-                case 'applications':
-                    return redirect(url_for('professor_applications'))
+                case 'jobs_created':
+                    return redirect(url_for('professor_jobs_created'))
+                case 'timecard_for_review':
+                    return redirect(url_for('professor_timecard_for_review'))
                 case 'logout':
                     session.pop("faculty_id", None)
                     return redirect(url_for('index'))
@@ -581,11 +597,32 @@ def after_login_professor():
         cursor = db.connection.cursor()
         faculty_id = session['faculty_id']
         cursor.execute(f"SELECT first_name FROM faculty WHERE faculty_id = {faculty_id};")
-        faculty_name = cursor.fetchall()
+        faculty_name = cursor.fetchall()[0][0]
         cursor.close()
         return render_template('professor/after_login.html', faculty_name=faculty_name)
     else:
         return render_template('errorpage.html')
+
+@app.route('/professor/personal_info', methods=['GET', 'POST'])
+def professor_personal_info():
+    if "faculty_id" in session:
+        if request.method == 'POST':
+            if request.form['submit_button'] == 'Update_profile':
+                return redirect(url_for('professor_edit_personal_info'))
+            elif request.form['submit_button'] == 'Add_job':
+                return redirect(url_for('professor_add_job'))
+            elif request.form['submit_button'] == 'Change_Password':
+                return redirect(url_for('professor_change_password'))
+            
+        cursor = db.connection.cursor()
+        faculty_id = session['faculty_id']
+        cursor.execute(f"SELECT * FROM faculty WHERE faculty_id = {faculty_id};")
+        fetched_data = cursor.fetchall()
+        cursor.close()
+        return render_template('professor/personal_info.html', faculty_data=fetched_data)
+    else:
+        return redirect(url_for('errorpage'))
+
 # ------------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
     app.run(debug=True)

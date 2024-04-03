@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>personal_info_change</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .sidebar {
+            background-color: #333;
+            color: white;
+            width: 200px;
+            height: 100vh;
+            position: fixed;
+            line-height: 30px;
+            padding: 20px;
+            left: -300px;
+            transition: left 0.3s ease;
+        }
+        .sidebar.open {
+            left: 2px;
+        }
+        .main-content {
+            margin-left: 40vw;
+            padding: 20px;
+            transition: margin-left 0.3s ease; 
+        }
+        .main-content.shift {
+            margin-left: 200px;
+        }
+        .menu-icon {
+            cursor: pointer;
+            display: block;
+            width: 30px;
+            height: 20px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        .menu-icon span {
+            display: block;
+            width: 100%;
+            height: 4px;
+            background-color: #333;
+            margin: 5px 0;
+        }
+        .update-profile {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        a{
+            color: white;
+            text-decoration: none;
+        }
+        @media (max-width: 600px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                left: 0;
+            }
+            .main-content {
+                margin-left: 10px;
+            }
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="menu-icon" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <div id="sidebar" class="sidebar">
+        <h2>Dashboard</h2>
+        <a href="/student">Home Page</a><br>
+        <a href="/student/personal_info">Personal Info</a><br>
+        <a href="/student/" >Applied Jobs</a><br>
+        <a href="/student/jobs_available">Jobs Available</a><br>
+        <a href="/student/my_jobs">My Jobs</a><br>
+        <a href="/student/logout">Logout</a><br>
+
+    </div>
+    <div id="main-content" class="main-content">
+        <img id="user-image" src="" alt="User Image" class="user-image">
+        <div class="user-info">
+            <p>Roll Number:{{ student_data[0][0]}}</p>
+            <p>First Name:{{ student_data[0][1]}}</p>
+            <p>Middle Name:{{ student_data[0][2] }}</p>
+            <p>Last Name:{{ student_data[0][3] }}</p>
+            <p>Email: {{ student_data[0][4] }}</p>
+            <p>Contact Number: {{ student_phone[0][0]}}</p>
+            <p>Alternate Contact Number: {{ student_phone[1][0]}}</p>
+            <p>CPI: {{ student_data[0][5] }}</p>
+            <p>Last Sem Spi: {{ student_data[0][6] }}</p>
+        </div>
+        <form action="{{url_for('student_personal_info')}}" method="POST">
+            <input type="submit" name="submit_button"  value="Update_Profile" class="update-profile">
+        </form>
+        <form action="{{url_for('student_personal_info')}}" method="POST">
+            <input type="submit" name="submit_button"  value="Change_Password" class="update-profile">
+        </form>
+        <form action="{{url_for('student_bank_details')}}" method="POST">
+            <input type="submit" name="submit_button"  value="Bank_Details" class="update-profile">
+    
+        <script>
+            function toggleMenu() {
+                var sidebar = document.getElementById('sidebar');
+                var mainContent = document.getElementById('main-content');
+                sidebar.classList.toggle('open');
+            }
+        </script>
+    </div>
+ 
