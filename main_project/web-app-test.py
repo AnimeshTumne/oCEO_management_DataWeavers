@@ -18,7 +18,7 @@ db = MySQL(app)
 # Home Page - Select User Type
 @app.route("/")
 def index():
-    return render_template("testing.html")
+    return render_template("index.html")
 
 # NEW USER REGISTRATION
 @app.route("/login/new_user", methods=["GET", "POST"])
@@ -99,6 +99,10 @@ def login_student():
 
     return render_template('student.html')
 
+@app.route('/login/professor', methods=['GET', 'POST'])
+def login_professor():
+    return render_template('professor/professor.html')
+
 @app.route("/errorpage")
 def errorpage():
     error_message = "Bad Credentials!"
@@ -110,6 +114,9 @@ def errorpage():
 @app.route('/student', methods=['GET', 'POST']) # student homepage
 def after_login_student():
     if "roll_number" in session:
+        cursor = db.connection.cursor()
+        # roll_number = session['roll_number']
+        # studen_name = 
         if request.method == 'POST':
             testvar = request.form['submit_button']
             match testvar:
