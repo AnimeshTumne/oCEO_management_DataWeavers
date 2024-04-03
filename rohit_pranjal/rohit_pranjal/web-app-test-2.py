@@ -9,7 +9,7 @@ app.secret_key = 'mySecretKey'
 
 app.config["MYSQL_HOST"] = "localhost"
 app.config["MYSQL_USER"] = "oceoAdmin"
-app.config["MYSQL_PASSWORD"] = "oceoAdmin"
+app.config["MYSQL_PASSWORD"] = "oceoAdmin#123"
 app.config["MYSQL_DB"] = "oceo_management"
 
 db = MySQL(app)
@@ -102,6 +102,7 @@ def errorpage():
 
 # -----------AUTHORISED ACCESS ONLY----------------------------------------------------------------
 
+#--------------STUDENT INFO  PAGES-----------------------------------------------------------------
 @app.route('/student', methods=['GET', 'POST']) # student homepage
 def after_login_student():
     if "roll_number" in session:
@@ -371,6 +372,54 @@ def student_applied_jobs():
     else:
         return redirect(url_for('errorpage'))
 
+#-------------------------------STUDENT PROFILE ENDS  HERE-----------------------------------------
+    
+#--------------------------------PROFESSOR PROFILE STARTS HERE--------------------------------------
+    
+@app.route('/login/professor', methods=['GET', 'POST'])
+def login_professor():
+    if request.method == 'POST':
+        email = request.form["username"]
+        password = request.form["password"]
+
+        # fetch roll number from database
+        cursor = db.connection.cursor()
+        sql = f"SELECT prof_id FROM professors_details WHERE email_id='{email}'"
+        cursor.execute(sql)
+        prof_id= cursor.fetchone()[0]
+        cursor.close()
+
+        if authenticate(email, password):
+            # ACTIVATES THE SESSION (logged in)
+            session["prof_id"] = prof_id
+            return redirect(url_for("after_login_student"))
+        else:
+            return redirect(url_for("errorpage"))
+
+    return render_template('professor.html')
+
+#---------------------------ADMIN PROFILE STARTS HERE---------------------------------------------------
+@app.route('/login/admin', methods=['GET', 'POST'])
+def login_admin():
+    if request.method == 'POST':
+        email = request.form["username"]
+        password = request.form["password"]
+
+        # fetch roll number from database
+        cursor = db.connection.cursor()
+        sql = f"SELECT admin_id FROM admin_details WHERE email_id='{email}'"
+        cursor.execute(sql)
+        admin_id= cursor.fetchone()[0]
+        cursor.close()
+
+        if authenticate(email, password):
+            # ACTIVATES THE SESSION (logged in)
+            session["admin_id"] = admin_id
+            return redirect(url_for("after_login_student"))
+        else:
+            return redirect(url_for("errorpage"))
+
+    return render_template('admin.html')
 
 # ------------------------------------------------------------------------------------------------------
 if __name__ == "__main__":

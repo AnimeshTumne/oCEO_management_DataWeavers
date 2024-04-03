@@ -7,7 +7,7 @@ from flask_mysqldb import MySQL
 from flask_sqlalchemy import SQLAlchemy
 import json
 from datetime import date
-import pymysql
+# import pymysql
 # --------------------------------------------------------------------------------------------------------------------------------------
 
 # connecting to the database
