@@ -46,10 +46,10 @@ def index():
     
     # added query to add password column in applied_student table
     query_add_column_password = "ALTER TABLE applied_student ADD COLUMN password VARCHAR(255);"
-    cur.execute(query_add_column_password)
+    # cur.execute(query_add_column_password)
     # rename column Approved to approval
     query_rename_approved_column = "ALTER TABLE application_status RENAME COLUMN Approved TO approval;"
-    cur.execute(query_rename_approved_column)
+    # cur.execute(query_rename_approved_column)
 
 
     query_fetch_roll_numbers = "SELECT roll_number FROM applied_student;"

@@ -31,7 +31,7 @@ def register():
         email = request.form["email"]
         userType = request.form.get('userType') 
         password = request.form["password"]
-        on_probation = request.form.get('on_probation') == 'Yes'
+        
         cursor = db.connection.cursor()
         
         if userType == "student":
@@ -52,7 +52,7 @@ def register():
             # new user registration
             else:
                 hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
-                sql = f"INSERT INTO applied_student (roll_number, first_name, middle_name, last_name, email_id, password, on_probation) VALUES ({new_roll_number},'{first_name}','{middle_name}','{last_name}','{email}','{hashed_password}',{on_probation});"
+                sql = f"INSERT INTO applied_student (roll_number, first_name, middle_name, last_name, email_id, password) VALUES ({new_roll_number},'{first_name}','{middle_name}','{last_name}','{email}','{hashed_password}');"
                 cursor.execute(sql)
                 db.connection.commit()
                 cursor.close()
@@ -101,7 +101,24 @@ def login_student():
 
 @app.route('/login/professor', methods=['GET', 'POST'])
 def login_professor():
-    return render_template('professor/professor.html')
+    if request.method == 'POST':
+        email = request.form["username"]
+        password = request.form["password"]
+
+        # fetch roll number from database
+        cursor = db.connection.cursor()
+        sql = f"SELECT faculty_id FROM faculty WHERE email_id='{email}'"
+        cursor.execute(sql)
+        faculty_id = cursor.fetchone()[0]
+        cursor.close()
+
+        if authenticate(email, password):
+            # ACTIVATES THE SESSION (logged in)
+            session["faculty_id"] = faculty_id
+            return redirect(url_for("after_login_professor"))
+        else:
+            return redirect(url_for("errorpage"))
+    return render_template('professor.html')
 
 @app.route("/errorpage")
 def errorpage():
@@ -126,13 +143,19 @@ def after_login_student():
                     return redirect(url_for('student_jobs_available'))
                 case 'applied_jobs':
                     return redirect(url_for('student_applied_jobs')) 
+                case 'my_jobs':
+                    return redirect(url_for('student_my_jobs'))
                 case 'logout':
-                    session.pop("roll_number", None) # todo Test logout
-                    return redirect(url_for('index'))
+                    return redirect(url_for('logout'))
                 case _:
                     return render_template('student/after_login.html')  
             
-        return render_template('student/after_login.html') # student homepage
+        cursor = db.connection.cursor()
+        roll_number = session['roll_number']
+        cursor.execute(f"SELECT first_name FROM applied_student WHERE roll_number = {roll_number};")
+        student_name = cursor.fetchone()[0]
+        cursor.close()
+        return render_template('student/after_login.html', student_name=student_name) # student homepage
     
     else:
         return redirect(url_for('errorpage'))
@@ -152,6 +175,10 @@ def student_personal_info():
             # profile update
             if request.form['submit_button'] == 'Update_Profile': 
                 return redirect(url_for('student_personal_info_change'))
+            elif request.form['submit_button'] == 'Change_Password':
+                return redirect(url_for('change_password'))
+            elif request.form['submit_button'] == 'Bank_Details':
+                return redirect(url_for('student_bank_details'))
 
         cursor = db.connection.cursor()
         roll_number = session['roll_number']
@@ -245,7 +272,7 @@ def student_jobs_available():
         # if "Apply" button is pressed
         if request.method == 'POST': 
             if request.form['submit_button'] == 'Apply':
-                return render_template('student/apply_job.html',job_id=request.form['job_id'])   
+                return redirect(url_for('student_apply_job',job_id=request.form['job_id']) )  
         
         # GET request handling:
         # fetch unapplied jobs
@@ -264,8 +291,8 @@ def student_jobs_available():
     else:
         return redirect(url_for('errorpage'))
 
-@app.route('/student/apply_job', methods=['GET', 'POST'])
-def student_apply_job():
+@app.route('/student/apply_job/<job_id>', methods=['GET', 'POST'])
+def student_apply_job(job_id):
     if "roll_number" in session:
         roll_number = session['roll_number']
         if request.method == 'POST': # submits the application
@@ -283,7 +310,6 @@ def student_apply_job():
             # fetch filled details
             cpi = request.form['cpi']
             last_sem_spi = request.form['last_sem_spi']
-            job_id = request.form['job_id']
             so_motivation = request.form['statement_of_motivation']
 
             sql_update_cpi_spi = f"UPDATE applied_student SET cpi = {cpi}, last_sem_spi = {last_sem_spi} WHERE roll_number = {roll_number};"
@@ -308,10 +334,10 @@ def student_apply_job():
         
         # FOR RENDERING DROPDOWN MENU
         # fetch unapplied jobs id
-        job_id = request.form['job_id']
+        
         cursor = db.connection.cursor()
-        cursor.execute(f"SELECT job.* FROM job where job_id={job_id});")
-        job = cursor.fetchall()
+        cursor.execute(f"SELECT job.* FROM job where job_id={job_id};")
+        job = cursor.fetchone()
 
 
         # fetch job role names
@@ -329,8 +355,7 @@ def student_apply_job():
             job_role=(f"{role_name}")                
 
         cursor.close()
-
-        return render_template('student/apply_job.html', job_id = job_id,job_role=job_role) 
+        return render_template('student/apply_job.html', job_id=job_id, job_role=job_role)
     
     else:
         return redirect(url_for('errorpage'))
@@ -383,7 +408,138 @@ def student_applied_jobs():
     else:
         return redirect(url_for('errorpage'))
 
+@app.route('/student/my_jobs', methods=['GET', 'POST'])
+def student_my_jobs():
+    if "roll_number" in session:
+        roll_number = session['roll_number']
+        cursor = db.connection.cursor()
 
+        if request.method == 'POST':
+            if request.form['submit_button'] == 'view':
+                job_id = request.form['job_id']
+                return redirect(url_for('student_timecard', job_id=job_id))
+                
+        # fetch my jobs
+        sql = f"SELECT application_status.application_id, job.job_id, job.job_type, job.job_description, application_status.approval FROM job JOIN application_status ON job.job_id = application_status.job_id WHERE application_status.roll_number = {roll_number} AND application_status.approval = 'approved';"
+        cursor.execute(sql)
+        my_jobs = cursor.fetchall()
+
+        # fetch column names
+        # cursor.execute("SHOW COLUMNS FROM job")
+        # job_head = cursor.fetchall()
+        # column_names = tuple(row[0] for row in job_head)
+        # cursor.close()
+
+        #Mannualy fix the Column Heading
+        column_names=('Application Id', 'Job Id', 'Job Type', 'Job Description', 'Approval Status')
+        
+        return render_template('student/my_jobs.html', job_data = my_jobs, job_head = column_names)
+
+    else:
+        return redirect(url_for('errorpage'))
+
+
+
+@app.route('/student/timecard/<job_id>', methods=['GET', 'POST'])
+def student_timecard(job_id):
+    if "roll_number" in session:
+        roll_number = session['roll_number']
+        cursor = db.connection.cursor()
+        if request.method == 'POST':
+            if request.form['submit_button'] == 'submit_timecard':
+                return redirect(url_for('submit_timecard',job_id=job_id))
+
+        # fetch timecard data
+        sql = f"SELECT * FROM time_card WHERE roll_number = {roll_number} AND job_id = {job_id};"
+        cursor.execute(sql)
+        timecard_data = cursor.fetchall()
+        timecard_head = cursor.description
+        column_names = tuple(row[0] for row in timecard_head)
+        cursor.close()
+        return render_template('student/timecard.html', timecard_data = timecard_data, timecard_head = column_names,job_id=job_id)
+
+        
+@app.route('/student/submit_timecard/<job_id>', methods=['GET', 'POST'])
+def submit_timecard(job_id):
+    if "roll_number" in session:
+        roll_number = session['roll_number']
+        cursor = db.connection.cursor()
+        if request.method == 'POST':
+            if request.form['submit_button'] == "submit_timecard":
+                month = request.form.get('month')
+                year = request.form.get('year')
+                hours_worked = request.form.get('hours_worked')
+                work_description = request.form.get('work_description')
+                sql = f"INSERT INTO time_card (roll_number, job_id, month, year, hours_worked, work_description,is_approved) VALUES ({roll_number}, {job_id}, '{month}', {year}, {hours_worked}, '{work_description}',0);"
+                cursor.execute(sql)
+                db.connection.commit()
+                cursor.close()  
+                return redirect(url_for('student_timecard', job_id=job_id))
+        return render_template('student/new_timecard.html', job_id=job_id)
+    else:
+        return redirect(url_for('errorpage'))    
+
+@app.route('/student/change_password', methods=['GET', 'POST'])
+def change_password():
+    if "roll_number" in session:
+        if request.method == 'POST':
+            roll_number = session['roll_number']
+            cursor = db.connection.cursor()
+            old_password = request.form.get('old_password')
+            new_password = request.form.get('new_password')
+            confirm_password = request.form.get('confirm_password')
+            cursor.execute(f"SELECT password FROM applied_student WHERE roll_number = {roll_number};")
+            hashed_password = cursor.fetchone()[0]
+            cursor.close()
+            if bcrypt.check_password_hash(hashed_password, old_password):
+                if new_password == confirm_password:
+                    new_hashed_password = bcrypt.generate_password_hash(new_password).decode("utf-8")
+                    cursor = db.connection.cursor()
+                    cursor.execute(f"UPDATE applied_student SET password = '{new_hashed_password}' WHERE roll_number = {roll_number};")
+                    db.connection.commit()
+                    cursor.close()
+                    return redirect(url_for('student_personal_info'))
+                else:
+                    return redirect(url_for('errorpage'))
+            else:
+                return redirect(url_for('errorpage'))
+        return render_template('student/change_password.html')
+    else:
+        return redirect(url_for('errorpage'))
+                
+@app.route('/student/logout')
+def logout():
+    session.pop('roll_number', None)
+    return redirect(url_for('index'))
+
+        
+# ------------- START OF PROF --------------------------------------------------------------------------
+
+@app.route('/professor', methods=['GET', 'POST']) # professor homepage
+def after_login_professor():
+    if "faculty_id" in session:
+        if request.method == 'POST':
+            testvar = request.form['submit_button']
+            match testvar:
+                case 'personal_info':
+                    return redirect(url_for('professor_personal_info'))
+                case 'jobs_posted':
+                    return redirect(url_for('professor_jobs_posted'))
+                case 'applications':
+                    return redirect(url_for('professor_applications'))
+                case 'logout':
+                    session.pop("faculty_id", None)
+                    return redirect(url_for('index'))
+                case _:
+                    return render_template('professor/after_login.html')
+        cursor = db.connection.cursor()
+        faculty_id = session['faculty_id']
+        cursor.execute(f"SELECT first_name FROM faculty WHERE faculty_id = {faculty_id};")
+        faculty_name = cursor.fetchall()
+        cursor.close()
+        return render_template('professor/after_login.html', faculty_name=faculty_name)
+    else:
+        return render_template('errorpage.html')
 # ------------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
     app.run(debug=True)

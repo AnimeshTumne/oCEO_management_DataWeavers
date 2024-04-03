@@ -17,7 +17,7 @@
             position: fixed;
             line-height: 30px;
             padding: 20px;
-            left: -200px;
+            left: -300px;
             transition: left 0.3s ease;
         }
         .sidebar.open {
@@ -56,6 +56,23 @@
             display: inline-block;
             margin-top: 20px;
         }
+        a{
+            color: white;
+            text-decoration: none;
+        }
+        @media (max-width: 600px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                left: 0;
+            }
+            .main-content {
+                margin-left: 10px;
+            }
+        }
+
+        
     </style>
 </head>
 <body>
@@ -66,9 +83,13 @@
     </div>
     <div id="sidebar" class="sidebar">
         <h2>Dashboard</h2>
-        <p>Link 1</p>
-        <p>Link 2</p>
-        <p>Link 3</p>
+        <a href="/student">Home Page</a><br>
+        <a href="/student/personal_info">Personal Info</a><br>
+        <a href="/student/applied_jobs" >Applied Jobs</a><br>
+        <a href="/student/jobs_available">Jobs Available</a><br>
+        <a href="/student/my_jobs">My Jobs</a><br>
+        <a href="/student/logout">Logout</a><br>
+
     </div>
     <div id="main-content" class="main-content">
         <img id="user-image" src="" alt="User Image" class="user-image">
@@ -86,5 +107,15 @@
         <form action="{{url_for('student_personal_info')}}" method="POST">
             <input type="submit" name="submit_button"  value="Update_Profile" class="update-profile">
         </form>
+        <form action="{{url_for('student_personal_info')}}" method="POST">
+            <input type="submit" name="submit_button"  value="Change_Password" class="update-profile">
+    
+        <script>
+            function toggleMenu() {
+                var sidebar = document.getElementById('sidebar');
+                var mainContent = document.getElementById('main-content');
+                sidebar.classList.toggle('open');
+            }
+        </script>
     </div>
  

@@ -27,11 +27,59 @@
             display: inline-block;
             margin-top: 20px;
         }
+        .sidebar {
+            background-color: #333;
+            color: white;
+            width: 200px;
+            height: 100vh;
+            position: fixed;
+            line-height: 30px;
+            padding: 20px;
+            left: -300px;
+            transition: left 0.3s ease;
+        }
+        .sidebar.open {
+            left: 2px;
+        }
+        .menu-icon {
+            cursor: pointer;
+            display: block;
+            width: 30px;
+            height: 20px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        .menu-icon span {
+            display: block;
+            width: 100%;
+            height: 4px;
+            background-color: #333;
+            margin: 5px 0;
+        }
+        a{
+            color: white;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
     <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Applied Jobs</h1>
-    
+    <div class="menu-icon" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <div id="sidebar" class="sidebar">
+        <h2>Dashboard</h2>
+        <a href="/student">Home Page</a><br>
+        <a href="/student/personal_info">Personal Info</a><br>
+        <a href="/student/applied_jobs" >Applied Jobs</a><br>
+        <a href="/student/jobs_available">Jobs Available</a><br>
+        <a href="/student/my_jobs">My Jobs</a><br>
+        <a href="/student/logout">Logout</a><br>
+
+    </div>
     <table>
     <thead>
         <tr>
@@ -57,6 +105,12 @@
         {% endfor %}
     </tbody>
     </table>
-   
+    <script>
+        function toggleMenu() {
+            var sidebar = document.getElementById('sidebar');
+            var mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('open');
+        }
+    </script>
 </body>
 </html>
