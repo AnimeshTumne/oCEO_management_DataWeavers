@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>personal_info</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .sidebar {
+            background-color: #333;
+            color: white;
+            width: 200px;
+            height: 100vh;
+            position: fixed;
+            line-height: 30px;
+            padding: 20px;
+        }
+        .main-content {
+            margin-left: 500px;
+            padding: 20px;
+        }
+        .user-info {
+            margin-bottom: 20px;
+        }
+        .user-info h2 {
+            margin: 10px;
+        }
+        .user-info p {
+            margin: 10px;
+        }
+        .user-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+        .update-profile {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        @media (max-width: 600px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Dashboard</h2>
+        <p>Link 1</p>
+        <p>Link 2</p>
+        <p>Link 3</p>
+    </div>
+    <div class="main-content">
+        <form action="{{url_for('professor_personal_info_change')}}" method="post">
+            <img src="user.jpg" alt="User Image" class="user-image">
+            <input type="file" id="img" name="img" accept="image/*">
+            <div class="user-info">
+                <p>Faculty ID: <input type="text" name="faculty_id" value="{{professor_data[0][0]}}" readonly ></p>
+                <p>First Name:<input type="text" name="first_name" value="{{professor_data[0][1]}}"required ></p>
+                <p>Middle Name:<input type="text" name="middle_name" value="{{professor_data[0][2]}}" ></p>
+                <p>Last Name:<input type="text" name="last_name" value="{{professor_data[0][3]}}" ></p>
+                <p>Department Name: <input type="text" name="department_name" value="{{professor_data[0][4]}}"></p>
+                <p>Email: <input type="text" name="email" value="{{professor_data[0][5]}}"  readonly></p>
+                <p>VOID ID: <input type="text" name="voip_id" value="{{professor_data[0][6]}}" ></p>
+            </div>
+            <input type="submit" value="Update Profile" class="update-profile">
+        </form>
+    </div>
+</body>
+</html>
