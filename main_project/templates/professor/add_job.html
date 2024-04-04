@@ -4,19 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add a Job</title>
-    
+    <script>
+        function toggleCourseFields() {
+            var adhRadioBtn = document.getElementById('ADH');
+            var courseFields = document.getElementById('course-fields');
+            var palRadioBtn = document.getElementById('PAL');
+            var subject_to_teach = document.getElementById('subject_to_teach');
+            var role_name = document.getElementById('role_name');
+           
+            if (adhRadioBtn.checked) {
+                courseFields.style.display = 'block';
+                subject_to_teach.style.display = 'none';
+                role_name.style.display = 'none';
+            } else if (palRadioBtn.checked) {
+                subject_to_teach.style.display = 'block';
+                courseFields.style.display = 'none';
+                role_name.style.display = 'none';
+            }  
+            else {
+                role_name.style.display = 'block';
+                courseFields.style.display = 'none';
+                subject_to_teach.style.display = 'none';
+            }
+        }
+        
+    </script>
 </head>
 <body>
     <h1>Job Application</h1>
     <form action="/professor/add_job" method="post">
         <label for="job_type">Job type:</label><br>
-        <input type="radio" id="job_type" name="job_type" value="ADH" onclick="toggleTextField(this, 'text-field')" required> ADH <br>
-        <div id="course_name_field">
-            <!-- Text field will be added here -->
-            <!-- <input type="text" id="course_name" name="course_name" required><br> -->
+        <input type="radio" id="ADH" name="job_type" value="ADH" onclick="toggleCourseFields()"  required> ADH <br>
+        <input type="radio" id="PAL" name="job_type" value="PAL" onclick="toggleCourseFields()" required> PAL <br>
+        <input type="radio" id="others" name="job_type" value="other"  onclick="toggleCourseFields()"required> Others <br>
+        <div id="course-fields" style="display:none;">
+            <label for="course_id">Course ID:</label><br>
+            <input type="text" id="course_id" name="course_id" ><br>
+            <label for="course_name">Course Name:</label><br>
+            <input type="text" id="course_name" name="course_name"><br>
         </div>
-        <input type="radio" id="job_type" name="job_type" value="PAL" required> PAL <br>
-        <input type="radio" id="job_type" name="job_type" value="other" required> Others <br>
+        <div id="subject_to_teach" style="display:none;">
+            <label for="subject_to_teach">Subjects To Teach:</label><br>
+            <input type="text" id="subject_to_teach" name="subject_to_teach" ><br>
+        </div>
+        <div id="role_name" style="display:none;">
+            <label for="role_name">Role Name:</label><br>
+            <input type="text" id="role_name" name="role_name" ><br>
+        </div>
 
         <!-- <label for="job_id">Job:</label><br> -->
         <!-- <input type="text" id="job_id" name="job_id" value="{{job_id}}:{{job_role}}"><br> -->
@@ -46,10 +80,18 @@
         
     </form>
     <script>
-        function toggleTextField(cb, id) {
-            var input = document.getElementById(id);
-            input.style.display = cb.checked ? 'block' : 'none';
+     function add_text(){
+        var job_type = document.querySelector('input[name="job_type"]:checked').value;
+        if(job_type == "ADH"){
+            document.getElementById("course_id").style.display = "block";
+            document.getElementById("course_name").style.display = "block";
         }
+        else{
+            document.getElementById("course_id").style.display = "none";
+            document.getElementById("course_name").style.display = "none";
+        }
+     }
+    
     </script>
 </body>
 </html>

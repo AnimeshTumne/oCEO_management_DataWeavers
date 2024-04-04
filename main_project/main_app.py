@@ -735,19 +735,23 @@ def professor_add_job():
                 cursor.execute("SELECT MAX(job_id) FROM job")
                 max_id = cursor.fetchone()[0]
                 job_id = max_id + 1
+
+            cursor.execute(f"INSERT INTO job (job_id, job_type, job_description, min_qualifications, job_criteria, prerequisites, additional_info, pay_per_hour, no_of_positions, start_date, end_date, tenure, faculty_id, is_position_open, application_deadline) VALUES ({job_id}, '{job_type}', '{job_description}', '{min_qualifications}', '{job_criteria}', '{prerequisites}', '{additional_info}', {pay_per_hour}, {no_of_positions}, '{start_date}', '{end_date}', '{tenure}', {faculty_id}, {is_position_open}, '{application_deadline}');")
+            db.connection.commit()
             if job_type == 'ADH':
-                job_id = 201
                 course_id = request.form.get('course_id')
                 course_name = request.form.get('course_name')
                 cursor.execute(f"INSERT INTO adh (job_id, course_id, course_name) VALUES ({job_id}, '{course_id}', '{course_name}');")
+                db.connection.commit()
             elif job_type == 'PAL':
                 subjects_to_teach = request.form.get('subjects_to_teach')
                 cursor.execute(f"INSERT INTO subjects_under_pal (job_id, subjects_to_teach) VALUES ({job_id}, '{subjects_to_teach}');")
+                db.connection.commit()
             else:
                 role_name = request.form.get('role_name')
                 cursor.execute(f"INSERT INTO others (job_id, role_name) VALUES ({job_id}, '{role_name}');")
-            cursor.execute(f"INSERT INTO job (job_id, job_type, job_description, min_qualifications, job_criteria, prerequisites, additional_info, pay_per_hour, no_of_positions, start_date, end_date, tenure, faculty_id, is_position_open, application_deadline) VALUES ({job_id}, '{job_type}', '{job_description}', '{min_qualifications}', '{job_criteria}', '{prerequisites}', '{additional_info}', {pay_per_hour}, {no_of_positions}, '{start_date}', '{end_date}', '{tenure}', {faculty_id}, {is_position_open}, '{application_deadline}');")
-            db.connection.commit()
+                db.connection.commit()
+            
             cursor.close()
             return redirect(url_for('professor_jobs_created'))
         return render_template('professor/add_job.html')
@@ -809,8 +813,8 @@ def professor_delete_job(job_id):
             cursor.execute(f"DELETE FROM adh WHERE job_id = {job_id};")
         elif job_type == "PAL":
             cursor.execute(f"DELETE FROM subjects_under_pal WHERE job_id = {job_id};")
-        # else:
-        #     cursor.execute(f"DELETE FROM others WHERE job_id = {job_id};")
+        else:
+             cursor.execute(f"DELETE FROM others WHERE job_id = {job_id};")
         
         cursor.execute(f"DELETE FROM job WHERE job_id = {job_id};")
         db.connection.commit()

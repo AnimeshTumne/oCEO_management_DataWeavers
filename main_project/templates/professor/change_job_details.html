@@ -9,27 +9,20 @@
 <body>
     <h1>Job Application</h1>
     <form action="/professor/change_job_details/{{job_data[0][0]}}" method="post">
-        <label for="job_type">Job type:</label><br>
-        <input type="radio" id="job_type" name="job_type" value="ADH" onclick="toggleTextField(this, 'text-field')" required> ADH <br>
-        <div id="course_name_field">
-            <!-- Text field will be added here -->
-            <!-- <input type="text" id="course_name" name="course_name" required><br> -->
-        </div>
-        <input type="radio" id="job_type" name="job_type" value="PAL" required> PAL <br>
-        <input type="radio" id="job_type" name="job_type" value="other" required> Others <br>
-
+        <p>Job ID: {{job_data[0][0]}}</p>
+        <p>Job Type: {{job_data[0][1]}}</p>
         <!-- <label for="job_id">Job:</label><br> -->
         <!-- <input type="text" id="job_id" name="job_id" value="{{job_id}}:{{job_role}}"><br> -->
         <label for="job_description">Job Description:</label><br>
-        <textarea id="job_description" name="job_description" value={{job_data[0][2]}} required></textarea><br>
+        <textarea id="job_description" name="job_description"  required>{{job_data[0][2]}}</textarea><br>
         <label for="minimum_qualification">Minimum qualification:</label><br>
-        <input type="text" id="minimum_qualification" name="minimum_qualification" value='{{job_data[0][3]}}' required><br>
+        <input type="text" id="minimum_qualification" name="minimum_qualification" value="{{job_data[0][3]}}" required><br>
         <label for="job_criteria">Job Criteria:</label><br>
-        <textarea id="job_criteria" name="job_criteria" value='{{job_data[4]}}' required></textarea><br>
+        <textarea id="job_criteria" name="job_criteria"  required>{{job_data[0][4]}}</textarea><br>
         <label for="prerequisites">Prerequisites:</label><br>
-        <textarea id="prerequisites" name="prerequisites" value='{{job_data[5]}}'required></textarea><br>
+        <textarea id="prerequisites" name="prerequisites"required>{{job_data[0][5]}}</textarea><br>
         <label for="additional_information">Additional Information:</label><br>
-        <textarea id="additional_information" name="additional_information" value='{{job_data[6]}}' required></textarea><br>
+        <textarea id="additional_information" name="additional_information" required>{{job_data[0][6]}}</textarea><br>
         <label for="pay_per_hour">Pay per hour:</label><br>
         <input type="text" id="pay_per_hour" name="pay_per_hour" value='{{job_data[0][7]}}'required><br>
         <label for="number_of_positions">Number of Positions:</label><br>
