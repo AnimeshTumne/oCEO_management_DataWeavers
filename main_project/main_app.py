@@ -176,7 +176,7 @@ def after_login_student():
         return render_template('student/after_login.html', student_name=student_name) # student homepage
     
     else:
-        return redirect(url_for('errorpage'))
+        return redirect(url_for('errorpage', error_message="You are not authorised to view this page. Please login first."))
 
 def phone_num_exist(roll_number):
     cursor = db.connection.cursor()
@@ -263,7 +263,7 @@ def student_edit_bank_details():
             return redirect(url_for('student_bank_details'))
         return render_template('student/edit_bank_details.html')
     else:
-        return redirect(url_for('errorpage'))
+        return redirect(url_for('errorpage'), error_message="You are not authorised to view this page. Please login first.")
 
 @app.route('/student/update_profile', methods=['GET', 'POST'])
 def student_personal_info_change():

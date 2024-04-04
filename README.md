@@ -5,8 +5,9 @@ This repository contains a simple yet elegant implementation of the on-Campus Em
 ## Front End:
 Our frontend, developed using Flask, Flex and Bootstrap, facilitates easy user experience and takes into account the needs of each user separately. \
 \
-*How to use?* \
-Please have a look inside the FrontEnd folder for more information on what file to use and how to use it.
 
 ## Back End:
-Work is pending. On it.
+Our backend is based on flask in python. It uses flask inbuilt methods to redirect and route our pages on the webapp.\
+
+*How to use?* \
+Go into the ```main_project``` folder, and, if running for the first time, run ```insert_passwords.py``` file. After this, run ```main_app.py``` file, and create a new student/professor user using the ```New User``` button. After this, login using created credentials through the ```Student``` or ```Professor``` buttons. After login, you can view various operations that can be done for that particular usertype.
