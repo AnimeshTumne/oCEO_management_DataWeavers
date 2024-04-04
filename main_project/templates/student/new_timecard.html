@@ -1,16 +1,65 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Time Card</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <h1> Time Card for oCEO Job</h1>
+    <h1>Time Card for oCEO Job</h1>
     <form action="/student/submit_timecard/{{job_id}}" method="post">
         <label for="job_id">Job:</label><br>
-        <input type="text" id="job_id" name="job_id" value="{{job_id}}"  readonly><br>
+        <input type="text" id="job_id" name="job_id" value="{{job_id}}" readonly><br>
         <label for="month">Month:</label><br>
         <input type="text" id="month" name="month" required><br>
         <label for="year">Year:</label><br>
@@ -22,6 +71,5 @@
         <label for="submit_button"></label><br>
         <button type="submit" name="submit_button" value="submit_timecard">Submit Time Card</button>
     </form>
-
 </body>
 </html>
