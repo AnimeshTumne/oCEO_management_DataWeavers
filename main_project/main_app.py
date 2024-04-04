@@ -138,6 +138,8 @@ def login_professor():
             return redirect(url_for("errorpage"))
     return render_template('professor.html')
 
+
+
 @app.route("/errorpage")
 def errorpage():
     error_message = "Bad Credentials!"
