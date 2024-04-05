@@ -140,6 +140,8 @@ def login_professor():
             return redirect(url_for("errorpage"))
     return render_template('professor.html')
 
+
+
 @app.route("/errorpage")
 def errorpage():
     error_message = "Bad Credentials!"
@@ -241,7 +243,9 @@ def student_bank_details():
 @app.route('/student/edit_bank_details', methods=['GET', 'POST'])
 def student_edit_bank_details():
     if "roll_number" in session:
-
+        cursor = db.connection.cursor()
+        cursor.execute(f"SELECT * FROM bank_details WHERE roll_number = {session['roll_number']};")
+        bank_data = cursor.fetchall()
         if request.method == 'POST':
             roll_number = session['roll_number']
 
@@ -263,7 +267,7 @@ def student_edit_bank_details():
             db.connection.commit()
             cursor.close()
             return redirect(url_for('student_bank_details'))
-        return render_template('student/edit_bank_details.html')
+        return render_template('student/edit_bank_details.html', bank_data=bank_data)
     else:
         return redirect(url_for('errorpage'), error_message="You are not authorised to view this page. Please login first.")
 
@@ -315,7 +319,7 @@ def student_personal_info_change():
         # fetch all data
         cursor = db.connection.cursor()
         roll_number = session['roll_number']
-        cursor.execute(f"SELECT * FROM applied_student WHERE roll_number = '{roll_number}';")
+        cursor.execute(f"SELECT * FROM applied_student WHERE roll_number = {roll_number};")
         fetched_data = cursor.fetchall()
 
         # check if phone number exists
@@ -345,7 +349,7 @@ def student_jobs_available():
         # fetch unapplied jobs
         cursor = db.connection.cursor()
         roll_number = session['roll_number']
-        cursor.execute(f"SELECT job.* FROM job LEFT JOIN application_status ON job.job_id = application_status.job_id AND application_status.roll_number = {roll_number} WHERE job.is_position_open = 1 AND (application_status.application_id IS NULL);")
+        cursor.execute(f"SELECT job.* FROM job LEFT JOIN application_status ON job.job_id = application_status.job_id AND application_status.roll_number = {roll_number} WHERE job.is_available = 'yes' AND (application_status.application_id IS NULL);")
         job_data = cursor.fetchall()
         
         # fetch column names
@@ -384,17 +388,17 @@ def student_apply_job(job_id):
             # add new application into 3 tables
             sql_app_id = f"INSERT INTO application_status (application_id, faculty_approved, oceo_coordinator_approved, SA_approved, dean_approved, statement_of_motivation, roll_number, job_id, approval) VALUES ({application_id}, 0, 0, 0, 0, '{so_motivation}', {roll_number}, {job_id}, 'pending');"
 
-            sql_job_id = f"INSERT INTO job_application (job_id, application_id) VALUES ({job_id}, {application_id});"
-            sql_student_id = f"INSERT INTO student_application (roll_number, application_id) VALUES ({roll_number}, {application_id});"
+            # sql_job_id = f"INSERT INTO job_application (job_id, application_id) VALUES ({job_id}, {application_id});"
+            # sql_student_id = f"INSERT INTO student_application (roll_number, application_id) VALUES ({roll_number}, {application_id});"
             # fill each table with new application info
             cursor.execute(sql_update_cpi_spi)
             db.connection.commit()
             cursor.execute(sql_app_id)
             db.connection.commit()
-            cursor.execute(sql_job_id)
-            db.connection.commit()
-            cursor.execute(sql_student_id)
-            db.connection.commit()
+            # cursor.execute(sql_job_id)
+            # db.connection.commit()
+            # cursor.execute(sql_student_id)
+            # db.connection.commit()
             cursor.close()
 
             return redirect(url_for('student_jobs_available'))
@@ -455,14 +459,14 @@ def student_applied_jobs():
                 # Perform cascading deletes using SQL queries
                 cursor = db.connection.cursor()
                 sql_delete_application = f"DELETE FROM application_status WHERE application_id = {application_id};"
-                sql_delete_job_application = f"DELETE FROM job_application WHERE application_id = {application_id};"
-                sql_delete_student_application = f"DELETE FROM student_application WHERE application_id = {application_id};"
+                # sql_delete_job_application = f"DELETE FROM job_application WHERE application_id = {application_id};"
+                # sql_delete_student_application = f"DELETE FROM student_application WHERE application_id = {application_id};"
 
-                cursor.execute(sql_delete_student_application)
-                db.connection.commit()
+                # cursor.execute(sql_delete_student_application)
+                # db.connection.commit()
 
-                cursor.execute(sql_delete_job_application)
-                db.connection.commit()
+                # cursor.execute(sql_delete_job_application)
+                # db.connection.commit()
 
                 cursor.execute(sql_delete_application)
                 db.connection.commit()
@@ -697,6 +701,9 @@ def professor_jobs_created():
             elif request.form['submit_button'] == 'view_applications':
                 job_id = request.form['job_id']
                 return redirect(url_for('professor_view_applications', job_id=job_id))
+            elif request.form['submit_button'] == 'approved_applications':
+                job_id = request.form['job_id']
+                return redirect(url_for('professor_approved_applications', job_id=job_id))
         
         cursor = db.connection.cursor()
         faculty_id = session['faculty_id']
@@ -738,7 +745,7 @@ def professor_add_job():
                 max_id = cursor.fetchone()[0]
                 job_id = max_id + 1
 
-            cursor.execute(f"INSERT INTO job (job_id, job_type, job_description, min_qualifications, job_criteria, prerequisites, additional_info, pay_per_hour, no_of_positions, start_date, end_date, tenure, faculty_id, is_position_open, application_deadline) VALUES ({job_id}, '{job_type}', '{job_description}', '{min_qualifications}', '{job_criteria}', '{prerequisites}', '{additional_info}', {pay_per_hour}, {no_of_positions}, '{start_date}', '{end_date}', '{tenure}', {faculty_id}, {is_position_open}, '{application_deadline}');")
+            cursor.execute(f"INSERT INTO job (job_id, job_type, job_description, min_qualifications, job_criteria, prerequisites, additional_info, pay_per_hour, no_of_positions, start_date, end_date, tenure, faculty_id, is_available, application_deadline) VALUES ({job_id}, '{job_type}', '{job_description}', '{min_qualifications}', '{job_criteria}', '{prerequisites}', '{additional_info}', {pay_per_hour}, {no_of_positions}, '{start_date}', '{end_date}', '{tenure}', {faculty_id}, {is_position_open}, '{application_deadline}');")
             db.connection.commit()
             if job_type == 'ADH':
                 course_id = request.form.get('course_id')
@@ -816,8 +823,10 @@ def professor_delete_job(job_id):
         elif job_type == "PAL":
             cursor.execute(f"DELETE FROM subjects_under_pal WHERE job_id = {job_id};")
         else:
-             cursor.execute(f"DELETE FROM others WHERE job_id = {job_id};")
-        
+            cursor.execute(f"DELETE FROM others WHERE job_id = {job_id};")
+
+        cursor.execute(f"DELETE FROM application_status WHERE job_id = {job_id};")
+        cursor.execute(f"DELETE FROM time_card WHERE job_id = {job_id};")
         cursor.execute(f"DELETE FROM job WHERE job_id = {job_id};")
         db.connection.commit()
         cursor.close()
@@ -931,6 +940,54 @@ def other_view_applications(job_id):
         return render_template('professor/view_applications.html', application_data=application_data, application_head=column_names, job_id=job_id)
     else:
         return redirect(url_for('errorpage'))
+
+# change below function
+@app.route('/professor/approved_applications/<job_id>', methods=['GET', 'POST'])
+def professor_approved_applications(job_id):  # cHanged this.
+    if "faculty_id" in session:
+        # if request.method == 'POST':
+            # if request.form['submit_button'] == 'approve':
+            #     application_id = request.form['application_id']
+            #     cursor = db.connection.cursor()
+            #     cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
+
+            #     # cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
+            #     cursor.execute(f"UPDATE application_status SET faculty_approved = 1 WHERE application_id = {application_id};")
+            #     db.connection.commit()
+            #     cursor.close()
+            #     return redirect(url_for('professor_view_applications', job_id=job_id))
+            
+        #     if request.form['submit_button'] == 'reject':
+        #         application_id = request.form['application_id']
+        #         cursor = db.connection.cursor()
+        #         cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
+        #         cursor.execute(f"UPDATE application_status SET faculty_approved = 0 WHERE application_id = {application_id};")
+        #         db.connection.commit()
+        #         cursor.close()
+        #         return redirect(url_for('professor_view_applications', job_id=job_id))
+        # cursor = db.connection.cursor()
+        # cursor.execute(f"SELECT application_status.application_id, application_status.roll_number, applied_student.first_name, applied_student.middle_name, applied_student.last_name, applied_student.cpi, applied_student.last_sem_spi, applied_student.on_probation, application_status.approval, application_status.statement_of_motivation FROM application_status JOIN applied_student ON application_status.roll_number = applied_student.roll_number WHERE application_status.job_id = {job_id} and application_status.faculty_approved = 0;")
+        
+        if request.method == 'POST':
+            if request.form['submit_button'] == 'remove':
+                application_id = request.form['application_id']
+                cursor = db.connection.cursor()
+                cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
+                cursor.execute(f"UPDATE application_status SET approval = 'rejected' WHERE application_id = {application_id};")
+                db.connection.commit()
+                cursor.close()
+                return redirect(url_for('professor_approved_applications', job_id=job_id))
+        cursor = db.connection.cursor()
+        cursor.execute(f"SELECT application_status.application_id, application_status.roll_number, applied_student.first_name, applied_student.middle_name, applied_student.last_name, applied_student.cpi, applied_student.last_sem_spi, applied_student.on_probation, application_status.approval, application_status.statement_of_motivation FROM application_status JOIN applied_student ON application_status.roll_number = applied_student.roll_number WHERE application_status.job_id = {job_id} and application_status.faculty_approved = 1;")
+        application_data = cursor.fetchall()
+        # cursor.execute("SHOW COLUMNS FROM application_status")
+        application_head = cursor.description
+        column_names = tuple(row[0] for row in application_head)
+        cursor.close()
+        return render_template('professor/approved_applications.html', application_data=application_data, application_head=column_names, job_id=job_id)
+    else:
+        return redirect(url_for('errorpage'))
+
 @app.route('/professor/timecard_for_review', methods=['GET', 'POST'])
 def professor_timecard_for_review():
     if "faculty_id" in session:
@@ -1030,21 +1087,8 @@ def jobs_approved():
 
 @app.route('/admin/logout')
 def admin_logout():
+    session.pop('email', None)
     return redirect(url_for('index'))
+
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-
-
-# Under testings: job application section
-# Under review: using CREATE USER and GRANT querires (e.g. to protect tables, etc.)
-
-
-# todo: image testing and rendering on frontend
-# todo: `password_change` feature
-# todo: bank_details frontend
-# todo: time_card frontend
-# todo: /my_jobs page
-
-
