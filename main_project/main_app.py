@@ -88,7 +88,7 @@ def authenticate(email, password, userType):
     elif userType == "professor":
         sql = f"SELECT password FROM faculty WHERE email_id='{email}'"
     elif userType == "others":
-        sql = f"SELECT password FROM others WHERE email = '{email}'"
+        sql = f"SELECT password FROM other WHERE email = '{email}'"
     cursor.execute(sql)
     result = cursor.fetchone()
     cursor.close()
@@ -421,7 +421,7 @@ def student_apply_job(job_id):
             subjects_to_teach = cursor.fetchone()[0]
             job_role=(f"PAL: {subjects_to_teach}")
         else:
-            cursor.execute(f"SELECT role_name FROM others WHERE job_id = {job[0]};")
+            cursor.execute(f"SELECT role_name FROM other WHERE job_id = {job[0]};")
             role_name = cursor.fetchone()[0]
             job_role=(f"{role_name}")                
 
@@ -773,7 +773,7 @@ def professor_add_job():
                 db.connection.commit()
             else:
                 role_name = request.form.get('role_name')
-                cursor.execute(f"INSERT INTO others (job_id, role_name) VALUES ({job_id}, '{role_name}');")
+                cursor.execute(f"INSERT INTO other (job_id, role_name) VALUES ({job_id}, '{role_name}');")
                 db.connection.commit()
             
             cursor.close()
@@ -850,7 +850,7 @@ def professor_jobs_change_details(job_id):
                 cursor.execute(f"UPDATE subjects_under_pal SET subjects_to_teach = '{subjects_to_teach}' WHERE job_id = {job_id};")
             else:
                 role_name = request.form.get('role_name')
-                cursor.execute(f"UPDATE others SET role_name = '{role_name}' WHERE job_id = {job_id};")
+                cursor.execute(f"UPDATE other SET role_name = '{role_name}' WHERE job_id = {job_id};")
             cursor.execute(f"UPDATE job SET job_type = '{job_type}', job_description = '{job_description}', min_qualifications = '{min_qualifications}', job_criteria = '{job_criteria}', prerequisites = '{prerequisites}', additional_info = '{additional_info}', pay_per_hour = {pay_per_hour}, no_of_positions = {no_of_positions}, start_date = '{start_date}', end_date = '{end_date}', tenure = '{tenure}', faculty_id = {faculty_id}, application_deadline = '{application_deadline}' WHERE job_id = {job_id};")
             db.connection.commit()
             cursor.close()
@@ -879,7 +879,7 @@ def professor_delete_job(job_id):
         elif job_type == "PAL":
             cursor.execute(f"DELETE FROM subjects_under_pal WHERE job_id = {job_id};")
         else:
-            cursor.execute(f"DELETE FROM others WHERE job_id = {job_id};")
+            cursor.execute(f"DELETE FROM other WHERE job_id = {job_id};")
 
         cursor.execute(f"DELETE FROM application_status WHERE job_id = {job_id};")
         cursor.execute(f"DELETE FROM time_card WHERE job_id = {job_id};")
@@ -1118,7 +1118,18 @@ def others_login():
 
 @app.route('/admin', methods=['GET', 'POST'])
 def after_login_admin():
-    #code it
+    if "email" in session:
+        if request.method == 'POST':
+            testvar = request.form['submit_button']
+            match testvar:
+                case 'applications_to_review':
+                    return redirect(url_for('review_application'))
+                case 'approved_jobs':
+                    return redirect(url_for('jobs_approved'))
+                case 'logout':
+                    return redirect(url_for('professor_logout'))
+                case _:
+                    return render_template('others/admin/admin.html')
     return render_template( 'others/admin/admin.html' )
 
 @app.route('/admin/review_application', methods=['GET', 'POST'])
@@ -1128,7 +1139,7 @@ def review_application():
     
 @app.route('/admin/jobs_approved', methods=['GET','POST'] )
 def jobs_approved():
-    render_template('others/admin/jobs_approved.html')
+    return render_template('others/admin/jobs_approved.html')
 
 @app.route('/admin/logout')
 def admin_logout():
