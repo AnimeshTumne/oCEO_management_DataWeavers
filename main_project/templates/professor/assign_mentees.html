@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Mentees</title>
+</head>
+<body>
+    <form action="/professor/assign_mentees/{{job_id}}&{{roll_number}}" method="post">
+        <!-- <label for="mentor_roll_number">Mentor Roll Number:</label> -->
+        <!-- <input type="text" id="mentor_roll_number" name="mentor_roll_number" value="add mentor roll number"><br><br> -->
+        
+        
+        <label for="mentee_roll_number">Roll Number:</label>
+        <input type="text" id="mentee_roll_number" name="mentee_roll_number" placeholder="add roll number"><br><br>
+        
+        <label for="first_name">First Name:</label>
+        <input type="text" id="first_name" name="first_name" placeholder="add first name"><br><br>
+
+        <label for="middle_name">Middle Name:</label>
+        <input type="text" id="middle_name" name="middle_name" placeholder="add middle name"><br><br>
+
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name" placeholder="add last name"><br><br>
+
+        <div id="additional-fields"></div><br>
+        
+        <button type="button" onclick="addAdditionalFields()">Add Additional Fields</button><br><br>
+        <button type="submit" name="submit_button" value="assign_mentees">Assign</button><br>
+    </form>
+
+    <script>
+        function addAdditionalFields() {
+            var additionalFieldsDiv = document.getElementById("additional-fields");
+            
+            // var mentorRollNumberInput = document.createElement("input");
+            // mentorRollNumberInput.type = "text";
+            // mentorRollNumberInput.name = "mentor_roll_number";
+            // mentorRollNumberInput.value = "add mentor roll number";
+            // additionalFieldsDiv.appendChild(mentorRollNumberInput);
+
+            var rollNumberInput = document.createElement("input");
+            rollNumberInput.type = "text";
+            rollNumberInput.name = "roll_number";
+            rollNumberInput.placeholder = "add roll number";
+            additionalFieldsDiv.appendChild(rollNumberInput);
+
+            var firstNameInput = document.createElement("input");
+            firstNameInput.type = "text";
+            firstNameInput.name = "first_name";
+            firstNameInput.placeholder = "add first name";
+            additionalFieldsDiv.appendChild(firstNameInput);
+
+            var middleNameInput = document.createElement("input");
+            middleNameInput.type = "text";
+            middleNameInput.name = "middle_name";
+            middleNameInput.placeholder = "add middle name";
+            additionalFieldsDiv.appendChild(middleNameInput);
+
+            var lastNameInput = document.createElement("input");
+            lastNameInput.type = "text";
+            lastNameInput.name = "last_name";
+            lastNameInput.placeholder = "add last name";
+            additionalFieldsDiv.appendChild(lastNameInput);
+
+            var breakLine = document.createElement("br");
+            additionalFieldsDiv.appendChild(breakLine);
+            
+            // var assignButton = document.createElement("button");
+            // assignButton.type = "button";
+            // assignButton.textContent = "Assign";
+            // additionalFieldsDiv.appendChild(assignButton);
+
+        }
+    </script>
+</body>
+</html>

@@ -85,7 +85,7 @@
         <thead>
             <tr>
             {% for columnName in job_head %}
-                <th>{{ columnName }}</th>
+                <th>{{ columnName.replace("_", " ") }}</th>
             {% endfor %}
             </tr>
         </thead>

@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
 import random
+import pandas as pd
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -796,7 +797,10 @@ def professor_job_page(job_id):
                 return redirect(url_for('professor_approved_applications', job_id=job_id))
             # elif idhar sochha tha kuch yaad nahi aa ra baadme dekh lena
             elif request.form.get('submit_button') == "assign_mentees":
-                return redirect(url_for('professor_assign_mentees', job_id=job_id))
+                roll_number = request.form.get('roll_number')
+                return redirect(url_for('professor_assign_mentees', job_id=job_id, roll_number=roll_number))
+            elif request.form.get('submit_button') == "stop_accepting_applications":
+                return redirect(url_for('professor_stop_accepting_applications', job_id=job_id))
                         
         cursor = db.connection.cursor()
         query_get_students_under_job = f"SELECT roll_number,first_name,middle_name,last_name,email_id FROM applied_student WHERE roll_number IN (SELECT roll_number FROM application_status WHERE job_id = {job_id} and approval='approved');"
@@ -815,13 +819,62 @@ def professor_job_page(job_id):
     else:
         return redirect(url_for('errorpage'))
 
-# @app.route('/professor/assign_mentees/<job_id>', methods=['GET', 'POST'])
-# def professor_assign_mentees(job_id):
-#     # if "faculty_id" in session:
-#     #     if request.method == 'POST':
-#     #         if request.form['submit_button'] == 'assign_mentees':
+@app.route('/professor/assign_mentees/<job_id>&<roll_number>', methods=['GET', 'POST'])
+def professor_assign_mentees(job_id, roll_number):
+    if "faculty_id" in session:
+        if request.method == 'POST':
+            if request.form['submit_button'] == 'assign_mentees':
                 
+                # roll_number = request.form['roll_number']
+                mentee_roll_number = request.form['mentee_roll_number']
+                first_name = request.form['first_name']
+                middle_name = request.form['middle_name']
+                last_name = request.form['last_name']
+                
+                cursor = db.connection.cursor()
+                cursor.execute(f"INSERT INTO mentees (mentee_roll_number, first_name, middle_name, last_name) values ({mentee_roll_number}, '{first_name}', '{middle_name}', '{last_name}');")
+                db.connection.commit()
+                cursor.execute(f"INSERT INTO mentor_mentee (mentee_roll_number, roll_number, job_id) VALUES ({mentee_roll_number}, {roll_number}, {job_id});")
+                db.connection.commit()
+                cursor.close()
+                return redirect(url_for('professor_job_page', job_id=job_id, roll_number=roll_number))
+                
+            # elif request.form['submit_button'] == 'import':
+            #     file = request.files['file']
+            #     if file:
+            #         # Read the file data using pandas
+            #         if file.filename.endswith('.csv'):
+            #             df = pd.read_csv(file)
+            #         elif file.filename.endswith('.xlsx'):
+            #             df = pd.read_excel(file)
+            #         else:
+            #             return "Invalid file format"
 
+            #         # Iterate over each row and add it to the database
+            #         for index, row in df.iterrows():
+            #             # Access the data from each column using row['column_name']
+            #             # Add the data to the database using appropriate SQL queries
+            #             mentee_roll_number = row['roll_number']
+            #             first_name = row['first_name']
+            #             middle_name = row['middle_name']
+            #             last_name = row['last_name']
+
+            #             cursor = db.connection.cursor()
+            #             cursor.execute(f"insert into mentees (mentee_roll_number, first_name, middle_name, last_name) values ({mentee_roll_number}, '{first_name}', '{middle_name}', '{last_name}');")
+            #             db.connection.commit()
+            #             cursor.execute(f"INSERT INTO mentor_mentee (mentee_roll_number, roll_number, job_id) VALUES ({mentee_roll_number}, {roll_number}, {job_id});")
+            #             db.connection.commit()
+            #             cursor.close()
+
+            #         return redirect(url_for('professor_job_page', job_id=job_id))
+            
+        cursor = db.connection.cursor()
+        cursor.execute(f"SELECT roll_number, first_name, middle_name, last_name FROM applied_student WHERE roll_number IN (SELECT roll_number FROM application_status WHERE job_id = {job_id} AND approval = 'approved');")
+        mentee_data = cursor.fetchall()
+        cursor.close()
+        return render_template('professor/assign_mentees.html', mentee_data=mentee_data, job_id=job_id, roll_number=roll_number)
+    else:
+        return redirect(url_for('errorpage'))
 
 @app.route('/professor/change_job_details/<job_id>', methods=['GET', 'POST'])
 def professor_jobs_change_details(job_id):
@@ -1077,6 +1130,17 @@ def professor_timecard_for_review():
         column_names = tuple(row[0] for row in timecard_head)
         cursor.close()
         return render_template('professor/timecard_for_review.html', timecard_data=timecard_data, timecard_head=column_names)
+    else:
+        return redirect(url_for('errorpage'))
+
+@app.route('/professor/stop_accepting_applications/<job_id>', methods=['GET', 'POST'])
+def professor_stop_accepting_applications(job_id):
+    if "faculty_id" in session:
+        cursor = db.connection.cursor()
+        cursor.execute(f"UPDATE job SET is_available = 'no' WHERE job_id = {job_id};")
+        db.connection.commit()
+        cursor.close()
+        return redirect(url_for('professor_jobs_created'))
     else:
         return redirect(url_for('errorpage'))
 
