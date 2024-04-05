@@ -1008,6 +1008,18 @@ def after_login_admin():
     #code it
     return render_template( 'others/admin/admin.html' )
 
+@app.route('/admin/review_application', methods=['GET', 'POST'])
+def review_application():
+    # return render_template('student/jobs_available.html', job_data=job_data, job_head = column_names)
+    return render_template('others/admin/review_application.html')
+    
+@app.route('/admin/jobs_approved', methods=['GET','POST'] )
+def jobs_approved():
+    render_template('others/admin/jobs_approved.html')
+
+@app.route('/admin/logout')
+def admin_logout():
+    return redirect(url_for('index'))
 if __name__ == "__main__":
     app.run(debug=True)
 
