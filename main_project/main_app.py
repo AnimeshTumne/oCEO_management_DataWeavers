@@ -87,6 +87,8 @@ def authenticate(email, password, userType):
         sql = f"SELECT password FROM applied_student WHERE email_id='{email}'"
     elif userType == "professor":
         sql = f"SELECT password FROM faculty WHERE email_id='{email}'"
+    elif userType == "others":
+        sql = f"SELECT password FROM others WHERE email = '{email}'"
     cursor.execute(sql)
     result = cursor.fetchone()
     cursor.close()
@@ -974,25 +976,33 @@ def professor_logout():
 # ------------------------------------------------------------------------------------------------------
 #----------------------Others-----------------------------------------------------------------
 
-@app.route('/login/others')
-def others_login():
+@app.route('/login/others',  methods=['GET', 'POST'])
+def others_login(): 
     if request.method == 'POST':
-        email = request.form["email"]
+        email = request.form["email"] 
         password = request.form["password"]
+        userType = request.form["userType"]
+        # #fetch roll number from database
+        # cursor = db.connection.cursor()
+        # sql = f"SELECT user_type FROM other WHERE email='{email}'"
+        # cursor.execute(sql)
+        # user= cursor.fetchone()[0]
+        # cursor.close()
 
-        # fetch roll number from database
-        cursor = db.connection.cursor()
-        sql = f"SELECT faculty_id FROM faculty WHERE email_id='{email}'"
-        cursor.execute(sql)
-        faculty_id = cursor.fetchone()[0]
-        cursor.close()
-
-    #     if authenticate(email, password, "professor"):
-    #         # ACTIVATES THE SESSION (logged in)
-    #         session["faculty_id"] = faculty_id
-    #         return redirect(url_for("after_login_professor"))
-    #     else:
-    #         return redirect(url_for("errorpage"))
+        if authenticate(email, password, "others"):
+            # ACTIVATES THE SESSION (logged in)
+            session["email"] = email
+            if userType == 'Admin':
+                return redirect(url_for("after_login_admin"))
+            elif userType == 'dean':
+                return redirect(url_for("after_login_dean"))
+            elif userType == 'SA_JS':
+                return redirect(url_for("after_login_admin"))
+            elif userType == 'oceo_cordinator':
+                return redirect(url_for("after_login_admin"))
+            
+        else:
+            return redirect(url_for("errorpage"))
     return render_template('others.html')
 
 @app.route('/admin', methods=['GET', 'POST'])
@@ -1000,6 +1010,18 @@ def after_login_admin():
     #code it
     return render_template( 'others/admin/admin.html' )
 
+@app.route('/admin/review_application', methods=['GET', 'POST'])
+def review_application():
+    # return render_template('student/jobs_available.html', job_data=job_data, job_head = column_names)
+    return render_template('others/admin/review_application.html')
+    
+@app.route('/admin/jobs_approved', methods=['GET','POST'] )
+def jobs_approved():
+    render_template('others/admin/jobs_approved.html')
+
+@app.route('/admin/logout')
+def admin_logout():
+    return redirect(url_for('index'))
 if __name__ == "__main__":
     app.run(debug=True)
 
