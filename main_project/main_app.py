@@ -1002,10 +1002,10 @@ def after_login_admin():
 def review_application():
     # return render_template('student/jobs_available.html', job_data=job_data, job_head = column_names)
     return render_template('others/admin/review_application.html')
-    
-@app.route('/admin/jobs_approved', methods=['GET','POST'] )
+
+@app.route('/admin/jobs_approved', methods=['GET', 'POST'])
 def jobs_approved():
-    render_template('others/admin/jobs_approved.html')
+    return render_template('others/admin/jobs_approved.html')
 
 @app.route('/admin/logout')
 def admin_logout():
