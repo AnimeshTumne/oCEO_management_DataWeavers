@@ -973,17 +973,17 @@ def professor_logout():
 #----------------------Others-----------------------------------------------------------------
 
 @app.route('/login/others')
-def  others_login():
-    # if request.method == 'POST':
-    #     email = request.form["username"]
-    #     password = request.form["password"]
+def others_login():
+    if request.method == 'POST':
+        email = request.form["email"]
+        password = request.form["password"]
 
-    #     # fetch roll number from database
-    #     cursor = db.connection.cursor()
-    #     sql = f"SELECT faculty_id FROM faculty WHERE email_id='{email}'"
-    #     cursor.execute(sql)
-    #     faculty_id = cursor.fetchone()[0]
-    #     cursor.close()
+        # fetch roll number from database
+        cursor = db.connection.cursor()
+        sql = f"SELECT faculty_id FROM faculty WHERE email_id='{email}'"
+        cursor.execute(sql)
+        faculty_id = cursor.fetchone()[0]
+        cursor.close()
 
     #     if authenticate(email, password, "professor"):
     #         # ACTIVATES THE SESSION (logged in)
