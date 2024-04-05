@@ -970,6 +970,29 @@ def professor_logout():
     session.pop('faculty_id', None)
     return redirect(url_for('index'))
 # ------------------------------------------------------------------------------------------------------
+#----------------------Others-----------------------------------------------------------------
+
+@app.route('/login/others')
+def  others_login():
+    # if request.method == 'POST':
+    #     email = request.form["username"]
+    #     password = request.form["password"]
+
+    #     # fetch roll number from database
+    #     cursor = db.connection.cursor()
+    #     sql = f"SELECT faculty_id FROM faculty WHERE email_id='{email}'"
+    #     cursor.execute(sql)
+    #     faculty_id = cursor.fetchone()[0]
+    #     cursor.close()
+
+    #     if authenticate(email, password, "professor"):
+    #         # ACTIVATES THE SESSION (logged in)
+    #         session["faculty_id"] = faculty_id
+    #         return redirect(url_for("after_login_professor"))
+    #     else:
+    #         return redirect(url_for("errorpage"))
+    return render_template('others.html')
+
 if __name__ == "__main__":
     app.run(debug=True)
 

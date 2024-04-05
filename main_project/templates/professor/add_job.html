@@ -126,11 +126,11 @@
         </div>
         <div id="subject_to_teach">
             <label for="subject_to_teach">Subjects To Teach:</label><br>
-            <input type="text" id="subject_to_teach" name="subject_to_teach" placeholder="Enter Subjects To Teach"><br>
+            <input type="text" id="subject_to_teach1" name="subject_to_teach" placeholder="Enter Subjects To Teach"><br>
         </div>
         <div id="role_name">
             <label for="role_name">Role Name:</label><br>
-            <input type="text" id="role_name" name="role_name" placeholder="Enter Role Name"><br>
+            <input type="text" id="role_name1" name="role_name" placeholder="Enter Role Name"><br>
         </div>
 
         <label for="job_description">Job Description:</label><br>
@@ -157,24 +157,6 @@
         <input type="date" id="application_deadline" name="application_deadline" required><br>
         <input type="submit" value="Submit Application">
     </form>
-    <script>
-        function add_text() {
-            var job_type = document.querySelector('input[name="job_type"]:checked').value;
-            if (job_type == "ADH") {
-                document.getElementById("course_id").style.display = "block";
-                document.getElementById("course_name").style.display = "block";
-            } else if (job_type == "PAL") {
-                document.getElementById("subject_to_teach").style.display = "block";
-            }else if (job_type == "other") {
-                document.getElementById("role_name").style.display = "block";
-            } else {
-                document.getElementById("course_id").style.display = "none";
-                document.getElementById("course_name").style.display = "none";
-                document.getElementById("subject_to_teach").style.display = "none";
-                document.getElementById("role_name").style.display = "none";
-            }
-        }
-    </script>
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>

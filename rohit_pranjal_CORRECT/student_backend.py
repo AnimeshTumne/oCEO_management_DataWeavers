@@ -134,6 +134,7 @@ def phone_num_exist(roll_number):
     return phone_count != 0
 
 @app.route('/student/personal_info', methods=['GET', 'POST'])
+
 def student_personal_info():
     if "roll_number" in session:
         if request.method == 'POST': 
