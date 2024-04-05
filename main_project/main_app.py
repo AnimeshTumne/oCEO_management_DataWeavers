@@ -1005,7 +1005,18 @@ def others_login():
 
 @app.route('/admin', methods=['GET', 'POST'])
 def after_login_admin():
-    #code it
+    if "email" in session:
+        if request.method == 'POST':
+            testvar = request.form['submit_button']
+            match testvar:
+                case 'applications_to_review':
+                    return redirect(url_for('review_application'))
+                case 'approved_jobs':
+                    return redirect(url_for('jobs_approved'))
+                case 'logout':
+                    return redirect(url_for('professor_logout'))
+                case _:
+                    return render_template('others/admin/admin.html')
     return render_template( 'others/admin/admin.html' )
 
 @app.route('/admin/review_application', methods=['GET', 'POST'])
