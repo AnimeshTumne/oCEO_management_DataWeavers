@@ -241,7 +241,9 @@ def student_bank_details():
 @app.route('/student/edit_bank_details', methods=['GET', 'POST'])
 def student_edit_bank_details():
     if "roll_number" in session:
-
+        cursor = db.connection.cursor()
+        cursor.execute(f"SELECT * FROM bank_details WHERE roll_number = {session['roll_number']};")
+        bank_data = cursor.fetchall()
         if request.method == 'POST':
             roll_number = session['roll_number']
 
@@ -263,7 +265,7 @@ def student_edit_bank_details():
             db.connection.commit()
             cursor.close()
             return redirect(url_for('student_bank_details'))
-        return render_template('student/edit_bank_details.html')
+        return render_template('student/edit_bank_details.html', bank_data=bank_data)
     else:
         return redirect(url_for('errorpage'), error_message="You are not authorised to view this page. Please login first.")
 
@@ -315,7 +317,7 @@ def student_personal_info_change():
         # fetch all data
         cursor = db.connection.cursor()
         roll_number = session['roll_number']
-        cursor.execute(f"SELECT * FROM applied_student WHERE roll_number = '{roll_number}';")
+        cursor.execute(f"SELECT * FROM applied_student WHERE roll_number = {roll_number};")
         fetched_data = cursor.fetchall()
 
         # check if phone number exists
@@ -455,14 +457,14 @@ def student_applied_jobs():
                 # Perform cascading deletes using SQL queries
                 cursor = db.connection.cursor()
                 sql_delete_application = f"DELETE FROM application_status WHERE application_id = {application_id};"
-                sql_delete_job_application = f"DELETE FROM job_application WHERE application_id = {application_id};"
+                # sql_delete_job_application = f"DELETE FROM job_application WHERE application_id = {application_id};"
                 # sql_delete_student_application = f"DELETE FROM student_application WHERE application_id = {application_id};"
 
                 # cursor.execute(sql_delete_student_application)
                 # db.connection.commit()
 
-                cursor.execute(sql_delete_job_application)
-                db.connection.commit()
+                # cursor.execute(sql_delete_job_application)
+                # db.connection.commit()
 
                 cursor.execute(sql_delete_application)
                 db.connection.commit()
@@ -933,6 +935,54 @@ def other_view_applications(job_id):
         return render_template('professor/view_applications.html', application_data=application_data, application_head=column_names, job_id=job_id)
     else:
         return redirect(url_for('errorpage'))
+
+# change below function
+@app.route('/professor/approved_applications/<job_id>', methods=['GET', 'POST'])
+def professor_approved_applications(job_id):  # cHanged this.
+    if "faculty_id" in session:
+        # if request.method == 'POST':
+            # if request.form['submit_button'] == 'approve':
+            #     application_id = request.form['application_id']
+            #     cursor = db.connection.cursor()
+            #     cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
+
+            #     # cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
+            #     cursor.execute(f"UPDATE application_status SET faculty_approved = 1 WHERE application_id = {application_id};")
+            #     db.connection.commit()
+            #     cursor.close()
+            #     return redirect(url_for('professor_view_applications', job_id=job_id))
+            
+        #     if request.form['submit_button'] == 'reject':
+        #         application_id = request.form['application_id']
+        #         cursor = db.connection.cursor()
+        #         cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
+        #         cursor.execute(f"UPDATE application_status SET faculty_approved = 0 WHERE application_id = {application_id};")
+        #         db.connection.commit()
+        #         cursor.close()
+        #         return redirect(url_for('professor_view_applications', job_id=job_id))
+        # cursor = db.connection.cursor()
+        # cursor.execute(f"SELECT application_status.application_id, application_status.roll_number, applied_student.first_name, applied_student.middle_name, applied_student.last_name, applied_student.cpi, applied_student.last_sem_spi, applied_student.on_probation, application_status.approval, application_status.statement_of_motivation FROM application_status JOIN applied_student ON application_status.roll_number = applied_student.roll_number WHERE application_status.job_id = {job_id} and application_status.faculty_approved = 0;")
+        
+        if request.method == 'POST':
+            if request.form['submit_button'] == 'remove':
+                application_id = request.form['application_id']
+                cursor = db.connection.cursor()
+                cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
+                cursor.execute(f"UPDATE application_status SET approval = 'rejected' WHERE application_id = {application_id};")
+                db.connection.commit()
+                cursor.close()
+                return redirect(url_for('professor_approved_applications', job_id=job_id))
+        cursor = db.connection.cursor()
+        cursor.execute(f"SELECT application_status.application_id, application_status.roll_number, applied_student.first_name, applied_student.middle_name, applied_student.last_name, applied_student.cpi, applied_student.last_sem_spi, applied_student.on_probation, application_status.approval, application_status.statement_of_motivation FROM application_status JOIN applied_student ON application_status.roll_number = applied_student.roll_number WHERE application_status.job_id = {job_id} and application_status.faculty_approved = 1;")
+        application_data = cursor.fetchall()
+        # cursor.execute("SHOW COLUMNS FROM application_status")
+        application_head = cursor.description
+        column_names = tuple(row[0] for row in application_head)
+        cursor.close()
+        return render_template('professor/approved_applications.html', application_data=application_data, application_head=column_names, job_id=job_id)
+    else:
+        return redirect(url_for('errorpage'))
+
 @app.route('/professor/timecard_for_review', methods=['GET', 'POST'])
 def professor_timecard_for_review():
     if "faculty_id" in session:
@@ -1021,21 +1071,8 @@ def jobs_approved():
 
 @app.route('/admin/logout')
 def admin_logout():
+    session.pop('email', None)
     return redirect(url_for('index'))
+
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-
-
-# Under testings: job application section
-# Under review: using CREATE USER and GRANT querires (e.g. to protect tables, etc.)
-
-
-# todo: image testing and rendering on frontend
-# todo: `password_change` feature
-# todo: bank_details frontend
-# todo: time_card frontend
-# todo: /my_jobs page
-
-
