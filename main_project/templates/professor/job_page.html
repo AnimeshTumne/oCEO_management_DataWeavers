@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jobs Created</title>
+    <title>Job Page</title>
     <style>
         table {
             width: 100%;
@@ -64,7 +64,7 @@
     </style>
 </head>
 <body>
-    <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Jobs Created</h1>
+    <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Jobs Page</h1>
     <div class="menu-icon" onclick="toggleMenu()">
         <span></span>
         <span></span>
@@ -79,28 +79,37 @@
         <a href="/professor/logout">Logout</a><br>
     </div>
     <div id="main-content" style="margin-left: 200px;">
-        <a href="/professor/add_job" class="apply-job">Create a new job</a>
-    </div>
+    
+    <form action="/professor/job_page/{{job_id}}" method="post">
+        <input type="hidden" name="job_id" value="{{ job_id }}">
+        <button type="submit" name="submit_button" value="change_job_details">Change job details</button>
+        <button type="submit" name="submit_button" value="delete_job">Delete Job</button>
+        <button type="submit" name="submit_button" value="view_applications">View Applications</button>
+        <button type="submit" name="submit_button" value="approved_applications">Approved Applications</button>
+     
+    </form>
+    <h2>Employed Students</h2>
     <table>
         <thead>
             <tr>
-            {% for columnName in job_head %}
-                <th>{{ columnName }}</th>
+                {% for columnName in  student_under_job_head%}
+                <th>{{ columnName.replace("_", " ") }}</th>
             {% endfor %}
             </tr>
         </thead>
         <tbody>
-            {% for job in job_data %}
+            {% for student in student_under_job_data %}
             <tr>
-                {% for field in job %}
+                {% for field in student %}
                     <td>{{ field }}</td>
-                   
                 {% endfor %}
                 <td>
-                    <form action="/professor/jobs_created" method="post">
-                        <input type="hidden" name="job_id" value="{{ job[0] }}">
-                        <button type="submit" name="submit_button" value="job_page">Job Page</button>
-                    </form>
+                    {% if job_type=='PAL'%}
+                    <input type="hidden" name="roll_number" value="{{ student[0] }}">
+                    <button type="submit" name="submit_button" value="assign_mentees">Assign Mentees</button>
+                    {% else %}
+                    {{pass}} 
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}

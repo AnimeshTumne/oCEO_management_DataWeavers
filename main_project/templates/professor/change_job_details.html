@@ -4,39 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add a Job</title>
-    
+    <style>
+        html{
+            font-family: 'Courier New', Courier, monospace;
+            font-size:large;
+        }
+        body {
+            
+            margin: 0;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+        }
+        
+        form {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+        
+        input[type="text"],
+        textarea,
+        input[type="date"] {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+        }
+        
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
     <h1>Job Application</h1>
     <form action="/professor/change_job_details/{{job_data[0][0]}}" method="post">
-        <p>Job ID: {{job_data[0][0]}}</p>
-        <p>Job Type: {{job_data[0][1]}}</p>
-        <!-- <label for="job_id">Job:</label><br> -->
-        <!-- <input type="text" id="job_id" name="job_id" value="{{job_id}}:{{job_role}}"><br> -->
-        <label for="job_description">Job Description:</label><br>
-        <textarea id="job_description" name="job_description"  required>{{job_data[0][2]}}</textarea><br>
-        <label for="minimum_qualification">Minimum qualification:</label><br>
-        <input type="text" id="minimum_qualification" name="minimum_qualification" value="{{job_data[0][3]}}" required><br>
-        <label for="job_criteria">Job Criteria:</label><br>
-        <textarea id="job_criteria" name="job_criteria"  required>{{job_data[0][4]}}</textarea><br>
-        <label for="prerequisites">Prerequisites:</label><br>
-        <textarea id="prerequisites" name="prerequisites"required>{{job_data[0][5]}}</textarea><br>
-        <label for="additional_information">Additional Information:</label><br>
-        <textarea id="additional_information" name="additional_information" required>{{job_data[0][6]}}</textarea><br>
-        <label for="pay_per_hour">Pay per hour:</label><br>
-        <input type="text" id="pay_per_hour" name="pay_per_hour" value='{{job_data[0][7]}}'required><br>
-        <label for="number_of_positions">Number of Positions:</label><br>
-        <input type="text" id="number_of_positions" name="number_of_positions" value='{{job_data[0][8]}}'required><br>
-        <label for="start_date">Start Date:</label><br>
-        <input type="date" id="start_date" name="start_date" value='{{job_data[0][9]}}'required><br>
-        <label for="end_date">End Date:</label><br>
-        <input type="date" id="end_date" name="end_date" value='{{job_data[0][10]}}' required><br>
-        <label for="tenure">Tenure:</label><br>
-        <input type="text" id="tenure" name="tenure" value='{{job_data[0][11]}}'required><br>
-        <label for="application_deadline">Application Deadline:</label><br>
-        <input type="date" id="application_deadline" name="application_deadline" value='{{job_data[0][12]}}' required><br>
+        <!-- <b><p>Job ID: {{job_data[0][0]}}</p></b> -->
+        <!-- <b><p>Job Type: {{job_data[0][1]}}</p></b> -->
+        <label for="job_id">Job ID:</label>
+        <input type="text" id="job_id" name="job_id" value="{{job_data[0][0]}}" readonly>
+        <label for="job_type">Job Type:</label>
+        <input type="text" id="job_type" name="job_type" value="{{job_data[0][1]}}" readonly>
+
+        <label for="job_description">Job Description:</label>
+        <textarea rows="4" id="job_description" name="job_description" required>{{job_data[0][2]}}</textarea>
+        <label for="minimum_qualification">Minimum qualification:</label>
+        <input type="text" id="minimum_qualification" name="minimum_qualification" value="{{job_data[0][3]}}" required>
+        <label for="job_criteria">Job Criteria:</label>
+        <textarea id="job_criteria" name="job_criteria" required>{{job_data[0][4]}}</textarea>
+        <label for="prerequisites">Prerequisites:</label>
+        <textarea id="prerequisites" name="prerequisites" required>{{job_data[0][5]}}</textarea>
+        <label for="additional_information">Additional Information:</label>
+        <textarea id="additional_information" name="additional_information" required>{{job_data[0][6]}}</textarea>
+        <label for="pay_per_hour">Pay per hour:</label>
+        <input type="text" id="pay_per_hour" name="pay_per_hour" value='{{job_data[0][7]}}' required>
+        <label for="number_of_positions">Number of Positions:</label>
+        <input type="text" id="number_of_positions" name="number_of_positions" value='{{job_data[0][8]}}' required>
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" value='{{job_data[0][9]}}' required>
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" value='{{job_data[0][10]}}' required>
+        <label for="tenure">Tenure:</label>
+        <input type="text" id="tenure" name="tenure" value='{{job_data[0][11]}}' required>
+        <label for="application_deadline">Application Deadline:</label>
+        <input type="date" id="application_deadline" name="application_deadline" value='{{job_data[0][14]}}' required>
         <input type="submit" value="Submit Application">
-        
     </form>
     <script>
         function toggleTextField(cb, id) {

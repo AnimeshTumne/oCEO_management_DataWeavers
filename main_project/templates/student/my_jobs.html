@@ -84,7 +84,7 @@
     <thead>
         <tr>
         {% for columnName in job_head %}
-            <th>{{ columnName }}</th>
+            <th>{{ columnName.replace("_", " ") }}</th>
         {% endfor %}
         </tr>
     </thead>
@@ -99,6 +99,11 @@
                 <form action="/student/my_jobs" method="post">
                     <input type="hidden" name="job_id" value="{{ job[1] }}">
                     <button type="submit" name="submit_button" value="view">View Time Card</button>
+                    {% if job[2] == "PAL" %}
+                    <button type="submit" name="submit_button" value="mentees">Mentees</button>
+                    {% else %}
+                        {{pass}} 
+                    {% endif %}
                 </form>
             </td>
         </tr>

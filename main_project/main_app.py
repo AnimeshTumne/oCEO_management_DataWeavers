@@ -489,6 +489,8 @@ def student_my_jobs():
             if request.form['submit_button'] == 'view':
                 job_id = request.form['job_id']
                 return redirect(url_for('student_timecard', job_id=job_id))
+            elif request.form['submit_button'] == 'mentees':
+                return redirect(url_for('student_mentees'))
                 
         # fetch my jobs
         sql = f"SELECT application_status.application_id, job.job_id, job.job_type, job.job_description, application_status.approval FROM job JOIN application_status ON job.job_id = application_status.job_id WHERE application_status.roll_number = {roll_number} AND application_status.approval = 'approved';"
@@ -505,6 +507,29 @@ def student_my_jobs():
         column_names=('Application Id', 'Job Id', 'Job Type', 'Job Description', 'Approval Status')
         
         return render_template('student/my_jobs.html', job_data = my_jobs, job_head = column_names)
+
+    else:
+        return redirect(url_for('errorpage'))
+
+@app.route('/student/mentees', methods=['GET', 'POST'])
+def student_mentees():
+    if "roll_number" in session:
+        roll_number = session['roll_number']
+        cursor = db.connection.cursor()
+
+        # fetch mentees
+        sql = f"select mentee_roll_number, first_name, middle_name, last_name from mentees natural join mentor_mentee where mentor_mentee.roll_number = {roll_number};"
+        cursor.execute(sql)
+        mentees = cursor.fetchall()
+
+        # fetch column names
+        column_names = cursor.description
+        # cursor.execute("SHOW COLUMNS FROM mentor_mentee")
+        # mentee_head = cursor.fetchall()
+        column_names = tuple(row[0] for row in column_names)
+        cursor.close()
+
+        return render_template('student/mentees.html', mentee_data = mentees, mentee_head = column_names)
 
     else:
         return redirect(url_for('errorpage'))
@@ -690,20 +715,10 @@ def professor_change_password():
 def professor_jobs_created():
     if "faculty_id" in session:
         if request.method == 'POST':
-            if request.form['submit_button'] == 'change_job_details':
+            if request.form['submit_button'] == 'job_page':
                 job_id = request.form['job_id']
-                return redirect(url_for('professor_jobs_change_details', job_id=job_id))
-            elif request.form['submit_button'] == 'add_job':
-                return redirect(url_for('professor_add_job'))
-            elif request.form['submit_button'] == 'delete_job':
-                job_id = request.form['job_id']
-                return redirect(url_for('professor_delete_job', job_id=job_id))
-            elif request.form['submit_button'] == 'view_applications':
-                job_id = request.form['job_id']
-                return redirect(url_for('professor_view_applications', job_id=job_id))
-            elif request.form['submit_button'] == 'approved_applications':
-                job_id = request.form['job_id']
-                return redirect(url_for('professor_approved_applications', job_id=job_id))
+                return redirect(url_for('professor_job_page', job_id=job_id))
+            
         
         cursor = db.connection.cursor()
         faculty_id = session['faculty_id']
@@ -766,6 +781,47 @@ def professor_add_job():
         return render_template('professor/add_job.html')
     else:
         return redirect(url_for('errorpage'))
+
+@app.route('/professor/job_page/<job_id>', methods=['GET', 'POST'])
+def professor_job_page(job_id):
+    if "faculty_id" in session:
+        if request.method == 'POST':
+            if request.form.get('submit_button') == 'change_job_details':
+                return redirect(url_for('professor_jobs_change_details', job_id=job_id))
+            elif request.form.get('submit_button') == 'delete_job':
+                return redirect(url_for('professor_delete_job', job_id=job_id))
+            elif request.form.get('submit_button') == 'view_applications':
+                return redirect(url_for('professor_view_applications', job_id=job_id))
+            elif request.form.get('submit_button') == 'approved_applications':
+                return redirect(url_for('professor_approved_applications', job_id=job_id))
+            # elif idhar sochha tha kuch yaad nahi aa ra baadme dekh lena
+            elif request.form.get('submit_button') == "assign_mentees":
+                return redirect(url_for('professor_assign_mentees', job_id=job_id))
+                        
+        cursor = db.connection.cursor()
+        query_get_students_under_job = f"SELECT roll_number,first_name,middle_name,last_name,email_id FROM applied_student WHERE roll_number IN (SELECT roll_number FROM application_status WHERE job_id = {job_id} and approval='approved');"
+        cursor.execute(query_get_students_under_job)
+        student_under_job_data = cursor.fetchall()
+        # cursor.execute("SHOW COLUMNS FROM job")
+        # job_head = cursor.fetchall()
+        student_under_job_head = cursor.description
+        student_under_job_head = tuple(row[0] for row in student_under_job_head)
+        query_job_type = f"SELECT job_type FROM job WHERE job_id = {job_id};"
+        cursor.execute(query_job_type)
+        job_type = cursor.fetchone()[0]
+        cursor.close()
+
+        return render_template('professor/job_page.html', student_under_job_head=student_under_job_head, student_under_job_data=student_under_job_data,job_id=job_id,job_type=job_type)
+    else:
+        return redirect(url_for('errorpage'))
+
+# @app.route('/professor/assign_mentees/<job_id>', methods=['GET', 'POST'])
+# def professor_assign_mentees(job_id):
+#     # if "faculty_id" in session:
+#     #     if request.method == 'POST':
+#     #         if request.form['submit_button'] == 'assign_mentees':
+                
+
 
 @app.route('/professor/change_job_details/<job_id>', methods=['GET', 'POST'])
 def professor_jobs_change_details(job_id):
@@ -1062,28 +1118,17 @@ def others_login():
 
 @app.route('/admin', methods=['GET', 'POST'])
 def after_login_admin():
-    if "email" in session:
-        if request.method == 'POST':
-            testvar = request.form['submit_button']
-            match testvar:
-                case 'applications_to_review':
-                    return redirect(url_for('review_application'))
-                case 'approved_jobs':
-                    return redirect(url_for('jobs_approved'))
-                case 'logout':
-                    return redirect(url_for('professor_logout'))
-                case _:
-                    return render_template('others/admin/admin.html')
+    #code it
     return render_template( 'others/admin/admin.html' )
 
 @app.route('/admin/review_application', methods=['GET', 'POST'])
 def review_application():
     # return render_template('student/jobs_available.html', job_data=job_data, job_head = column_names)
     return render_template('others/admin/review_application.html')
-
-@app.route('/admin/jobs_approved', methods=['GET', 'POST'])
+    
+@app.route('/admin/jobs_approved', methods=['GET','POST'] )
 def jobs_approved():
-    return render_template('others/admin/jobs_approved.html')
+    render_template('others/admin/jobs_approved.html')
 
 @app.route('/admin/logout')
 def admin_logout():
