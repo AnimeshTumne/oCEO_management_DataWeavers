@@ -993,6 +993,11 @@ def others_login():
     #         return redirect(url_for("errorpage"))
     return render_template('others.html')
 
+@app.route('/admin', methods=['GET', 'POST'])
+def after_login_admin():
+    #code it
+    return render_template( 'others/admin/admin.html' )
+
 if __name__ == "__main__":
     app.run(debug=True)
 
