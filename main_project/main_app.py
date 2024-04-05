@@ -140,6 +140,8 @@ def login_professor():
             return redirect(url_for("errorpage"))
     return render_template('professor.html')
 
+
+
 @app.route("/errorpage")
 def errorpage():
     error_message = "Bad Credentials!"
@@ -699,6 +701,9 @@ def professor_jobs_created():
             elif request.form['submit_button'] == 'view_applications':
                 job_id = request.form['job_id']
                 return redirect(url_for('professor_view_applications', job_id=job_id))
+            elif request.form['submit_button'] == 'approved_applications':
+                job_id = request.form['job_id']
+                return redirect(url_for('professor_approved_applications', job_id=job_id))
         
         cursor = db.connection.cursor()
         faculty_id = session['faculty_id']
