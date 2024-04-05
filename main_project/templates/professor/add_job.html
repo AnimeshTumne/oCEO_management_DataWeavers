@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add a Job</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input[type="radio"],
+        input[type="text"],
+        textarea,
+        input[type="date"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="radio"] {
+            display: inline-block;
+            width: auto;
+            margin-right: 10px;
+        }
+
+        #course-fields,
+        #subject_to_teach,
+        #role_name {
+            display: none;
+        }
+
+        #course-fields label,
+        #subject_to_teach label,
+        #role_name label {
+            margin-top: 20px;
+        }
+
+        #course-fields input,
+        #subject_to_teach input,
+        #role_name input {
+            margin-top: 5px;
+        }
+
+        #course-fields input[type="text"],
+        #subject_to_teach input[type="text"],
+        #role_name input[type="text"] {
+            width: 100%;
+        }
+
+        #course-fields input[type="text"]::placeholder,
+        #subject_to_teach input[type="text"]::placeholder,
+        #role_name input[type="text"]::placeholder {
+            color: #999;
+        }
+
+        #course-fields textarea,
+        #subject_to_teach textarea,
+        #role_name textarea {
+            width: 100%;
+            resize: vertical;
+        }
+
+        #course-fields input[type="submit"] {
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        function toggleCourseFields() {
+            var adhRadioBtn = document.getElementById('ADH');
+            var courseFields = document.getElementById('course-fields');
+            var palRadioBtn = document.getElementById('PAL');
+            var subject_to_teach = document.getElementById('subject_to_teach');
+            var role_name = document.getElementById('role_name');
+
+            if (adhRadioBtn.checked) {
+                courseFields.style.display = 'block';
+                subject_to_teach.style.display = 'none';
+                role_name.style.display = 'none';
+            } else if (palRadioBtn.checked) {
+                subject_to_teach.style.display = 'block';
+                courseFields.style.display = 'none';
+                role_name.style.display = 'none';
+            } else {
+                role_name.style.display = 'block';
+                courseFields.style.display = 'none';
+                subject_to_teach.style.display = 'none';
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Job Application</h1>
+    <form action="/professor/add_job" method="post">
+        <label for="job_type">Job type:</label><br>
+        <input type="radio" id="ADH" name="job_type" value="ADH" onclick="toggleCourseFields()" required> ADH <br>
+        <input type="radio" id="PAL" name="job_type" value="PAL" onclick="toggleCourseFields()" required> PAL <br>
+        <input type="radio" id="others" name="job_type" value="other" onclick="toggleCourseFields()" required> Others <br>
+        <div id="course-fields">
+            <label for="course_id">Course ID:</label><br>
+            <input type="text" id="course_id" name="course_id" placeholder="Enter Course ID"><br>
+            <label for="course_name">Course Name:</label><br>
+            <input type="text" id="course_name" name="course_name" placeholder="Enter Course Name"><br>
+        </div>
+        <div id="subject_to_teach">
+            <label for="subject_to_teach">Subjects To Teach:</label><br>
+            <input type="text" id="subject_to_teach1" name="subject_to_teach" placeholder="Enter Subjects To Teach"><br>
+        </div>
+        <div id="role_name">
+            <label for="role_name">Role Name:</label><br>
+            <input type="text" id="role_name1" name="role_name" placeholder="Enter Role Name"><br>
+        </div>
+
+        <label for="job_description">Job Description:</label><br>
+        <textarea id="job_description" name="job_description" placeholder="Enter Job Description" required></textarea><br>
+        <label for="minimum_qualification">Minimum qualification:</label><br>
+        <input type="text" id="minimum_qualification" name="minimum_qualification" placeholder="Enter Minimum Qualification" required><br>
+        <label for="job_criteria">Job Criteria:</label><br>
+        <textarea id="job_criteria" name="job_criteria" placeholder="Enter Job Criteria" required></textarea><br>
+        <label for="prerequisites">Prerequisites:</label><br>
+        <textarea id="prerequisites" name="prerequisites" placeholder="Enter Prerequisites" required></textarea><br>
+        <label for="additional_information">Additional Information:</label><br>
+        <textarea id="additional_information" name="additional_information" placeholder="Enter Additional Information" required></textarea><br>
+        <label for="pay_per_hour">Pay per hour:</label><br>
+        <input type="text" id="pay_per_hour" name="pay_per_hour" placeholder="Enter Pay per Hour" required><br>
+        <label for="number_of_positions">Number of Positions:</label><br>
+        <input type="text" id="number_of_positions" name="number_of_positions" placeholder="Enter Number of Positions" required><br>
+        <label for="start_date">Start Date:</label><br>
+        <input type="date" id="start_date" name="start_date" required><br>
+        <label for="end_date">End Date:</label><br>
+        <input type="date" id="end_date" name="end_date" required><br>
+        <label for="tenure">Tenure:</label><br>
+        <input type="text" id="tenure" name="tenure" placeholder="Enter Tenure" required><br>
+        <label for="application_deadline">Application Deadline:</label><br>
+        <input type="date" id="application_deadline" name="application_deadline" required><br>
+        <input type="submit" value="Submit Application">
+    </form>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

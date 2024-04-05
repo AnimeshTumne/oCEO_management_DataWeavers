@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add a Job</title>
+    
+</head>
+<body>
+    <h1>Job Application</h1>
+    <form action="/professor/change_job_details/{{job_data[0][0]}}" method="post">
+        <p>Job ID: {{job_data[0][0]}}</p>
+        <p>Job Type: {{job_data[0][1]}}</p>
+        <!-- <label for="job_id">Job:</label><br> -->
+        <!-- <input type="text" id="job_id" name="job_id" value="{{job_id}}:{{job_role}}"><br> -->
+        <label for="job_description">Job Description:</label><br>
+        <textarea id="job_description" name="job_description"  required>{{job_data[0][2]}}</textarea><br>
+        <label for="minimum_qualification">Minimum qualification:</label><br>
+        <input type="text" id="minimum_qualification" name="minimum_qualification" value="{{job_data[0][3]}}" required><br>
+        <label for="job_criteria">Job Criteria:</label><br>
+        <textarea id="job_criteria" name="job_criteria"  required>{{job_data[0][4]}}</textarea><br>
+        <label for="prerequisites">Prerequisites:</label><br>
+        <textarea id="prerequisites" name="prerequisites"required>{{job_data[0][5]}}</textarea><br>
+        <label for="additional_information">Additional Information:</label><br>
+        <textarea id="additional_information" name="additional_information" required>{{job_data[0][6]}}</textarea><br>
+        <label for="pay_per_hour">Pay per hour:</label><br>
+        <input type="text" id="pay_per_hour" name="pay_per_hour" value='{{job_data[0][7]}}'required><br>
+        <label for="number_of_positions">Number of Positions:</label><br>
+        <input type="text" id="number_of_positions" name="number_of_positions" value='{{job_data[0][8]}}'required><br>
+        <label for="start_date">Start Date:</label><br>
+        <input type="date" id="start_date" name="start_date" value='{{job_data[0][9]}}'required><br>
+        <label for="end_date">End Date:</label><br>
+        <input type="date" id="end_date" name="end_date" value='{{job_data[0][10]}}' required><br>
+        <label for="tenure">Tenure:</label><br>
+        <input type="text" id="tenure" name="tenure" value='{{job_data[0][11]}}'required><br>
+        <label for="application_deadline">Application Deadline:</label><br>
+        <input type="date" id="application_deadline" name="application_deadline" value='{{job_data[0][12]}}' required><br>
+        <input type="submit" value="Submit Application">
+        
+    </form>
+    <script>
+        function toggleTextField(cb, id) {
+            var input = document.getElementById(id);
+            input.style.display = cb.checked ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>

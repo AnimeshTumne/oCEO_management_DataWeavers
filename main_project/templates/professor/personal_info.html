@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>personal_info_change</title>
+    <title>Personal Info</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -83,36 +83,30 @@
     </div>
     <div id="sidebar" class="sidebar">
         <h2>Dashboard</h2>
-        <a href="/student">Home Page</a><br>
-        <a href="/student/personal_info">Personal Info</a><br>
-        <a href="/student/applied_jobs" >Applied Jobs</a><br>
-        <a href="/student/jobs_available">Jobs Available</a><br>
-        <a href="/student/my_jobs">My Jobs</a><br>
-        <a href="/student/logout">Logout</a><br>
-
+        <a href="/professor">Home Page</a><br>
+        <a href="/professor/personal_info">Personal Info</a><br>
+        <a href="/professor/jobs_created" >Jobs Created</a><br>
+        <a href="/professor/timecard_for_review">Timecards for review</a><br>
+        <a href="/professor/logout">Logout</a><br>
     </div>
     <div id="main-content" class="main-content">
         <img id="user-image" src="" alt="User Image" class="user-image">
         <div class="user-info">
-            <p>Roll Number:{{ student_data[0][0]}}</p>
-            <p>First Name:{{ student_data[0][1]}}</p>
-            <p>Middle Name:{{ student_data[0][2] }}</p>
-            <p>Last Name:{{ student_data[0][3] }}</p>
-            <p>Email: {{ student_data[0][4] }}</p>
-            <p>Contact Number: {{ student_phone[0][0]}}</p>
-            <p>Alternate Contact Number: {{ student_phone[1][0]}}</p>
-            <p>CPI: {{ student_data[0][5] }}</p>
-            <p>Last Sem Spi: {{ student_data[0][6] }}</p>
+            <p>Faculty ID: {{professor_data[0][0]}}</p>
+            <p>First Name:{{ professor_data[0][1]}}</p>
+            <p>Middle Name:{{ professor_data[0][2] }}</p>
+            <p>Last Name:{{ professor_data[0][3] }}</p>
+            <p>Department name: {{professor_data[0][4]}} </p>
+            <p>Email ID: {{ professor_data[0][5] }}</p>
+            <p>VOIP ID: {{ professor_data[0][6] }}</p>
         </div>
-        <form action="{{url_for('student_personal_info')}}" method="POST">
+
+        <form action="{{url_for('professor_personal_info')}}" method="POST">
             <input type="submit" name="submit_button"  value="Update_Profile" class="update-profile">
         </form>
-        <form action="{{url_for('student_personal_info')}}" method="POST">
+        <form action="{{url_for('professor_personal_info')}}" method="POST">
             <input type="submit" name="submit_button"  value="Change_Password" class="update-profile">
         </form>
-        <form action="{{url_for('student_bank_details')}}" method="POST">
-            <input type="submit" name="submit_button"  value="Bank_Details" class="update-profile">
-    
         <script>
             function toggleMenu() {
                 var sidebar = document.getElementById('sidebar');
@@ -121,4 +115,5 @@
             }
         </script>
     </div>
- 
+</body>
+</html>

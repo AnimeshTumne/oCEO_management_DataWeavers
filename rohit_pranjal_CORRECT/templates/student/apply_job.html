@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for a Job</title>
+    
+</head>
+<body>
+    <h1>Job Application</h1>
+    <form action="/student/apply_job/{{job_id}}" method="post">
+        <label for="job_id">Job:</label><br>
+        <input type="text" id="job_id" name="job_id" value="{{job_id}}:{{job_role}}"  readonly><br>
+        <label for="cpi">Current CPI:</label><br>
+        <input type="text" id="cpi" name="cpi" required><br>
+        <label for="last_sem_spi">Last Semester SPI:</label><br>
+        <input type="text" id="last_sem_spi" name="last_sem_spi" required><br>
+        <label for="statement_of_motivation">Statement of Motivation:</label><br>
+        <textarea id="statement_of_motivation" name="statement_of_motivation" required></textarea><br>
+        <input type="submit" value="Submit Application">
+    </form>
+</body>
+</html>

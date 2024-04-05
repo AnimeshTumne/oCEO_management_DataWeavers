@@ -14,12 +14,13 @@
         }
 
         form {
-            width: 300px;
+            width: 50vw;
             margin: 0 auto;
             padding: 20px;
             background-color: #fff;
             border: 1px solid #ccc;
             border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         label {
@@ -95,7 +96,6 @@
             
         <label for="confirmPassword">Confirm Password:</label>
         <input type="password" id="confirmPassword" name="confirmPassword" required><br><br>
-        <input type="text" id="on_probation" name="on_probation" required><br><br>
         <label for="userType">User Type:</label>
             <input type="radio" id="other" name="userType" value="other" required>
             <label for="other">Other</label>
@@ -107,24 +107,4 @@
         <input type="submit" value="Register">
     </form>
 </body>
-<script>
-    document.getElementById('userType').addEventListener('change', function() {
-        var extraFields = document.getElementById('extraFields');
-        if (this.value === 'student') {
-            extraFields.innerHTML = `
-                <label for="cpi">Enter CPI:</label>
-                <input type="text" id="cpi" name="cpi"><br>
-                <label for="last_sem_spi">Enter Last Sem SPI:</label>
-                <input type="text" id="last_sem_spi" name="last_sem_spi"><br>
-                <label for="on_probation">Are You On Probation:</label>
-                <select id="on_probation" name="on_probation">
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                </select>
-            `;
-        } else {
-            extraFields.innerHTML = '';
-        }
-    });
-    </script>
 </html>

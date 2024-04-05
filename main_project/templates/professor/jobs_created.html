@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Available Jobs</title>
+    <title>Jobs Created</title>
     <style>
         table {
             width: 100%;
@@ -64,7 +64,7 @@
     </style>
 </head>
 <body>
-    <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Available Jobs</h1>
+    <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Jobs Created</h1>
     <div class="menu-icon" onclick="toggleMenu()">
         <span></span>
         <span></span>
@@ -72,13 +72,14 @@
     </div>
     <div id="sidebar" class="sidebar">
         <h2>Dashboard</h2>
-        <a href="/student">Home Page</a><br>
-        <a href="/student/personal_info">Personal Info</a><br>
-        <a href="/student/applied_jobs" >Applied Jobs</a><br>
-        <a href="/student/jobs_available">Jobs Available</a><br>
-        <a href="/student/my_jobs">My Jobs</a><br>
-        <a href="/student/logout">Logout</a><br>
-
+        <a href="/professor">Home Page</a><br>
+        <a href="/professor/personal_info">Personal Info</a><br>
+        <a href="/professor/jobs_created" >Jobs Created</a><br>
+        <a href="/professor/timecard_for_review">Timecards for review</a><br>
+        <a href="/professor/logout">Logout</a><br>
+    </div>
+    <div id="main-content" style="margin-left: 200px;">
+        <a href="/professor/add_job" class="apply-job">Create a new job</a>
     </div>
     <table>
         <thead>
@@ -96,9 +97,11 @@
                    
                 {% endfor %}
                 <td>
-                    <form action="/student/jobs_available" method="post">
+                    <form action="/professor/jobs_created" method="post">
                         <input type="hidden" name="job_id" value="{{ job[0] }}">
-                        <button type="submit" name="submit_button" value="Apply">Apply</button>
+                        <button type="submit" name="submit_button" value="change_job_details">Change job details</button>
+                        <button type="submit" name="submit_button" value="delete_job">Delete Job</button>
+                        <button type="submit" name="submit_button" value="view_applications">View Applications</button>
                     </form>
                 </td>
             </tr>
