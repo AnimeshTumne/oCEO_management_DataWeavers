@@ -914,7 +914,7 @@ def professor_approved_applications(job_id):  # cHanged this.
                 application_id = request.form['application_id']
                 cursor = db.connection.cursor()
                 cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
-                cursor.execute(f"UPDATE application_status SET faculty_approved = 0 WHERE application_id = {application_id};")
+                cursor.execute(f"UPDATE application_status SET approval = 'rejected' WHERE application_id = {application_id};")
                 db.connection.commit()
                 cursor.close()
                 return redirect(url_for('professor_approved_applications', job_id=job_id))
