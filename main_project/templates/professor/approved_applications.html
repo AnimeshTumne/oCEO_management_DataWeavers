@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jobs Created</title>
+    <title>Applications</title>
     <style>
         table {
             width: 100%;
@@ -64,7 +64,7 @@
     </style>
 </head>
 <body>
-    <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Jobs Created</h1>
+    <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Applications</h1>
     <div class="menu-icon" onclick="toggleMenu()">
         <span></span>
         <span></span>
@@ -78,31 +78,29 @@
         <a href="/professor/timecard_for_review">Timecards for review</a><br>
         <a href="/professor/logout">Logout</a><br>
     </div>
-    <div id="main-content" style="margin-left: 200px;">
-        <a href="/professor/add_job" class="apply-job">Create a new job</a>
-    </div>
+
     <table>
         <thead>
             <tr>
-            {% for columnName in job_head %}
+                <th>Job ID</th>
+            {% for columnName in application_head %}
                 <th>{{ columnName }}</th>
             {% endfor %}
             </tr>
         </thead>
         <tbody>
-            {% for job in job_data %}
+            {% for job in application_data %}
             <tr>
+                <td>{{ job_id }}</td>
                 {% for field in job %}
                     <td>{{ field }}</td>
                    
                 {% endfor %}
                 <td>
-                    <form action="/professor/jobs_created" method="post">
-                        <input type="hidden" name="job_id" value="{{ job[0] }}">
-                        <button type="submit" name="submit_button" value="change_job_details">Change job details</button>
-                        <button type="submit" name="submit_button" value="delete_job">Delete Job</button>
-                        <button type="submit" name="submit_button" value="view_applications">View Applications</button>
-                        <button type="submit" name="submit_button" value="approved_applications">Approved Applications</button>
+                    <form action="/professor/approved_applications/{{job_id}}" method="post">
+                        <input type="hidden" name="application_id" value="{{ job[0]}}">
+                        <input type="hidden" name="job_id" value="{{ job_id }}">
+                        <button type="submit" name="submit_button" value="remove">remove</button>
                     </form>
                 </td>
             </tr>

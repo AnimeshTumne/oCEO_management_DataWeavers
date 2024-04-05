@@ -697,6 +697,9 @@ def professor_jobs_created():
             elif request.form['submit_button'] == 'view_applications':
                 job_id = request.form['job_id']
                 return redirect(url_for('professor_view_applications', job_id=job_id))
+            elif request.form['submit_button'] == 'approved_applications':
+                job_id = request.form['job_id']
+                return redirect(url_for('professor_approved_applications', job_id=job_id))
         
         cursor = db.connection.cursor()
         faculty_id = session['faculty_id']
@@ -878,6 +881,54 @@ def professor_view_applications(job_id):
         return render_template('professor/view_applications.html', application_data=application_data, application_head=column_names, job_id=job_id)
     else:
         return redirect(url_for('errorpage'))
+
+# change below function
+@app.route('/professor/approved_applications/<job_id>', methods=['GET', 'POST'])
+def professor_approved_applications(job_id):  # cHanged this.
+    if "faculty_id" in session:
+        # if request.method == 'POST':
+            # if request.form['submit_button'] == 'approve':
+            #     application_id = request.form['application_id']
+            #     cursor = db.connection.cursor()
+            #     cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
+
+            #     # cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
+            #     cursor.execute(f"UPDATE application_status SET faculty_approved = 1 WHERE application_id = {application_id};")
+            #     db.connection.commit()
+            #     cursor.close()
+            #     return redirect(url_for('professor_view_applications', job_id=job_id))
+            
+        #     if request.form['submit_button'] == 'reject':
+        #         application_id = request.form['application_id']
+        #         cursor = db.connection.cursor()
+        #         cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
+        #         cursor.execute(f"UPDATE application_status SET faculty_approved = 0 WHERE application_id = {application_id};")
+        #         db.connection.commit()
+        #         cursor.close()
+        #         return redirect(url_for('professor_view_applications', job_id=job_id))
+        # cursor = db.connection.cursor()
+        # cursor.execute(f"SELECT application_status.application_id, application_status.roll_number, applied_student.first_name, applied_student.middle_name, applied_student.last_name, applied_student.cpi, applied_student.last_sem_spi, applied_student.on_probation, application_status.approval, application_status.statement_of_motivation FROM application_status JOIN applied_student ON application_status.roll_number = applied_student.roll_number WHERE application_status.job_id = {job_id} and application_status.faculty_approved = 0;")
+        
+        if request.method == 'POST':
+            if request.form['submit_button'] == 'remove':
+                application_id = request.form['application_id']
+                cursor = db.connection.cursor()
+                cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
+                cursor.execute(f"UPDATE application_status SET faculty_approved = 0 WHERE application_id = {application_id};")
+                db.connection.commit()
+                cursor.close()
+                return redirect(url_for('professor_approved_applications', job_id=job_id))
+        cursor = db.connection.cursor()
+        cursor.execute(f"SELECT application_status.application_id, application_status.roll_number, applied_student.first_name, applied_student.middle_name, applied_student.last_name, applied_student.cpi, applied_student.last_sem_spi, applied_student.on_probation, application_status.approval, application_status.statement_of_motivation FROM application_status JOIN applied_student ON application_status.roll_number = applied_student.roll_number WHERE application_status.job_id = {job_id} and application_status.faculty_approved = 1;")
+        application_data = cursor.fetchall()
+        # cursor.execute("SHOW COLUMNS FROM application_status")
+        application_head = cursor.description
+        column_names = tuple(row[0] for row in application_head)
+        cursor.close()
+        return render_template('professor/approved_applications.html', application_data=application_data, application_head=column_names, job_id=job_id)
+    else:
+        return redirect(url_for('errorpage'))
+
 
 @app.route('/professor/timecard_for_review', methods=['GET', 'POST'])
 def professor_timecard_for_review():
