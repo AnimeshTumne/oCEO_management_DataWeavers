@@ -4,6 +4,47 @@
     <title>personal_info</title>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+         .sidebar {
+            background-color: #333;
+            color: rgb(67, 146, 74);
+            width: 200px;
+            height: 100vh;
+            position: fixed;
+            line-height: 30px;
+            padding: 20px;
+            left: -250px;
+            top:10%;
+            transition: left 0.3s;
+        }
+        .sidebar.open {
+            left: 0;
+        }
+        .menu-icon {
+            cursor: pointer;
+            display: block;
+            width: 30px;
+            height: 20px;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+        .menu-icon span {
+            display: block;
+            width: 100%;
+            height: 4px;
+            background-color: black;
+            margin: 6px 0;
+        }
+        a {
+            color: #ddd;
+            text-decoration: none;
+            display: block;
+            margin: 10px 0;
+        }
+        a:hover {
+            color: #fff;
+        }
         body {
             font-family:"open sans", sans-serif;
             margin: 0;
@@ -61,16 +102,22 @@
     </style>
 </head>
 <body>
-    <div class="sidebar">
+    <div class="menu-icon" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <div id="sidebar" class="sidebar">
         <h2>Dashboard</h2>
-        <p>Link 1</p>
-        <p>Link 2</p>
-        <p>Link 3</p>
+        <a href="/professor">Home Page</a><br>
+        <a href="/professor/personal_info">Personal Info</a><br>
+        <a href="/professor/jobs_created" >Jobs Created</a><br>
+        <a href="/professor/timecard_for_review">Timecards for review</a><br>
+        <a href="/professor/logout">Logout</a><br>
     </div>
     <div class="main-content">
         <form action="{{url_for('professor_personal_info_change')}}" method="post">
-            <img src="user.jpg" alt="User Image" class="user-image">
-            <input type="file" id="img" name="img" accept="image/*">
+           
             <div class="user-info">
                 <p>Faculty ID: <input type="text" name="faculty_id" value="{{professor_data[0][0]}}" readonly ></p>
                 <p>First Name:<input type="text" name="first_name" value="{{professor_data[0][1]}}"required ></p>
@@ -83,5 +130,12 @@
             <input type="submit" value="Update Profile" class="update-profile">
         </form>
     </div>
+    <script>
+        function toggleMenu() {
+            var sidebar = document.getElementById('sidebar');
+            var mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('open');
+        }
+    </script>
 </body>
 </html>
