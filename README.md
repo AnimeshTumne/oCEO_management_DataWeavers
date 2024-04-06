@@ -11,9 +11,9 @@ Our backend is based on flask in python. It uses flask inbuilt methods to redire
 
 *How to use?* 
 
-Import into mySQL, the final version of our database, ```oCEO_v5.sql```
+Import into mySQL, the final version of our database, ```oCEO_v5.sql```. Import this file into your database using server>import>import from sql file option.
 
-Go into the ```main_project``` folder, and, if running for the first time, run ```insert_passwords.py``` file. After this, run ```main_app.py``` file, and create a new student/professor user using the ```New User``` button. After this, login using created credentials through the ```Student``` or ```Professor``` buttons. After login, you can view various operations that can be done for that particular usertype.
+Go into the ```main_project``` folder. After this, run ```main_app.py``` file, and create a new student/professor user using the ```New User``` button. After this, login using created credentials through the ```Student``` or ```Professor``` buttons. After login, you can view various operations that can be done for that particular usertype.
 
 For logging-in using others, which contains Admin, oCEO coordinator, Dean SA and Student Affairs Junior Superintendant, you have four different email ids:
 
