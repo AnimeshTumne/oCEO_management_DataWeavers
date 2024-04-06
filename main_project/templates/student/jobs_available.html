@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Available Jobs</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         table {
             width: 100%;
@@ -84,7 +85,7 @@
         <thead>
             <tr>
             {% for columnName in job_head %}
-                <th>{{ columnName }}</th>
+            <th>{{ columnName.replace("_", " ") }}</th>
             {% endfor %}
             </tr>
         </thead>

@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
 import random
-import pandas as pd
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
