@@ -722,10 +722,9 @@ def professor_jobs_created():
         
         cursor = db.connection.cursor()
         faculty_id = session['faculty_id']
-        cursor.execute(f"SELECT job.* FROM job WHERE job.faculty_id = {faculty_id};")
+        cursor.execute(f"SELECT job_id,job_type,job_description,min_qualifications,job_criteria,prerequisites,additional_info,pay_per_hour,no_of_positions,start_date,end_date,tenure,is_available,application_deadline FROM job WHERE job.faculty_id = {faculty_id};")
         job_data = cursor.fetchall()
-        cursor.execute("SHOW COLUMNS FROM job")
-        job_head = cursor.fetchall()
+        job_head =  cursor.description
         column_names = tuple(row[0] for row in job_head)
         cursor.close()
         return render_template('professor/jobs_created.html', job_data=job_data, job_head=column_names)

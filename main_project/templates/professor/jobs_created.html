@@ -82,7 +82,7 @@
             display: block;
             width: 100%;
             height: 4px;
-            background-color: #fff;
+            background-color:  #4CAF50;
             margin: 6px 0;
         }
         a {
@@ -93,6 +93,23 @@
         }
         a:hover {
             color: #fff;
+        }
+        .scrollable-content {
+        max-height: 200px; /* Adjust as needed */
+        overflow-y: auto; /* Enables vertical scrollbar if content overflows */
+        }
+        #job_page_button{
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            border-radius: 5px;
+        }       
+        #job_page_button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
@@ -122,19 +139,20 @@
             {% endfor %}
             </tr>
         </thead>
-        <tbody>
+        <tbody >
             {% for job in job_data %}
             <tr>
                 {% for field in job %}
-                    <td>{{ field }}</td>
+                 <td >  <div class="scrollable-content">{{ field }} </div></td>  
                    
                 {% endfor %}
                 <td>
                     <form action="/professor/jobs_created" method="post">
                         <input type="hidden" name="job_id" value="{{ job[0] }}">
-                        <button type="submit" name="submit_button" value="job_page">Job Page</button>
+                        <button id="job_page_button" type="submit" name="submit_button" value="job_page">Job Page</button>
                     </form>
                 </td>
+                   
             </tr>
             {% endfor %}
         </tbody>

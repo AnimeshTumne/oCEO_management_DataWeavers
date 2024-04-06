@@ -19,12 +19,13 @@
 
         form {
             max-width: 600px;
-            margin: 0 auto;
+            margin:  auto;
         }
 
         label {
             display: block;
             margin-top: 10px;
+   
         }
 
         input[type="radio"],
@@ -85,6 +86,19 @@
 
         #course-fields input[type="submit"] {
             margin-top: 20px;
+        }
+        #submit_button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        #submit_button:hover {
+            background-color: #45a049;
         }
     </style>
     <script>
@@ -155,7 +169,7 @@
         <input type="text" id="tenure" name="tenure" placeholder="Enter Tenure" required><br>
         <label for="application_deadline">Application Deadline:</label><br>
         <input type="date" id="application_deadline" name="application_deadline" required><br>
-        <input type="submit" value="Submit Application">
+        <input type="submit" id="submit_button" value="Submit Application">
     </form>
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
