@@ -72,21 +72,21 @@
     </div>
     <div id="sidebar" class="sidebar">
         <h2>Dashboard</h2>
-        <a href="/admin">Home Page</a><br>
-        <a href="/admin/review_application">Review Application</a><br>
-        <a href="/admin/logout">Logout</a><br>
+        <a href="/{{type}}/after_login_other">Home Page</a><br>
+        <a href="/{{type}}/review_application">Review Application</a><br>
+        <a href="/{{type}}/logout">Logout</a><br>
 
     </div>
     <table>
         <thead>
             <tr>
-            {% for columnName in job_head %}
+            {% for columnName in application_head %}
                 <th>{{ columnName }}</th>
             {% endfor %}
             </tr>
         </thead>
         <tbody>
-            {% for job in job_data %}
+            {% for job in application_data %}
             <tr>
                 {% for field in job %}
                     <td>{{ field }}</td>

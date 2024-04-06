@@ -43,14 +43,14 @@
 </style>
 </head>
 <body>
-    <form action="{{url_for('after_login_admin')}}" method="post">
+    <form action="/{{type}}/after_login_other" method="post">
         <!-- <button class='btn' name="submit_button" value="personal_info" type="submit">Personal Info</button>
         <button class='btn' name="submit_button" value="jobs_available" type="submit">Jobs Available</button>
         <button class='btn' name="submit_button" value="applied_jobs" type="submit">Applied Jobs</button>
         <button class='btn' name="submit_button" value="logout" type="submit">Logout</button>
          -->
         <div class="container">
-            <h2>Welcome, {{admin_name}}!</h2>
+            <h2>Welcome, {{type}}!</h2>
             <button class='btn' name="submit_button" value="applications_to_review" type="submit">Applications to review</button>
             <button class='btn' name="submit_button" value="approved_jobs" type="submit">Approved Jobs</button>
             <button class='btn' name="submit_button" value="logout" type="submit">Logout</button>

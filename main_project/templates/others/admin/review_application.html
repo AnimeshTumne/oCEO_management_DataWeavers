@@ -72,29 +72,29 @@
     </div>
     <div id="sidebar" class="sidebar">
         <h2>Dashboard</h2>
-        <a href="/admin">Home Page</a><br>
-        <a href="/admin/jobs_approved">Approved Jobs</a><br>
-        <a href="/admin/logout">Logout</a><br>
+        <a href="/{{type}}/after_login_other">Home Page</a><br>
+        <a href="/{{type}}/jobs_approved">Approved Jobs</a><br>
+        <a href="/{{type}}/logout">Logout</a><br>
 
     </div>
     <table>
         <thead>
             <tr>
-            {% for columnName in job_head %}
+            {% for columnName in application_head %}
                 <th>{{ columnName }}</th>
             {% endfor %}
             </tr>
         </thead>
         <tbody>
-            {% for job in job_data %}
+            {% for job in application_data %}
             <tr>
                 {% for field in job %}
                     <td>{{ field }}</td>
                    
                 {% endfor %}
                 <td>
-                    <form action="/admin/review_application" method="post">
-                        <input type="hidden" name="job_id" value="{{ job[0] }}">
+                    <form action="/{{type}}/review_application" method="post">
+                        <input type="hidden" name="application_id" value="{{ job[0] }}">
                         <button type="submit" name="submit_button" value="Approve">Approve</button>
                         <button type="submit" name="submit_button" value="Reject">Reject</button>
                     </form>

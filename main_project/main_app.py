@@ -457,7 +457,7 @@ def student_apply_job(job_id):
             subjects_to_teach = cursor.fetchone()[0]
             job_role=(f"PAL: {subjects_to_teach}")
         else:
-            cursor.execute(f"SELECT role_name FROM other WHERE job_id = {job[0]};")
+            cursor.execute(f"SELECT role_name FROM others WHERE job_id = {job[0]};")
             role_name = cursor.fetchone()[0]
             job_role=(f"{role_name}")                
 
@@ -1202,43 +1202,207 @@ def others_login():
             # ACTIVATES THE SESSION (logged in)
             session["email"] = email
             if userType == 'Admin':
-                return redirect(url_for("after_login_admin"))
-            elif userType == 'dean':
-                return redirect(url_for("after_login_dean"))
-            elif userType == 'SA_JS':
-                return redirect(url_for("after_login_admin"))
-            elif userType == 'oceo_cordinator':
-                return redirect(url_for("after_login_admin"))
+                cursor = db.connection.cursor()
+                sql = "SELECT email FROM other WHERE user_type = 'admin';"
+                cursor.execute(sql)
+                admin_email =  cursor.fetchone()[0]
+                cursor.close()
+
+                if admin_email == email :
+                    return redirect(url_for("after_login_other", type = 'admin'))
+                else:
+                    return redirect(url_for("errorpage"))
+            elif userType == 'Dean':
+                cursor = db.connection.cursor()
+                sql = "SELECT email FROM other WHERE user_type = 'dean';"
+                cursor.execute(sql)
+                admin_email =  cursor.fetchone()[0]
+                cursor.close()
+
+                if admin_email == email :
+                    return redirect(url_for("after_login_other", type = 'dean'))
+                else:
+                    return redirect(url_for("errorpage"))
+                
+            elif userType == 'SA JS':
+                cursor = db.connection.cursor()
+                sql = "SELECT email FROM other WHERE user_type = 'sa_js';"
+                cursor.execute(sql)
+                admin_email =  cursor.fetchone()[0]
+                cursor.close()
+
+                if admin_email == email :
+                    return redirect(url_for("after_login_other", type = 'sa_js'))
+                else:
+                    return redirect(url_for("errorpage"))
+                
+            elif userType == 'oCEO Coordinator':
+                cursor = db.connection.cursor()
+                sql = "SELECT email FROM other WHERE user_type = 'oceo_coordinator';"
+                cursor.execute(sql)
+                admin_email =  cursor.fetchone()[0]
+                cursor.close()
+
+                if admin_email == email :
+                    return redirect(url_for("after_login_other", type = 'oceo_coordinator'))
+                else:
+                    return redirect(url_for("errorpage"))
+                
             
         else:
             return redirect(url_for("errorpage"))
     return render_template('others.html')
 
-@app.route('/admin', methods=['GET', 'POST'])
-def after_login_admin():
+@app.route('/<type>/after_login_other', methods=['GET', 'POST'])
+def after_login_other(type):
     if "email" in session:
         if request.method == 'POST':
             testvar = request.form['submit_button']
             match testvar:
                 case 'applications_to_review':
-                    return redirect(url_for('review_application'))
+                    return redirect(url_for('review_application', type = type))
                 case 'approved_jobs':
-                    return redirect(url_for('jobs_approved'))
+                    return redirect(url_for('jobs_approved', type =type))
+                case 'logout':
+                    return redirect(url_for('professor_logout'))
+                case _:
+                    return render_template('others/admin/admin.html', type = type)
+        return render_template( 'others/admin/admin.html', type = type ) 
+
+
+# @app.route('/admin/admin.html', methods=['GET', 'POST'])
+# def after_login_admin():
+#     if "email" in session:
+#         if request.method == 'POST':
+#             testvar = request.form['submit_button']
+#             match testvar:
+#                 case 'applications_to_review':
+#                     return redirect(url_for('review_application', type = 'admin'))
+#                 case 'approved_jobs':
+#                     return redirect(url_for('jobs_approved', type ='admin'))
+#                 case 'logout':
+#                     return redirect(url_for('professor_logout'))
+#                 case _:
+#                     return render_template('others/admin/admin.html')
+#     return render_template( 'others/admin/admin.html' ) 
+
+# @app.route('/dean/admin.html', methods=['GET', 'POST'])
+# def after_login_dean():
+#     if "email" in session:
+#         if request.method == 'POST':
+#             testvar = request.form['submit_button']
+#             match testvar:
+#                 case 'applications_to_review':
+#                     return redirect(url_for('review_application', type = 'dean'))
+#                 case 'approved_jobs':
+#                     return redirect(url_for('jobs_approved', type ='dean'))
+#                 case 'logout':
+#                     return redirect(url_for('professor_logout'))
+#                 case _:
+#                     return render_template('others/admin/admin.html')
+#     return render_template( 'others/admin/admin.html' ) 
+
+# @app.route('/oceo_coordinator', methods=['GET', 'POST'])
+# def after_login_oceo_coordinator():
+#     if "email" in session:
+#         if request.method == 'POST':
+#             testvar = request.form['submit_button']
+#             match testvar:
+#                 case 'applications_to_review':
+#                     return redirect(url_for('review_application', type = 'oceo_coordinator'))
+#                 case 'approved_jobs':
+#                     return redirect(url_for('jobs_approved'), type = 'oceo_coordinator')
+#                 case 'logout':
+#                     return redirect(url_for('professor_logout'))
+#                 case _:
+#                     return render_template('others/oceo_coordinator/admin.html')
+#     return render_template( 'others/oceo_coordinator/admin.html' )
+
+# @app.route('/oceo_coordinator', methods=['GET', 'POST'])
+# def after_login_sa_js():
+    if "email" in session:
+        if request.method == 'POST':
+            testvar = request.form['submit_button']
+            match testvar:
+                case 'applications_to_review':
+                    return redirect(url_for('review_application', type = 'sa_js'))
+                case 'approved_jobs':
+                    return redirect(url_for('jobs_approved', type = 'sa_js'))
                 case 'logout':
                     return redirect(url_for('professor_logout'))
                 case _:
                     return render_template('others/admin/admin.html')
     return render_template( 'others/admin/admin.html' )
 
-@app.route('/admin/review_application', methods=['GET', 'POST'])
-def review_application():
-    # return render_template('student/jobs_available.html', job_data=job_data, job_head = column_names)
-    return render_template('others/admin/review_application.html')
-    
-@app.route('/admin/jobs_approved', methods=['GET','POST'] )
-def jobs_approved():
-    return render_template('others/admin/jobs_approved.html')
 
+@app.route('/<type>/jobs_approved', methods=['GET','POST'] )
+def jobs_approved(type):
+    if "email" in session: 
+
+        # if request.method == 'POST':
+        cursor = db.connection.cursor()
+        if type =='admin':
+            query = 'SELECT * FROM application_status WHERE faculty_approved = 1;'
+        elif type =='dean':
+            query = 'SELECT * FROM application_status WHERE dean_approved = 1;'
+        elif type =='sa_js':
+            query = 'SELECT * FROM application_status WHERE SA_approved = 1;'
+        elif type =='oceo_coordinator':
+            query = 'SELECT * FROM application_status WHERE oceo_coordinator_approved = 1;'
+
+        # query  = f'SELECT * FROM application_status WHERE {type}_approved = 1;' 
+        cursor.execute(query)
+        application_data = cursor.fetchall()
+        # cursor.execute("SHOW COLUMNS FROM application_status")
+        application_head = cursor.description
+        column_names = tuple(row[0] for row in application_head)
+        cursor.close()
+        return render_template('others/admin/jobs_approved.html', application_data=application_data, application_head=column_names,type = type)
+    else:
+        return redirect(url_for('errorpage'))
+    
+@app.route('/<type>/review_application', methods=['GET', 'POST'])
+def review_application(type):
+    if "email" in session:
+        if type =='admin':
+            perm = 'faculty_approved'
+        elif type =='dean':
+            perm = 'dean_approved'
+        elif type =='sa_js':
+            perm  = 'SA_approved'
+        elif type =='oceo_coordinator':
+            perm = 'oceo_coordinator_approved'
+        if request.method == 'POST':
+            if request.form['submit_button'] == 'Approve':
+                application_id = request.form['application_id']
+                cursor = db.connection.cursor()
+
+                # cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
+                cursor.execute(f"UPDATE application_status SET {perm} = 1 WHERE application_id = {application_id};")
+                db.connection.commit()
+                cursor.close()
+                return redirect(url_for('review_application',type=type))
+            elif request.form['submit_button'] == 'Reject':
+                application_id = request.form['application_id']
+                cursor = db.connection.cursor()
+                # cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
+                cursor.execute(f"UPDATE application_status SET {perm}= 0 WHERE application_id = {application_id};")
+                db.connection.commit()
+                cursor.close()
+                return redirect(url_for('review_application',type=type))
+            
+        cursor = db.connection.cursor()
+        query = f'SELECT * FROM application_status WHERE {perm} = 0;'
+        cursor.execute(query)
+        application_data = cursor.fetchall()
+        # cursor.execute("SHOW COLUMNS FROM application_status")
+        application_head = cursor.description
+        column_names = tuple(row[0] for row in application_head)
+        cursor.close()
+        return render_template('others/admin/review_application.html', application_data=application_data, application_head=column_names, type = type)
+    else:
+        return redirect(url_for('errorpage'))
+    
 @app.route('/admin/logout')
 def admin_logout():
     session.pop('email', None)
