@@ -2,9 +2,10 @@
 <html>
 <head>
     <title>Personal Info</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Open Sans', sans-serif;
             margin: 50px;
             padding: 20px;
             background-color: #f0f0f0;
@@ -90,7 +91,6 @@
         <a href="/professor/logout">Logout</a><br>
     </div>
     <div id="main-content" class="main-content">
-        <img id="user-image" src="" alt="User Image" class="user-image">
         <div class="user-info">
             <p>Faculty ID: {{professor_data[0][0]}}</p>
             <p>First Name:{{ professor_data[0][1]}}</p>
