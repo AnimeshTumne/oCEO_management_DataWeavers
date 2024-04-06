@@ -57,7 +57,12 @@ def register():
                 cursor.execute(sql)
                 db.connection.commit()
                 cursor.close()
-                return redirect(url_for("index"))
+                return render_template_string(f"""
+                    <script>
+                        alert("User registered successfully! Query Executed: {sql}");
+                        window.location.href = "{{{{ url_for('index') }}}}";
+                    </script>
+                """)
 
         elif userType == "professor":
             sql = f"SELECT count(*) FROM faculty WHERE email_id='{email}'"
@@ -295,14 +300,21 @@ def student_edit_bank_details():
             is_existing_roll_number = cursor.fetchone()[0]
 
             if is_existing_roll_number:
-                cursor.execute(f"UPDATE bank_details SET bank_name = '{bank_name}', account_number = {account_number}, IFSC_code = '{ifsc_code}' WHERE roll_number = {roll_number};")
+                update_query = f"UPDATE bank_details SET bank_name = '{bank_name}', account_number = {account_number}, IFSC_code = '{ifsc_code}' WHERE roll_number = {roll_number};"
+                cursor.execute(update_query)
             else:
                 cursor.execute(f"INSERT INTO bank_details (roll_number, bank_name, account_number, IFSC_code) VALUES ({roll_number}, '{bank_name}', {account_number}, '{ifsc_code}');")
             # --------------------
 
             db.connection.commit()
             cursor.close()
-            return redirect(url_for('student_bank_details'))
+            # return redirect(url_for('student_bank_details'))
+            return render_template_string(f"""
+                <script>
+                    alert("Bank details updated successfully! Query Executed: {update_query}");
+                    window.location.href = "{{{{ url_for('student_bank_details') }}}}";
+                </script>
+            """)
         return render_template('student/edit_bank_details.html', bank_data=bank_data)
     else:
         return redirect(url_for('errorpage'), error_message="You are not authorised to view this page. Please login first.")
@@ -508,7 +520,12 @@ def student_applied_jobs():
                 db.connection.commit()
                 cursor.close()
 
-                return redirect(url_for('student_applied_jobs'))
+                return render_template_string(f"""
+                    <script>
+                        alert("Application deleted successfully! Query Executed: {sql_delete_application}");
+                        window.location.href = "{{{{ url_for('student_applied_jobs') }}}}";
+                    </script>
+                """)
         
         return render_template('student/applied_jobs.html', job_data = applied_jobs, job_head = column_names)
 
@@ -1379,6 +1396,8 @@ def review_application(type):
 
                 # cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
                 cursor.execute(f"UPDATE application_status SET {perm} = 1 WHERE application_id = {application_id};")
+                if perm == 'dean_approved':
+                    cursor.execute(f"UPDATE application_status SET approval = 'approved' WHERE application_id = {application_id};")
                 db.connection.commit()
                 cursor.close()
                 return redirect(url_for('review_application',type=type))
@@ -1387,12 +1406,21 @@ def review_application(type):
                 cursor = db.connection.cursor()
                 # cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
                 cursor.execute(f"UPDATE application_status SET {perm}= 0 WHERE application_id = {application_id};")
+                cursor.execute(f"UPDATE application_status SET approval = 'rejected' WHERE application_id = {application_id};")
                 db.connection.commit()
                 cursor.close()
                 return redirect(url_for('review_application',type=type))
             
         cursor = db.connection.cursor()
-        query = f'SELECT * FROM application_status WHERE {perm} = 0;'
+        if perm == 'faculty_approved':
+            query = f'SELECT * FROM application_status WHERE {perm} = 0;'
+        elif perm == 'oceo_coordinator_approved':
+            query = f'SELECT * FROM application_status WHERE {perm} = 0 and faculty_approved = 1;'
+        elif perm == 'SA_approved':
+            query = f'SELECT * FROM application_status WHERE {perm} = 0 and faculty_approved = 1 and oceo_coordinator_approved = 1;'
+        elif perm == 'dean_approved':
+            query = f'SELECT * FROM application_status WHERE {perm} = 0 and faculty_approved = 1 and oceo_coordinator_approved = 1 and SA_approved = 1;'
+        # query = f'SELECT * FROM application_status WHERE {perm} = 0;'
         cursor.execute(query)
         application_data = cursor.fetchall()
         # cursor.execute("SHOW COLUMNS FROM application_status")
