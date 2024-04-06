@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
 import random
+from flask import session, redirect, url_for, render_template_string
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -124,7 +125,6 @@ def login_student():
         password = request.form["password"]
 
         # fetch roll number from database
-        
 
         if authenticate(email, password, "student"):
             cursor = db.connection.cursor()
@@ -134,7 +134,15 @@ def login_student():
             cursor.close()
             # ACTIVATES THE SESSION (logged in)
             session["roll_number"] = roll_number
-            return redirect(url_for("after_login_student"))
+            # Render a template with JavaScript to show a popup
+            return render_template_string(f"""
+                <script>
+                    // Show popup
+                    alert("Successfully logged in as a Student. Successfully Executed:{sql}'");
+                    // Redirect to the desired page
+                    window.location.href = "{{{{ url_for('after_login_student') }}}}";
+                </script>
+            """)
         else:
             return redirect(url_for("errorpage"))
 
