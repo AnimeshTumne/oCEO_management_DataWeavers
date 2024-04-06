@@ -11,6 +11,8 @@
         h1 {
             text-align: center;
             color: #333;
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-family: 'Courier New', Courier, monospace;
         }
 
         form {
@@ -21,6 +23,8 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-family: 'Courier New', Courier, monospace;
         }
 
         label {
@@ -32,7 +36,7 @@
         input[type="text"],
         input[type="email"],
         input[type="password"] {
-            width: 100%;
+            width: 95%;
             padding: 10px;
             margin-bottom: 20px;
             border: 1px solid #ccc;
@@ -42,7 +46,7 @@
         input[type="submit"] {
             width: 100%;
             padding: 10px;
-            background-color: #333;
+            background-color: #4CAF50;
             color: #fff;
             border: none;
             border-radius: 5px;
@@ -50,8 +54,22 @@
         }
 
         input[type="submit"]:hover {
-            background-color: #555;
+            background-color: #45a049;
         }
+        .radio-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .radio-container div {
+            display: flex;
+            align-items: center;
+        }
+
+        .radio-container input[type="radio"] {
+            margin-right: 10px; /* Adjust spacing between radio button and label */
+        }
+
     </style>
     <script>
         function validateForm() {
@@ -97,13 +115,20 @@
         <label for="confirmPassword">Confirm Password:</label>
         <input type="password" id="confirmPassword" name="confirmPassword" required><br><br>
         <label for="userType">User Type:</label>
-            <input type="radio" id="other" name="userType" value="other" required>
-            <label for="other">Other</label>
-            <input type="radio" id="professor" name="userType" value="professor" required>
-            <label for="professor">Professor</label>
-            <input type="radio" id="student" name="userType" value="student" required>
-            <label for="student">Student</label><br><br>
-            <div id="extraFields"></div>
+        <div class="radio-container">
+            <div>
+                <input type="radio" id="other" name="userType" value="other" required>
+                <label for="other">Other</label>
+            </div>
+            <div>
+                <input type="radio" id="professor" name="userType" value="professor" required>
+                <label for="professor">Professor</label>
+            </div>
+            <div>
+                <input type="radio" id="student" name="userType" value="student" required>
+                <label for="student">Student</label>
+            </div>
+        </div>              
         <input type="submit" value="Register">
     </form>
 </body>
