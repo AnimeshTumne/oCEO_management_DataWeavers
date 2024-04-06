@@ -722,7 +722,7 @@ def professor_jobs_created():
         
         cursor = db.connection.cursor()
         faculty_id = session['faculty_id']
-        cursor.execute(f"SELECT job_id,job_type,job_description,min_qualifications,job_criteria,prerequisites,additional_info,pay_per_hour,no_of_positions,start_date,end_date,tenure,is_available,application_deadline FROM job WHERE job.faculty_id = {faculty_id};")
+        cursor.execute(f"SELECT job_id,job_type,job_description,pay_per_hour,start_date,end_date,is_available FROM job WHERE job.faculty_id = {faculty_id};")
         job_data = cursor.fetchall()
         job_head =  cursor.description
         column_names = tuple(row[0] for row in job_head)
@@ -808,12 +808,12 @@ def professor_job_page(job_id):
         # job_head = cursor.fetchall()
         student_under_job_head = cursor.description
         student_under_job_head = tuple(row[0] for row in student_under_job_head)
-        query_job_type = f"SELECT job_type FROM job WHERE job_id = {job_id};"
+        query_job_type = f"SELECT * FROM job WHERE job_id = {job_id};"
         cursor.execute(query_job_type)
-        job_type = cursor.fetchone()[0]
+        job = cursor.fetchall()
         cursor.close()
 
-        return render_template('professor/job_page.html', student_under_job_head=student_under_job_head, student_under_job_data=student_under_job_data,job_id=job_id,job_type=job_type)
+        return render_template('professor/job_page.html', student_under_job_head=student_under_job_head, student_under_job_data=student_under_job_data,job_id=job_id,job=job)
     else:
         return redirect(url_for('errorpage'))
 

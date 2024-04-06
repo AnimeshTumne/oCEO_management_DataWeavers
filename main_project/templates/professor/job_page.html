@@ -2,41 +2,76 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
     <title>Job Page</title>
+  
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
+         body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(180deg, #f8f9fa 0%,#e9eceb 100%); /* New gradient background */
+            margin: 0;
+            padding: 0;
+            width: 100vw;
         }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+            font-size: 1rem;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            margin-top: 50px;
+            font-size: 2.5rem;
+        }
+ 
         th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 12px;
             text-align: left;
         }
         th {
             background-color: #4CAF50;
             color: white;
+            font-size: 1.2rem;
         }
-        .apply-job {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 20px;
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
         }
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        .table {
+         width: calc(100% - 40px); /* Adjust total width to account for margins */
+        margin-top: 20px;
+        margin-left: 20px; /* 20px margin on the left */
+        margin-right: 20px; /* 20px margin on the right */
+        margin-bottom: 20px;
+        border-collapse: collapse;
+}
         .sidebar {
             background-color: #333;
-            color: white;
+            color: rgb(67, 146, 74);
             width: 200px;
             height: 100vh;
             position: fixed;
             line-height: 30px;
             padding: 20px;
-            left: -300px;
-            transition: left 0.3s ease;
+            left: -250px;
+            top:10%;
+            transition: left 0.3s;
         }
         .sidebar.open {
             left: 2px;
@@ -57,14 +92,39 @@
             background-color: #333;
             margin: 5px 0;
         }
-        a{
-            color: white;
+        a {
+            color: #ddd;
             text-decoration: none;
+            display: block;
+            margin: 10px 0;
+        }
+        a:hover {
+            color: #fff;
+        }
+        .job-details {
+        display: flex;
+        flex-direction: column;
+        }
+
+        .detail {
+        display: flex;
+        margin: 10px;
+        }
+
+        .detail b {
+        width: 150px; /* Adjust the width as needed */
+        min-width: 150px; /* Ensures the label does not shrink */
+        text-align: left;
+        margin-right: 10px; /* Space between label and content */
+        }
+
+        .detail span {
+            text-align: left;
         }
     </style>
 </head>
 <body>
-    <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Jobs Page</h1>
+    <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Job Page</h1>
     <div class="menu-icon" onclick="toggleMenu()">
         <span></span>
         <span></span>
@@ -87,8 +147,27 @@
         <button type="submit" name="submit_button" value="view_applications">View Applications</button>
         <button type="submit" name="submit_button" value="approved_applications">Approved Applications</button>
         <button type="submit" name="submit_button" value="stop_accepting_applications">Stop Accepting Applications</button>
-     
     </form>
+   
+<div class="job-details">
+    <div class="detail"><b>Job ID :</b> <span>{{job[0][0]}}</span></div>
+    <div class="detail"><b>Job Type :</b> <span>{{job[0][1]}}</span></div>
+    <div class="detail"><b>Job Description :</b> <span>{{job[0][2]}}</span></div>
+    <div class="detail"><b>Minimum Qualification:</b> <span>{{job[0][3]}}</span></div>
+    <div class="detail"><b>Job Criteria:</b> <span>{{job[0][4]}}</span></div>
+    <div class="detail"><b>Prerequisites:</b> <span>{{job[0][5]}}</span></div>
+    <div class="detail"><b>Additional Information:</b> <span>{{job[0][6]}}</span></div>
+    <div class="detail"><b>Pay per hour:</b> <span>{{job[0][7]}}</span></div>
+    <div class="detail"><b>Number of positions :</b> <span>{{job[0][8]}}</span></div>
+    <div class="detail"><b>Start Date :</b> <span>{{job[0][9]}}</span></div>
+    <div class="detail"><b>End Date :</b> <span>{{job[0][10]}}</span></div>
+    <div class="detail"><b>Is Available:</b> <span>{{job[0][12]}}</span></div>
+    <div class="detail"><b>Application Deadline:</b> <span>{{job[0][13]}}</span></div>
+  </div>
+  
+
+
+
     <h2>Employed Students</h2>
     <table>
         <thead>

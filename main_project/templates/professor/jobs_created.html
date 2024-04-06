@@ -8,9 +8,10 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #f8f9fa 0%,#e9eceb 100%); /* New gradient background */
+            background: linear-gradient(180deg, #f8f9fa 0%,#e9eceb 100%); /* New gradient background */
             margin: 0;
             padding: 0;
+            width: 100vw;
         }
         h1 {
             text-align: center;
@@ -54,6 +55,14 @@
         .apply-job:hover {
             background-color: #45a049;
         }
+        table {
+         width: calc(100% - 40px); /* Adjust total width to account for margins */
+        margin-top: 20px;
+        margin-left: 20px; /* 20px margin on the left */
+        margin-right: 20px; /* 20px margin on the right */
+        margin-bottom: 20px;
+        border-collapse: collapse;
+}
         .sidebar {
             background-color: #333;
             color: rgb(67, 146, 74);
@@ -63,6 +72,7 @@
             line-height: 30px;
             padding: 20px;
             left: -250px;
+            top:10%;
             transition: left 0.3s;
         }
         .sidebar.open {
@@ -82,7 +92,7 @@
             display: block;
             width: 100%;
             height: 4px;
-            background-color:  #4CAF50;
+            background-color: black;
             margin: 6px 0;
         }
         a {
@@ -128,7 +138,7 @@
         <a href="/professor/timecard_for_review">Timecards for review</a><br>
         <a href="/professor/logout">Logout</a><br>
     </div>
-    <div id="main-content" style="padding-top: 40px; text-align:center; border: 1px #e9e9e9;"">
+    <div id="main-content" style="padding-top: 40px; text-align:center; border: 1px #e9e9e9;">
         <a href="/professor/add_job" class="apply-job">Create a new job</a>
     </div>
     <table>

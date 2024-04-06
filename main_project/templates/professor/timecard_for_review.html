@@ -57,9 +57,14 @@
             background-color: #333;
             margin: 5px 0;
         }
-        a{
-            color: white;
+        a {
+            color: #ddd;
             text-decoration: none;
+            display: block;
+            margin: 5px 0;
+        }
+        a:hover {
+            color: #ddd;
         }
     </style>
 </head>
@@ -84,7 +89,7 @@
         <thead>
             <tr>
             {% for columnName in timecard_head %}
-                <th>{{ columnName }}</th>
+                <th>{{ columnName.replace("_", " ") }}</th>
             {% endfor %}
             </tr>
         </thead>
