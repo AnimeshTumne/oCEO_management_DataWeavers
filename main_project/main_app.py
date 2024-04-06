@@ -84,10 +84,30 @@ def register():
 def authenticate(email, password, userType):
     cursor = db.connection.cursor()
     if userType == "student":
-        sql = f"SELECT password FROM applied_student WHERE email_id='{email}'"
+        sql = f"SELECT COUNT(*) FROM applied_student WHERE email_id='{email}'"
+        cursor.execute(sql)
+        result = cursor.fetchone()
+        if result[0] > 0:
+            sql = f"SELECT password FROM applied_student WHERE email_id='{email}'"
+        else:
+            return False
     elif userType == "professor":
-        sql = f"SELECT password FROM faculty WHERE email_id='{email}'"
+        sql = f"SELECT COUNT(*) FROM faculty WHERE email_id='{email}'"
+        cursor.execute(sql)
+        result = cursor.fetchone()
+        if result[0] > 0:
+            sql = f"SELECT password FROM faculty WHERE email_id='{email}'"
+        else:
+            return False
+        # sql = f"SELECT password FROM faculty WHERE email_id='{email}'"
     elif userType == "others":
+        sql = f"SELECT COUNT(*) FROM other WHERE email='{email}'"
+        cursor.execute(sql)
+        result = cursor.fetchone()
+        if result[0] > 0:
+            sql = f"SELECT password FROM other WHERE email='{email}'"
+        else:
+            return False
         sql = f"SELECT password FROM other WHERE email = '{email}'"
     cursor.execute(sql)
     result = cursor.fetchone()
@@ -104,13 +124,14 @@ def login_student():
         password = request.form["password"]
 
         # fetch roll number from database
-        cursor = db.connection.cursor()
-        sql = f"SELECT roll_number FROM applied_student WHERE email_id='{email}'"
-        cursor.execute(sql)
-        roll_number = cursor.fetchone()[0]
-        cursor.close()
+        
 
         if authenticate(email, password, "student"):
+            cursor = db.connection.cursor()
+            sql = f"SELECT roll_number FROM applied_student WHERE email_id='{email}'"
+            cursor.execute(sql)
+            roll_number = cursor.fetchone()[0]
+            cursor.close()
             # ACTIVATES THE SESSION (logged in)
             session["roll_number"] = roll_number
             return redirect(url_for("after_login_student"))
