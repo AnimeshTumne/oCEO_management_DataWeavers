@@ -107,9 +107,13 @@
                 <th>IFSC Code</th>
             </tr>
             <tr>
-                <td>{{ bank_data[0][0] }}</td>
-                <td>{{ bank_data[0][1] }}</td>
-                <td>{{ bank_data[0][2] }}</td>
+                {% if bank_data %}
+                    <td>{{ bank_data[0][0] }}</td>
+                    <td>{{ bank_data[0][1] }}</td>
+                    <td>{{ bank_data[0][1] }}</td>
+                {% else %}
+                    <td colspan="3">No bank details found</td>
+                {% endif %}
             </tr>
         </table>
         <button onclick="window.location.href = '/student/edit_bank_details';" name="submit_button" value="Edit">Edit Bank Details</button>

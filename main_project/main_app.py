@@ -154,26 +154,33 @@ def login_professor():
         email = request.form["username"]
         password = request.form["password"]
 
-        # fetch roll number from database
-        cursor = db.connection.cursor()
-        sql = f"SELECT faculty_id FROM faculty WHERE email_id='{email}'"
-        cursor.execute(sql)
-        faculty_id = cursor.fetchone()[0]
-        cursor.close()
-
         if authenticate(email, password, "professor"):
             # ACTIVATES THE SESSION (logged in)
+            # fetch faculty id from database
+            cursor = db.connection.cursor()
+            sql = f"SELECT faculty_id FROM faculty WHERE email_id='{email}'"
+            cursor.execute(sql)
+            faculty_id = cursor.fetchone()[0]
+            cursor.close()
             session["faculty_id"] = faculty_id
-            return redirect(url_for("after_login_professor"))
+            return render_template_string(f"""
+                <script>
+                    // Show popup
+                    alert("Successfully logged in as a Professor. Successfully Executed:{sql}'");
+                    // Redirect to the desired page
+                    window.location.href = "{{{{ url_for('after_login_professor') }}}}";
+                </script>
+            """)
+            # return redirect(url_for("after_login_professor"))
         else:
-            return redirect(url_for("errorpage"))
+            return redirect(url_for("errorpage", error_message="Bad Credentials! Change password or email, and try again."))
     return render_template('professor.html')
 
 
 
 @app.route("/errorpage")
-def errorpage():
-    error_message = "Bad Credentials!"
+def errorpage(error_message="Bad Credentials!"):
+    # error_message = "Bad Credentials!"
     return render_template("errorpage.html", error_message=error_message)
 
 
