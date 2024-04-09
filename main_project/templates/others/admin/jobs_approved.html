@@ -81,7 +81,17 @@
         <thead>
             <tr>
             {% for columnName in application_head %}
-                <th>{{ columnName }}</th>
+                {% if columnName == "oceo_coordinator_approved" %}
+                    <th>oCEO Coordinator approved</th>
+                {% elif columnName == "SA_approved" %}
+                    <th>SA approved</th>
+                {% elif columnName == "job_id" %}
+                    <th>Job ID</th>
+                {% elif columnName == "application_id"%}
+                    <th>Application ID</th>
+                {% else %}
+                    <th>{{ (columnName.replace("_", " ")).capitalize() }}</th>
+                {% endif %}
             {% endfor %}
             </tr>
         </thead>

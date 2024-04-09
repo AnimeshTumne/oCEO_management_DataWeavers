@@ -236,11 +236,11 @@ def student_personal_info():
     if "roll_number" in session:
         if request.method == 'POST': 
             # profile update
-            if request.form['submit_button'] == 'Update_Profile': 
+            if request.form['submit_button'] == 'Update Profile': 
                 return redirect(url_for('student_personal_info_change'))
-            elif request.form['submit_button'] == 'Change_Password':
+            elif request.form['submit_button'] == 'Change Password':
                 return redirect(url_for('change_password'))
-            elif request.form['submit_button'] == 'Bank_Details':
+            elif request.form['submit_button'] == 'Bank Details':
                 return redirect(url_for('student_bank_details'))
 
         cursor = db.connection.cursor()
@@ -1441,8 +1441,8 @@ def review_application(type):
     else:
         return redirect(url_for('errorpage'))
     
-@app.route('/admin/logout')
-def admin_logout():
+@app.route('/<type>/logout')
+def admin_logout(type):
     session.pop('email', None)
     return redirect(url_for('index'))
 
