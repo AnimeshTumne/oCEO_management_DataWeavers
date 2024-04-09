@@ -131,7 +131,7 @@
                 </p>
                 
                 <p>Contact Number: <input type="text" name="contact_number" value="{{ student_phone[0][0] if student_phone[0][0] != 'Not Added' else '' }}" ></p>
-                <p>Alternate Contact Number: <input type="text" name="alternate_contact_number" value="{{ student_phone[1][0] if student_phone[1][0] != 'Not Added' else '' }}"></p>
+                <p>Alternate Contact Number: <input type="text" name="alternate_contact_number" value="{{ student_phone[1][0] if student_phone[1] else 'Not Added' }}"></p>
             </div>
             <input type="submit" value="Update Profile" class="update-profile">
         </form>

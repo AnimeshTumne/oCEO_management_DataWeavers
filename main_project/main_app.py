@@ -257,6 +257,11 @@ def student_personal_info():
         else:
             fetched_phone = ("Not Added", "Not Added")
 
+        print("########################################################")
+        print("########################################################")
+        print(fetched_phone)
+        print("########################################################")
+        print("########################################################")
         cursor.close()
         
         return render_template('student/personal_info.html', student_data=fetched_data, student_phone = fetched_phone)
@@ -331,7 +336,12 @@ def student_personal_info_change():
             last_sem_spi = request.form.get('last_sem_spi')
             on_probation = 1 if request.form.get('on_probation') == 'Yes' else 0
             phone_1 = request.form.get('contact_number')
-            phone_2 = request.form.get('alternate_contact_number', '')
+            phone_2 = request.form.get('alternate_contact_number')
+            print("########################################################")
+            print("########################################################")
+            print(phone_1, phone_2)
+            print("########################################################")
+            print("########################################################")
             # fetch uploaded image
             cursor = db.connection.cursor()
             
@@ -354,7 +364,7 @@ def student_personal_info_change():
             # add new phone numbers
             cursor.execute(f"INSERT INTO applied_student_phone (roll_number, phone_number) VALUES ({roll_number}, {phone_1});")
             db.connection.commit()
-            if phone_2!="": 
+            if phone_2: 
                 cursor.execute(f"INSERT INTO applied_student_phone (roll_number, phone_number) VALUES ({roll_number}, {phone_2});")
                 db.connection.commit()
 
