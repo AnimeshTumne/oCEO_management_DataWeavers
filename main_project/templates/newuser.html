@@ -2,74 +2,149 @@
 <html>
 <head>
     <title>New User Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=M+PLUS+1+Code:wght@100..700&family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
             background-color: #f2f2f2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        form {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            animation: fadeIn 1s ease;
+        }
+
+        @media (max-width: 480px) {
+            form {
+                padding: 20px;
+            }
         }
 
         h1 {
             text-align: center;
-            color: #333;
-            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-            font-family: 'Courier New', Courier, monospace;
-        }
-
-        form {
-            width: 50vw;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-            font-family: 'Courier New', Courier, monospace;
+            margin-bottom: 30px;
+            color: #333333;
         }
 
         label {
             display: block;
             margin-bottom: 10px;
-            color: #333;
+            font-weight: bold;
+            color: #555555;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        .password-container input[type="password"]:focus {
+            border-color: #666666;
+            outline: none;
+        }
+
+        .password-container .toggle-password {
+            position: absolute;
+            top: 30%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #888888;
         }
 
         input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 95%;
+        input[type="email"] {
+             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
-            border: 1px solid #ccc;
+            border: 1px solid #cccccc;
             border-radius: 5px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
         }
 
-        input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+             border-color: #666666;
+            outline: none;
         }
 
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
         .radio-container {
+            margin-bottom: 20px;
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
         }
 
         .radio-container div {
-            display: flex;
-            align-items: center;
+            margin-right: 20px;
+            margin-bottom: 10px;
         }
 
-        .radio-container input[type="radio"] {
-            margin-right: 10px; /* Adjust spacing between radio button and label */
+        @media (max-width: 480px) {
+            .radio-container {
+                flex-direction: column;
+            }
+            .radio-container div {
+                margin-right: 0;
+            }
         }
 
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        input[type="submit"].enabled {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        input[type="submit"]:hover.enabled {
+            background-color: #45a049;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
     <script>
         function validateForm() {
@@ -83,38 +158,88 @@
             }
 
             // Check if password meets the requirements
-            var passwordRegex = /^(?=.[!@#$%^&])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+            // var passwordRegex = /^(?=.[!@#$%^&*_-])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+            // var passwordRegex = /^(?=.*[!@#$%^&*=_-])(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d!@#$%^&*]{8,}$/;
+            // var passwordRegex = /^(?=.*[!@#$%^&*=_-])(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d!@#$%^&*]{8,}$/;
+            var passwordRegex = /^(?=.*[!@#$%^&*()-_=+[\]{};:'",.<>/?]).{8,}$/;
             if (!passwordRegex.test(password)) {
-                alert("Password must be 8 characters long and contain at least one special character.");
+                // alert("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character (!, @, #, $, %, ^, &, *, _, -).");
+                alert("Password must be at least 8 characters long and contain at least one special character (!, @, #, $, %, ^, &, *).");
                 return false;
             }
-           
+
+            return true;
         }
+
+        function toggleSubmitButton() {
+            var rollNumber = document.getElementById("roll_number").value.trim();
+            var firstName = document.getElementById("first_name").value.trim();
+            var email = document.getElementById("email").value.trim();
+            var password = document.getElementById("password").value.trim();
+            var confirmPassword = document.getElementById("confirmPassword").value.trim();
+            var userTypeChecked = document.querySelector('input[name="userType"]:checked');
+
+            var submitButton = document.getElementById("submit-btn");
+
+            if (rollNumber && firstName && email && password && confirmPassword && userTypeChecked) {
+                submitButton.classList.add("enabled");
+            } else {
+                submitButton.classList.remove("enabled");
+            }
+        }
+
+        function togglePasswordVisibility(inputId) {
+            var passwordInput = document.getElementById(inputId);
+            var toggleIcon = passwordInput.nextElementSibling;
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                toggleIcon.textContent = "hide";
+                // toggleIcon.innerHTML = '<img src="{url_for("static", filename="eye_close.png")}" alt="hide">';
+            } else {
+                passwordInput.type = "password";
+                toggleIcon.textContent = "show";
+                // toggleIcon.innerHTML = '<img src="{url_for("static", filename="eye_open.png")}" alt="show">';
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var inputFields = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], input[type="radio"]');
+            inputFields.forEach(function(field) {
+                field.addEventListener("input", toggleSubmitButton);
+            });
+        });
     </script>
 </head>
 <body>
-    <h1>New User Registration</h1>
-    <!-- <form onsubmit="return validateForm()"> -->
-        <form onsubmit="return " method="POST">
+    <form onsubmit="return validateForm()" method="POST">
+        <h1>New User Registration</h1>
         <label for="roll_number">Roll Number/Employee ID:</label>
-        <input type="text" id="roll_number" name="roll_number" required><br><br>
+        <input type="text" id="roll_number" name="roll_number" required>
+
         <label for="first_name">First Name:</label>
-        <input type="text" id="text" name="first_name" required><br><br>
+        <input type="text" id="first_name" name="first_name" required>
+
         <label for="middle_name">Middle Name:</label>
-        <input type="text" id="text" name="middle_name" ><br><br>
+        <input type="text" id="middle_name" name="middle_name">
+
         <label for="last_name">Last Name:</label>
-        <input type="text" id="text" name="last_name"><br><br>
-        
+        <input type="text" id="last_name" name="last_name">
 
         <label for="email">Email ID:</label>
-        <input type="email" id="email" name="email" required><br><br>
+        <input type="email" id="email" name="email" required>
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-            
+        <div class="password-container">
+            <input type="password" id="password" name="password" required>
+            <span class="toggle-password" onclick="togglePasswordVisibility('password')">show</span>
+        </div>
         <label for="confirmPassword">Confirm Password:</label>
-        <input type="password" id="confirmPassword" name="confirmPassword" required><br><br>
-        <label for="userType">User Type:</label>
+        <div class="password-container">
+            <input type="password" id="confirmPassword" name="confirmPassword" required>
+            <span class="toggle-password" onclick="togglePasswordVisibility('confirmPassword')">show</span>
+        </div>
+        <label>User Type:</label>
         <div class="radio-container">
             <div>
                 <input type="radio" id="other" name="userType" value="other" required>
@@ -128,8 +253,9 @@
                 <input type="radio" id="student" name="userType" value="student" required>
                 <label for="student">Student</label>
             </div>
-        </div>              
-        <input type="submit" value="Register">
+        </div>
+
+        <input type="submit" id="submit-btn" value="Register">
     </form>
 </body>
 </html>
