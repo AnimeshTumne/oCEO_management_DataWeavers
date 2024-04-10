@@ -120,7 +120,7 @@
                 <p>Last Name: <input type="text" name="last_name" value="{{student_data[0][3]}}" ></p>
                 <p>Email:  <input type="text" name="email" value="{{student_data[0][4]}}"  readonly></p>
                 <p>Roll Number: <input type="text" name="roll_number" value="{{student_data[0][0]}}"  readonly></p>
-                <p>CPI: <input type="text" name="cpi" value="{{student_data[0][5]}}" required></p>
+                <p>CPI: <input type="text" name="cpi" value="{{student_data[0][5]}}" min="0.0" max="10.0" required></p>
                 <p>Last Sem SPI:  <input type="text" name="last_sem_spi" value="{{student_data[0][6]}}"required ></p>
                 <p>On Probation:
                     <label for="on_probation"></label>
@@ -131,7 +131,7 @@
                 </p>
                 
                 <p>Contact Number: <input type="text" name="contact_number" value="{{ student_phone[0][0] if student_phone[0][0] != 'Not Added' else '' }}" ></p>
-                <p>Alternate Contact Number: <input type="text" name="alternate_contact_number" value="{{ student_phone[1][0] if student_phone[1][0] != 'Not Added' else '' }}"></p>
+                <p>Alternate Contact Number: <input type="text" name="alternate_contact_number" placeholder="{{ student_phone[1][0] if student_phone[1] else 'Not Added' }}" value="{{ student_phone[1][0] if student_phone[1]}}"></p>
             </div>
             <input type="submit" value="Update Profile" class="update-profile">
         </form>

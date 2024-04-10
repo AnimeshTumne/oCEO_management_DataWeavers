@@ -102,18 +102,22 @@
             <p>Last Name:{{ student_data[0][3] }}</p>
             <p>Email: {{ student_data[0][4] }}</p>
             <p>Contact Number: {{ student_phone[0][0]}}</p>
-            <p>Alternate Contact Number: {{ student_phone[1][0]}}</p>
+            {% if student_phone[1] %}
+                <p>Alternate Contact Number: {{ student_phone[1][0]}}</p>
+            {% else %}
+                <p>Alternate Contact Number: Not Added</p>
+            {% endif %}
             <p>CPI: {{ student_data[0][5] }}</p>
             <p>Last Sem Spi: {{ student_data[0][6] }}</p>
         </div>
         <form action="{{url_for('student_personal_info')}}" method="POST">
-            <input type="submit" name="submit_button"  value="Update_Profile" class="update-profile">
+            <input type="submit" name="submit_button"  value="Update Profile" class="update-profile">
         </form>
         <form action="{{url_for('student_personal_info')}}" method="POST">
-            <input type="submit" name="submit_button"  value="Change_Password" class="update-profile">
+            <input type="submit" name="submit_button"  value="Change Password" class="update-profile">
         </form>
         <form action="{{url_for('student_bank_details')}}" method="POST">
-            <input type="submit" name="submit_button"  value="Bank_Details" class="update-profile">
+            <input type="submit" name="submit_button"  value="Bank Details" class="update-profile">
     
         <script>
             function toggleMenu() {
