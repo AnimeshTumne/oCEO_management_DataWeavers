@@ -3,6 +3,7 @@ from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
 import random
 from flask import session, redirect, url_for, render_template_string
+import datetime
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -337,11 +338,6 @@ def student_personal_info_change():
             on_probation = 1 if request.form.get('on_probation') == 'Yes' else 0
             phone_1 = request.form.get('contact_number')
             phone_2 = request.form.get('alternate_contact_number')
-            print("########################################################")
-            print("########################################################")
-            print(phone_1, phone_2)
-            print("########################################################")
-            print("########################################################")
             # fetch uploaded image
             cursor = db.connection.cursor()
             
@@ -618,6 +614,7 @@ def student_timecard(job_id):
 @app.route('/student/submit_timecard/<job_id>', methods=['GET', 'POST'])
 def submit_timecard(job_id):
     if "roll_number" in session:
+        current_year = datetime.datetime.now().year
         roll_number = session['roll_number']
         cursor = db.connection.cursor()
         if request.method == 'POST':
@@ -630,8 +627,8 @@ def submit_timecard(job_id):
                 cursor.execute(sql)
                 db.connection.commit()
                 cursor.close()  
-                return redirect(url_for('student_timecard', job_id=job_id))
-        return render_template('student/new_timecard.html', job_id=job_id)
+                return redirect(url_for('student_timecard', job_id=job_id, current_year=current_year))
+        return render_template('student/new_timecard.html', job_id=job_id, current_year=current_year)
     else:
         return redirect(url_for('errorpage'))    
 
@@ -1395,6 +1392,7 @@ def pending_payments(type):
                 cursor.execute(f"UPDATE time_card SET payment_status ='done'  WHERE job_id = {job_id} AND roll_number = {roll_number} AND month = '{month}';")
                 db.connection.commit()
                 cursor.close()
+            return redirect(url_for('pending_payments',type=type))
         
         cursor = db.connection.cursor()
         cursor.execute("select job_id, roll_number, pay_per_hour*hours_worked, account_number, IFSC_code, bank_name from job natural join time_card natural join bank_details where faculty_approval='approved' and payment_status ='pending'  order by job_id;")

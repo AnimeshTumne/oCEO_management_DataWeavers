@@ -94,11 +94,11 @@
         <a href="/student/logout">Logout</a><br>
 
     </div>
-    <form action="/student/timecard/{{job_id}}" method="post">
+    <form id="timecardForm" action="/student/timecard/{{job_id}}" method="post">
         <input type="hidden" name="job_id" value="{{ job_id }}">
         <button type="submit" name="submit_button" value="submit_timecard">Submit New Time Card</button>
     </form>
-    <table>
+    <table id = 'timecardTable'>
         <thead>
             <tr>
             {% for columnName in timecard_head %}
@@ -120,11 +120,56 @@
         </tbody>
         </table>
         <script>
+            document.getElementById('timcardTable').addEventListener('click', function(e) {
+                if (e.target.tagName === '') {
+                    var job_id = e.target.parentElement.children[0].textContent;
+                    var month = e.target.parentElement.children[1].textContent;
+                    var year = e.target.parentElement.children[2].textContent;
+                    var hours = e.target.parentElement.children[3].textContent;
+                    var rate = e.target.parentElement.children[4].textContent;
+                    var total = e.target.parentElement.children[5].textContent;
+                    var status = e.target.parentElement.children[6].textContent;
+                    var timecard_id = e.target.parentElement.children[7].textContent;
+                    var job_id = e.target.parentElement.children[8].textContent;
+                    var student_id = e.target.parentElement.children[9].textContent;
+                    var form = document.createElement('form');
+                    form.action = '/student/edit_timecard';
+                    form.method = 'post';
+                    form.innerHTML = '<input type="hidden" name="timecard_id" value="' + timecard_id + '"><input type="hidden" name="job_id" value="' + job_id + '"><input type="hidden" name="student_id" value="' + student_id + '"><label for="month">Month:</label><input type="text" name="month" value="' + month + '"><br><label for="year">Year:</label><input type="text" name="year" value="' + year + '"><br><label for="hours">Hours:</label><input type="text" name="hours" value="' + hours + '"><br><label for="rate">Rate:</label><input type="text" name="rate" value="' + rate + '"><br><label for="total">Total:</label><input type="text" name="total" value="' + total + '"><br><label for="status">Status:</label><input type="text" name="status" value="' + status + '"><br><button type="submit" name="submit_button" value="edit_timecard">Edit Time Card</button>';
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+
+            // document.getElementById('timecardForm').addEventListener('submit', function(event) {
+            //     event.preventDefault(); // prevent form submission
+            
+            //     var table = document.getElementById('timecardTable');
+            //     var newRow = table.insertRow(-1); // create a new row at the end of the table
+            
+            //     // assuming timecard_head is available in the JavaScript context
+            //     for (var i = 0; i < timecard_head.length; i++) {
+            //         var newCell = newRow.insertCell(i);
+            //         var input = document.createElement('input');
+            //         input.name = timecard_head[i];
+            //         newCell.appendChild(input);
+            //     }
+            
+            //     var submitCell = newRow.insertCell(-1);
+            //     var submitButton = document.createElement('button');
+            //     submitButton.textContent = 'Submit';
+            //     submitButton.addEventListener('click', function() {
+            //         // handle form submission here
+            //     });
+            //     submitCell.appendChild(submitButton);
+            // });
+            
             function toggleMenu() {
                 var sidebar = document.getElementById('sidebar');
                 var mainContent = document.getElementById('main-content');
                 sidebar.classList.toggle('open');
             }
+            
         </script>
 </body>
 </html>
