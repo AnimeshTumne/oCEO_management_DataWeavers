@@ -53,8 +53,18 @@
             <h2>Welcome, {{type}}!</h2>
             <button class='btn' name="submit_button" value="applications_to_review" type="submit">Applications to review</button>
             <button class='btn' name="submit_button" value="approved_jobs" type="submit">Approved Jobs</button>
+            {% if type == 'sa_js' %}
+            <!-- render time_card table sent by backend -->
+            <button class='btn' name="submit_button" value="time_card" type="submit">Time Card</button>
+            <button class='btn' name="submit_button" value="pending_payments" type="submit">Pending Payments</button> 
+            {% endif %}
             <button class='btn' name="submit_button" value="logout" type="submit">Logout</button>
+            
+
         </div>
         </form>
+
+        
+
 </body>
 </html>

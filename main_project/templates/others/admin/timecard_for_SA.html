@@ -3,20 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Approved Jobs</title>
+    <title>Timecards for Review</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         table {
             width: 100%;
             border-collapse: collapse;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
         th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 12px;
             text-align: left;
         }
         th {
             background-color: #4CAF50;
             color: white;
+            font-size: 1.2rem;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
         }
         .apply-job {
             background-color: #4CAF50;
@@ -57,14 +70,26 @@
             background-color: #333;
             margin: 5px 0;
         }
-        a{
-            color: white;
+        a {
+            color: #ddd;
             text-decoration: none;
+            display: block;
+            margin: 5px 0;
+        }
+        a:hover {
+            color: #ddd;
+        }
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(180deg, #f8f9fa 0%,#e9eceb 100%); /* New gradient background */
+            margin: 0;
+            padding: 0;
+            width: 100vw;
         }
     </style>
 </head>
 <body>
-    <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Approved Jobs</h1>
+    <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Timecards for Review</h1>
     <div class="menu-icon" onclick="toggleMenu()">
         <span></span>
         <span></span>
@@ -72,40 +97,46 @@
     </div>
     <div id="sidebar" class="sidebar">
         <h2>Dashboard</h2>
-        <a href="/{{type}}/after_login_other">Home Page</a><br>
-        <a href="/{{type}}/review_application">Review Application</a><br>
-        {% if type == 'sa_js' %}
-        <a href="/{{type}}/timecard_for_payment">Time Card for Review</a><br>
-        {% endif %}
-        <a href="/{{type}}/logout">Logout</a><br>
+        <a href="/{{type1}}/after_login_other">Home Page</a><br>
+        <a href="/{{type1}}/review_application">Review Application</a><br>
+        <a href="/{{type1}}/timecard_for_payment">Time Card for Review</a><br>
+        <a href="/{{type1}}/logout">Logout</a><br>
+    </div>
 
     </div>
     <table>
         <thead>
             <tr>
-            {% for columnName in application_head %}
-                {% if columnName == "oceo_coordinator_approved" %}
-                    <th>oCEO Coordinator approved</th>
-                {% elif columnName == "SA_approved" %}
-                    <th>SA approved</th>
-                {% elif columnName == "job_id" %}
-                    <th>Job ID</th>
-                {% elif columnName == "application_id"%}
-                    <th>Application ID</th>
-                {% else %}
-                    <th>{{ (columnName.replace("_", " ")).capitalize() }}</th>
-                {% endif %}
+            {% for columnName in timecard_head %}
+            {% if columnName == 'pay_per_hour*hours_worked' %}
+                <th>Amount</th>
+            {% elif columnName == 'month' %}
+
+            {% else %}
+                <th>{{ columnName.replace("_", " ") }}</th>
+            {% endif %}
             {% endfor %}
             </tr>
         </thead>
         <tbody>
-            {% for job in application_data %}
+            {% for job in timecard_data %}
             <tr>
                 {% for field in job %}
-                    <td>{{ field }}</td>
+                    {% if not loop.index0 == 2 %}
+                        <td>{{ field }}</td>
+                    {% endif %}
+
                    
                 {% endfor %}
-
+                <td>
+                    <form action="/{{type1}}/timecard_for_payment" method="post">
+                        <input type="hidden" name="job_id" value="{{ job[0] }}">
+                        <input type="hidden" name="roll_number" value="{{ job[1] }}">
+                        <input type="hidden" name="month" value="{{ job[2] }}">
+                        
+                        <button type="submit" name="submit_button" value="payment_done">Payment Done</button>
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

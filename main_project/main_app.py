@@ -626,7 +626,7 @@ def submit_timecard(job_id):
                 year = request.form.get('year')
                 hours_worked = request.form.get('hours_worked')
                 work_description = request.form.get('work_description')
-                sql = f"INSERT INTO time_card (roll_number, job_id, month, year, hours_worked, work_description,is_approved) VALUES ({roll_number}, {job_id}, '{month}', {year}, {hours_worked}, '{work_description}',0);"
+                sql = f"INSERT INTO time_card (roll_number, job_id, month, year, hours_worked, work_description, faculty_approval, payment_status) VALUES ({roll_number}, {job_id}, '{month}', {year}, {hours_worked}, '{work_description}','pending', 'pending');"
                 cursor.execute(sql)
                 db.connection.commit()
                 cursor.close()  
@@ -1169,7 +1169,7 @@ def professor_timecard_for_review():
                 roll_number = request.form['roll_number']
                 month = request.form['month']
                 cursor = db.connection.cursor()
-                cursor.execute(f"UPDATE time_card SET is_approved = 1 WHERE job_id = {job_id} AND roll_number = {roll_number} AND month = '{month}';")
+                cursor.execute(f"UPDATE time_card SET faculty_approval = 'approved' WHERE job_id = {job_id} AND roll_number = {roll_number} AND month = '{month}';")
                 db.connection.commit()
                 cursor.close()
                 return redirect(url_for('professor_timecard_for_review'))
@@ -1178,13 +1178,13 @@ def professor_timecard_for_review():
                 roll_number = request.form['roll_number']
                 month = request.form['month']
                 cursor = db.connection.cursor()
-                cursor.execute(f"UPDATE time_card SET is_approved = 0 WHERE job_id = {job_id} AND roll_number = {roll_number} AND month = '{month}';")
+                cursor.execute(f"UPDATE time_card SET faculty_approval = 'rejected' WHERE job_id = {job_id} AND roll_number = {roll_number} AND month = '{month}';")
                 db.connection.commit()
                 cursor.close()
                 return redirect(url_for('professor_timecard_for_review'))
         cursor = db.connection.cursor()
         faculty_id = session['faculty_id']
-        cursor.execute(f"SELECT time_card.*, applied_student.first_name, applied_student.middle_name, applied_student.last_name FROM time_card JOIN applied_student ON time_card.roll_number = applied_student.roll_number WHERE time_card.is_approved = 0 AND time_card.job_id IN (SELECT job_id FROM job WHERE faculty_id = {faculty_id});")
+        cursor.execute(f"SELECT time_card.*, applied_student.first_name, applied_student.middle_name, applied_student.last_name FROM time_card JOIN applied_student ON time_card.roll_number = applied_student.roll_number WHERE time_card.faculty_approval = 'pending' AND time_card.job_id IN (SELECT job_id FROM job WHERE faculty_id = {faculty_id});")
         timecard_data = cursor.fetchall()
         cursor.execute("SHOW COLUMNS FROM time_card")
         timecard_head = cursor.fetchall()
@@ -1274,10 +1274,27 @@ def others_login():
                     return redirect(url_for("after_login_other", type = 'oceo_coordinator'))
                 else:
                     return redirect(url_for("errorpage"))
+            # elif userType =='accounts':
+            #     cursor = db.connection.cursor()
+            #     sql = "SELECT email FROM other WHERE user_type = 'accounts';"
+            #     cursor.execute(sql)
+            #     admin_email =  cursor.fetchone()[0]
+            #     # admin_email = cursor.fetchall()[0]
+            #     print("33333333333333333333333333333333333333333333333333333333333333333333333")
+            #     print("33333333333333333333333333333333333333333333333333333333333333333333333")
+            #     print(admin_email)
+            #     print("33333333333333333333333333333333333333333333333333333333333333333333333")
+            #     print("33333333333333333333333333333333333333333333333333333333333333333333333")
+            #     cursor.close()
+
+            #     if admin_email == email :
+            #         return redirect(url_for("after_login_other", type = 'accounts'))
+            #     else:
+            #         return redirect(url_for("errorpage", message="Invalid Credentials for accounts login"))    
                 
             
         else:
-            return redirect(url_for("errorpage"))
+            return redirect(url_for("errorpage", message="Invalid Credentials for <type> login"))
     return render_template('others.html')
 
 @app.route('/<type>/after_login_other', methods=['GET', 'POST'])
@@ -1292,6 +1309,10 @@ def after_login_other(type):
                     return redirect(url_for('jobs_approved', type =type))
                 case 'logout':
                     return redirect(url_for('professor_logout'))
+                case 'time_card':
+                    return redirect(url_for('timecard_for_payment', type = type))
+                case 'pending_payments':
+                    return redirect(url_for('pending_payments', type = type))
                 case _:
                     return render_template('others/admin/admin.html', type = type)
         return render_template( 'others/admin/admin.html', type = type ) 
@@ -1347,21 +1368,84 @@ def after_login_other(type):
 
 # @app.route('/oceo_coordinator', methods=['GET', 'POST'])
 # def after_login_sa_js():
+    # if "email" in session:
+    #     if request.method == 'POST':
+    #         testvar = request.form['submit_button']
+    #         match testvar:
+    #             case 'applications_to_review':
+    #                 return redirect(url_for('review_application', type = 'sa_js'))
+    #             case 'approved_jobs':
+    #                 return redirect(url_for('jobs_approved', type = 'sa_js'))
+    #             case 'logout':
+    #                 return redirect(url_for('professor_logout'))
+    #             case _:
+    #                 return render_template('others/admin/admin.html')
+    # return render_template( 'others/admin/admin.html' )
+
+
+@app.route('/<type>/pending_payments', methods=['GET', 'POST'])
+def pending_payments(type):
     if "email" in session:
         if request.method == 'POST':
-            testvar = request.form['submit_button']
-            match testvar:
-                case 'applications_to_review':
-                    return redirect(url_for('review_application', type = 'sa_js'))
-                case 'approved_jobs':
-                    return redirect(url_for('jobs_approved', type = 'sa_js'))
-                case 'logout':
-                    return redirect(url_for('professor_logout'))
-                case _:
-                    return render_template('others/admin/admin.html')
-    return render_template( 'others/admin/admin.html' )
+            if request.form['submit_button'] == 'payment_done':
+                job_id = request.form['job_id']
+                roll_number = request.form['roll_number']
+                month = request.form['month']
+                cursor = db.connection.cursor()
+                cursor.execute(f"UPDATE time_card SET payment_status ='done'  WHERE job_id = {job_id} AND roll_number = {roll_number} AND month = '{month}';")
+                db.connection.commit()
+                cursor.close()
+        
+        cursor = db.connection.cursor()
+        cursor.execute("select job_id, roll_number, pay_per_hour*hours_worked, account_number, IFSC_code, bank_name from job natural join time_card natural join bank_details where faculty_approval='approved' and payment_status ='pending'  order by job_id;")
+        timecard_data = cursor.fetchall()
+        timecard_head = cursor.description
+        column_names = tuple(row[0] for row in timecard_head)
+        cursor.close()
+        return render_template('others/admin/pending_payments.html', timecard_data=timecard_data, timecard_head=column_names,type1 = type)
+    else:
+        return redirect(url_for('errorpage'))
 
 
+@app.route('/<type>/timecard_for_payment', methods=['GET', 'POST'])
+def timecard_for_payment(type):
+    if "email" in session:
+        if request.method == 'POST':
+            if request.form['submit_button'] == 'payment_done':
+                job_id = request.form['job_id']
+                roll_number = request.form['roll_number']
+                month = request.form['month']
+                print("#"*10)
+                print(job_id, roll_number, month)
+                print("#"*10)
+
+                cursor = db.connection.cursor()
+                cursor.execute(f"UPDATE time_card SET payment_status ='done'  WHERE job_id = {job_id} AND roll_number = {roll_number} AND month = '{month}';")
+                db.connection.commit()
+                cursor.close()
+
+            # elif request.form['submit_button'] == 'reject':
+            #     job_id = request.form['job_id']
+            #     roll_number = request.form['roll_number']
+            #     month = request.form['month']
+            #     cursor = db.connection.cursor()
+            #     cursor.execute(f"UPDATE time_card SET SA_approval ='rejected' WHERE job_id = {job_id} AND roll_number = {roll_number} AND month = '{month}';")
+            #     db.connection.commit()
+            #     cursor.close()
+            return redirect(url_for('timecard_for_payment',type=type))
+        
+        
+        cursor = db.connection.cursor()
+        cursor.execute("select job_id, roll_number, month, job_description, pay_per_hour, hours_worked, pay_per_hour*hours_worked, account_number, IFSC_code, bank_name from job natural join time_card natural join bank_details where faculty_approval='approved' and payment_status ='pending' order by job_id;")
+        # cursor.execute("SELECT job_id, roll_number, month, year, work_description, pay_per_hour*hours_worked, hours_worked FROM job NATURAL JOIN time_card WHERE SA_approval='pending' ORDER BY job_id;")
+        timecard_data = cursor.fetchall()
+        timecard_head = cursor.description
+        column_names = tuple(row[0] for row in timecard_head)
+        cursor.close()
+        return render_template('others/admin/timecard_for_SA.html', timecard_data=timecard_data, timecard_head=column_names,type1 = type)
+    else:
+        return redirect(url_for('errorpage'))
+    
 @app.route('/<type>/jobs_approved', methods=['GET','POST'] )
 def jobs_approved(type):
     if "email" in session: 
@@ -1440,7 +1524,8 @@ def review_application(type):
         return render_template('others/admin/review_application.html', application_data=application_data, application_head=column_names, type = type)
     else:
         return redirect(url_for('errorpage'))
-    
+ #---------------------------------------------Accounts---------------------------------------------------------  
+
 @app.route('/<type>/logout')
 def admin_logout(type):
     session.pop('email', None)

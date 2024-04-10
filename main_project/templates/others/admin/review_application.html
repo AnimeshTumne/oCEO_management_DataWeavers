@@ -74,6 +74,9 @@
         <h2>Dashboard</h2>
         <a href="/{{type}}/after_login_other">Home Page</a><br>
         <a href="/{{type}}/jobs_approved">Approved Jobs</a><br>
+        {% if type == 'sa_js' %}
+        <a href="/{{type}}/timecard_for_payment">Time Card for Review</a><br>
+        {% endif %}
         <a href="/{{type}}/logout">Logout</a><br>
 
     </div>

@@ -73,49 +73,38 @@
     <div id="sidebar" class="sidebar">
         <h2>Dashboard</h2>
         <a href="/{{type}}/after_login_other">Home Page</a><br>
-        <a href="/{{type}}/review_application">Review Application</a><br>
-        {% if type == 'sa_js' %}
-        <a href="/{{type}}/timecard_for_payment">Time Card for Review</a><br>
-        {% endif %}
+        <a href="/{{type}}/review_application">Pending Payments</a><br>
         <a href="/{{type}}/logout">Logout</a><br>
 
     </div>
+<body>
     <table>
         <thead>
             <tr>
-            {% for columnName in application_head %}
-                {% if columnName == "oceo_coordinator_approved" %}
-                    <th>oCEO Coordinator approved</th>
-                {% elif columnName == "SA_approved" %}
-                    <th>SA approved</th>
-                {% elif columnName == "job_id" %}
-                    <th>Job ID</th>
-                {% elif columnName == "application_id"%}
-                    <th>Application ID</th>
-                {% else %}
-                    <th>{{ (columnName.replace("_", " ")).capitalize() }}</th>
-                {% endif %}
+            {% for columnName in timecard_head %}
+                <th>{{ columnName.replace("_", " ") }}</th>
             {% endfor %}
             </tr>
         </thead>
         <tbody>
-            {% for job in application_data %}
+            {% for job in timecard_data %}
             <tr>
                 {% for field in job %}
                     <td>{{ field }}</td>
                    
                 {% endfor %}
-
+                <td>
+                    <form action="/{{type}}/pending_payments" method="post">
+                        <input type="hidden" name="job_id" value="{{ job[0] }}">
+                        <input type="hidden" name="roll_number" value="{{ job[1] }}">
+                        <input type="hidden" name="month" value="{{ job[2] }}">
+                        <button type="submit" name="submit_button" value="payment_done">Done</button>
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
         </table>
-        <script>
-            function toggleMenu() {
-                var sidebar = document.getElementById('sidebar');
-                var mainContent = document.getElementById('main-content');
-                sidebar.classList.toggle('open');
-            }
-        </script>
+    
 </body>
 </html>
