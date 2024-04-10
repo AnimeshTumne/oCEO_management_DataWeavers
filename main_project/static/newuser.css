@@ -1,0 +1,138 @@
+body {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-color: #f2f2f2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+form {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+    animation: fadeIn 1s ease;
+}
+
+@media (max-width: 480px) {
+    form {
+        padding: 20px;
+    }
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333333;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #555555;
+}
+
+.password-container {
+    position: relative;
+}
+
+.password-container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.password-container input[type="password"]:focus {
+    border-color: #666666;
+    outline: none;
+}
+
+.password-container .toggle-password {
+    position: absolute;
+    top: 30%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888888;
+}
+
+input[type="text"],
+input[type="email"] {
+     width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus {
+     border-color: #666666;
+    outline: none;
+}
+
+.radio-container {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.radio-container div {
+    margin-right: 20px;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 480px) {
+    .radio-container {
+        flex-direction: column;
+    }
+    .radio-container div {
+        margin-right: 0;
+    }
+}
+
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+input[type="submit"].enabled {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+input[type="submit"]:hover.enabled {
+    background-color: #45a049;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
