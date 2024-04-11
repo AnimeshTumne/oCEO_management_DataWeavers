@@ -1,5 +1,4 @@
 body {
-    /* the final font family to be used */
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     background-color: #f2f2f2;
     display: flex;
@@ -71,7 +70,7 @@ label {
 
 input[type="text"],
 input[type="email"] {
-     width: 100%;
+    width: 100%;
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid #cccccc;
@@ -82,28 +81,8 @@ input[type="email"] {
 
 input[type="text"]:focus,
 input[type="email"]:focus {
-     border-color: #666666;
+    border-color: #666666;
     outline: none;
-}
-
-.radio-container {
-    margin-bottom: 20px;
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.radio-container div {
-    margin-right: 20px;
-    margin-bottom: 10px;
-}
-
-@media (max-width: 480px) {
-    .radio-container {
-        flex-direction: column;
-    }
-    .radio-container div {
-        margin-right: 0;
-    }
 }
 
 input[type="submit"] {

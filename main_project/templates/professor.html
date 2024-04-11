@@ -1,178 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Student Login Page</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            width: 40vw;
-            padding: 50px;
-            margin-top: 100px;
-            margin-bottom: 100px;
-            margin-left: 200px;
-            margin-right: 200px;
-            background-color: #f2f2f2;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-            font-family: 'Courier New', Courier, monospace;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            margin-bottom: 10px;
-        }
-
-        input[type="text"],
-        input[type="password"] {
-            padding: 10px;
-            margin-bottom: 30px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            font-family: 'Courier New', Courier, monospace;
-        }
-
-        input[type="radio"] {
-            margin-right: 5px;
-        }
-
-        input[type="submit"] {
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-
-        .radio-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            align-items: center;
-        }
-
-        .radio-buttons label {
-            margin-right: 10px;
-            margin-left: -50px;
-        }
-
-        .radio-buttons input[type="radio"] {
-            margin-right: 1px;
-            margin-bottom: 10px;
-            appearance: none;
-            width: 15px;
-            height: 15px;
-            border: 2px solid #ccc;
-            border-radius: 50%;
-            outline: none;
-        }
-
-        #userType {
-            margin-left:0px;
-        }
-
-        .radio-buttons input[type="radio"]:checked {
-            background-color: #4CAF50;
-            border-color: #4CAF50;
-        }
-
-        .radio-buttons input[type="radio"]:checked::after {
-            content: "";
-            display: block;
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background-color: white;
-            margin: 3px;
-        }
-    </style>
-    <script>
-        function validate_credentials() {
-            // Get the user ID and password from the form
-            var userID = document.getElementById("username").value;
-            var password = document.getElementById("password").value;
-
-            // add code to check if the user ID and password are empty 
-            if (userID == "" || password == "") {
-                alert("Please enter both user ID and password");
-                return;
-            }
-
-            // add code to authenticate the user from database oceo_management
-            // if the user is authenticated, redirect to the dashboard of the user.
-            return true;
-            /*
-            // Make an AJAX request to validate the credentials
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/validate_credentials", true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    if (response.success) {
-                        // Credentials are valid, redirect to the dashboard
-                        window.location.href = "/dashboard";
-                    } else {
-                        // Credentials are invalid, display an error message
-                        alert(response.message);
-                    }
-                }
-            };
-
-            // Send the user ID and password as JSON data
-            var data = JSON.stringify({ userID: userID, password: password });
-            xhr.send(data);
-            */
-        }
-    </script>
+    <title>Professor Login Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=M+PLUS+1+Code:wght@100..700&family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/login_page.css">
+    <script src="../static/login_page.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Professor Login </h1>
-        <form action="{{ url_for('login_professor')}}"method="post">
-            <label for="username">Email ID:</label>
-            <input type="text" id="username" name="username" required>
-            <label for="password">Password:</label>
+    <form onsubmit="return validateForm()" method="post">
+        <h1>Professor Login</h1>
+        <label for="username">Email ID:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Password:</label>
+        <div class="password-container">
             <input type="password" id="password" name="password" required>
-            <input type="submit" value="Submit">
-        </form>
-        <script>
-            // Checking if error message is passed from Flask
-            var errorMessage = "{{ error_message }}" || null;
+            <span class="toggle-password" onclick="togglePasswordVisibility('password')">show</span>
+        </div>
+        <input type="submit" id="submit-btn" value="Submit">
+    </form>
+    <script>
+        // Checking if error message is passed from Flask
+        var errorMessage = "{{ error_message }}" || null;
 
-            // Function that displays error message as a popup dialogue
-            function displayErrorMessage() {
-                if (errorMessage) {
-                    alert(errorMessage);
-                }
+        // Function that displays error message as a popup dialogue
+        function displayErrorMessage() {
+            if (errorMessage) {
+                alert(errorMessage);
             }
-            // Calling the function to display error message
-            displayErrorMessage();
-        </script>
-    </div>
+        }
+
+        // Calling the function to display error message
+        displayErrorMessage();
+    </script>
 </body>
 </html>
