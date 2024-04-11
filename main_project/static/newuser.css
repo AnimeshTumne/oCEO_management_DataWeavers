@@ -107,7 +107,7 @@ input[type="email"]:focus {
 }
 
 input[type="submit"] {
-    background-color: #4CAF50;
+    background-color: #179cd9;
     color: #ffffff;
     padding: 10px 20px;
     border: none;
@@ -124,7 +124,7 @@ input[type="submit"].enabled {
 }
 
 input[type="submit"]:hover.enabled {
-    background-color: #45a049;
+    background-color: #1280a9;
 }
 
 @keyframes fadeIn {
