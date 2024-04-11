@@ -81,7 +81,9 @@ label {
 
 .password-container .toggle-password {
     position: absolute;
-    top: 30%;
+    top: 38%;
+    /* display: flex; */
+    /* align-items: center; */
     right: 10px;
     transform: translateY(-50%);
     cursor: pointer;
@@ -138,6 +140,13 @@ input[type="submit"]:hover.enabled {
 .radio-container div {
     margin-right: 20px;
     margin-bottom: 10px;
+}
+
+.eye-icon {
+    width: 30px;
+    /* height: 30px; */
+    fill: currentColor;
+    opacity: 0.5;
 }
 
 /* @media (min-width: 1080px) {

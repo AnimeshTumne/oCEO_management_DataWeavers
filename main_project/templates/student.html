@@ -19,7 +19,9 @@
             <label for="password">Password:</label>
             <div class="password-container">
                 <input type="password" id="password" name="password" required>
-                <span class="toggle-password" onclick="togglePasswordVisibility('password')">show</span>
+                <span class="toggle-password" onclick="togglePasswordVisibility('password')">
+                    <img src="../static/eye_open.png" alt="show" class="eye-icon" id="show-password-icon">
+                </span>
             </div>
             <!-- <input type="password" id="password" name="password" required> -->
             <input id="submit-btn" type="submit" value="Submit">

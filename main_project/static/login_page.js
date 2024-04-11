@@ -25,10 +25,12 @@ function togglePasswordVisibility(inputId) {
 
     if (passwordInput.type === "password") {
         passwordInput.type = "text";
-        toggleIcon.textContent = "hide";
+        // toggleIcon.textContent = "hide";
+        toggleIcon.innerHTML = '<img src="../static/eye_close.png" alt="hide" class="eye-icon" id="hide-password-icon">';
     } else {
         passwordInput.type = "password";
-        toggleIcon.textContent = "show";
+        // toggleIcon.textContent = "show";
+        toggleIcon.innerHTML = '<img src="../static/eye_open.png" alt="show" class="eye-icon" id="show-password-icon">';
     }
 }
 
