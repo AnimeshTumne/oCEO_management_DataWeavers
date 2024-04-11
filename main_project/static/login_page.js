@@ -1,13 +1,18 @@
-function validateForm() {
-    var username = document.getElementById("username").value.trim();
+function validateForm() {   
+    var useremail = document.getElementById("username").value.trim();
     var password = document.getElementById("password").value.trim();
 
     // Check if username and password are empty
-    if (username === "" || password === "") {
+    if (useremail === "" || password === "") {
         alert("Please enter both username and password");
         return false;
     }
 
+    // check if email is valid
+    if (!useremail.includes("@")) {
+        alert("Please enter a valid email address");
+        return false;
+    }
     // Add code here to authenticate the user from the database
     // If the user is authenticated, redirect to the dashboard
     // For now, we'll just return true to allow form submission

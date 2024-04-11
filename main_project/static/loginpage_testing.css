@@ -90,6 +90,18 @@ h2 {
   visibility: hidden;
 }
 
+@media (max-width: 720px) {
+  form {
+      padding: 20px;
+  }
+  .btn-container {
+      flex-direction: column;
+  }
+  .btn-container button {
+      width: 100px;
+  }
+}
+
 h2 span,
 .btn span,
 #animated-text span {

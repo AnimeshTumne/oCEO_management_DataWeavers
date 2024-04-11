@@ -1,4 +1,10 @@
 body {
+    /* background-image: url(Final_IITGN-Logo-symmetric-Color.png); */
+    /* background-size: 50px 50px; */
+    /* background-repeat: no-repeat; */
+    /* background-attachment: fixed; */
+    /* background-position: top left; */
+
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     background-color: #f2f2f2;
     display: flex;
@@ -11,7 +17,17 @@ body {
     box-sizing: border-box;
 }
 
+.logo {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 20px;
+    padding-bottom: 30px;
+    animation: fadeIn 1s ease;
+}
+
 form {
+    /* height: 30vw; */
+
     background-color: #ffffff;
     padding: 40px;
     border-radius: 10px;
@@ -21,11 +37,15 @@ form {
     animation: fadeIn 1s ease;
 }
 
+/* 
 @media (max-width: 480px) {
-    form {
-        padding: 20px;
+    .radio-container {
+        flex-direction: column;
     }
-}
+    .radio-container div {
+        margin-right: 0;
+    }
+} */
 
 h1 {
     text-align: center;
@@ -86,7 +106,7 @@ input[type="email"]:focus {
 }
 
 input[type="submit"] {
-    background-color: #4CAF50;
+    background-color: #179cd9;
     color: #ffffff;
     padding: 10px 20px;
     border: none;
@@ -95,16 +115,57 @@ input[type="submit"] {
     transition: background-color 0.3s ease;
     opacity: 0.5;
     pointer-events: none;
+    width: 100%;
 }
 
 input[type="submit"].enabled {
     opacity: 1;
     pointer-events: auto;
+    /* flex: 12; */
+
 }
 
 input[type="submit"]:hover.enabled {
-    background-color: #45a049;
+    background-color: #1280a9;
 }
+
+.radio-container {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.radio-container div {
+    margin-right: 20px;
+    margin-bottom: 10px;
+}
+
+/* @media (min-width: 1080px) {
+
+    #form-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-size: larger;
+    }
+    #form-body {
+        background-color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-size: larger;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 100%;
+        animation: fadeIn 1s ease;
+    }
+} */
 
 @keyframes fadeIn {
     0% {
