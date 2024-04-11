@@ -258,11 +258,7 @@ def student_personal_info():
         else:
             fetched_phone = ("Not Added", "Not Added")
 
-        print("########################################################")
-        print("########################################################")
-        print(fetched_phone)
-        print("########################################################")
-        print("########################################################")
+
         cursor.close()
         
         return render_template('student/personal_info.html', student_data=fetched_data, student_phone = fetched_phone)
@@ -1212,7 +1208,7 @@ def professor_logout():
 @app.route('/login/others',  methods=['GET', 'POST'])
 def others_login(): 
     if request.method == 'POST':
-        email = request.form["email"] 
+        email = request.form["username"] 
         password = request.form["password"]
         userType = request.form["userType"]
         # #fetch roll number from database
