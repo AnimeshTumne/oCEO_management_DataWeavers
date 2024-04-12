@@ -11,8 +11,9 @@
 </head>
 <body>
     <!-- <div class="container"> -->
+        <!-- <button onclick="toggleDarkMode()" style="position: fixed; top: 10px; right: 10px;">Toggle Dark Mode</button> -->
         <img src="{{url_for('static', filename='logo.png')}}" alt="logo" class="logo">
-        <form id="form-body" onsubmit="return validateForm()" action="{{ url_for('login_student')}}" method="post">
+        <form id="form-body" onsubmit="return errorMessage('{{error_message}}')" action="{{ url_for('login_student')}}" method="post">
             <h1>Student Login </h1>
             <label for="username">Email ID:</label>
             <input type="email" id="username" name="username" required>
@@ -23,21 +24,22 @@
                     <img src="../static/eye_open.png" alt="show" class="eye-icon" id="show-password-icon">
                 </span>
             </div>
+            <p id="password-error" style="color: red; display: none;">Password is incorrect</p>
             <!-- <input type="password" id="password" name="password" required> -->
             <input id="submit-btn" type="submit" value="Submit">
         </form>
         <script>
             // Checking if error message is passed from Flask
-            var errorMessage = "{{ error_message }}" || null;
+            // var errorMessage = "{{ error_message }}" || null;
 
             // Function that displays error message as a popup dialogue
-            function displayErrorMessage() {
+            function displayErrorMessage(errorMessage) {
                 if (errorMessage) {
                     alert(errorMessage);
                 }
             }
             // Calling the function to display error message
-            displayErrorMessage();
+            // displayErrorMessage(errorMessage);
         </script>
     <!-- </div> -->
 </body>

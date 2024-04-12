@@ -5,16 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Error page</title>
     <style>
+        html{
+            /* the final font family to be used */
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
         .error-box {
-            border: 1px solid red;
+            border: 1px solid rgba(255, 0, 0, 0.288);
             padding: 10px;
             margin: 10px;
+            animation: shake 0.5s 1;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 80vw;
+            margin: 10vh auto;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
+
+        .back-link-container {
+            text-align: center;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: white;
+            font-size: larger;
+            /* text-decoration: underline; */
+            animation: fade-in 1s;
+        }
+        button{
+            padding: 10px 20px;
+            border: 1px solid #179cd9;
+            border-radius: 5px;
+            background-color: #179cd9;
+            cursor: pointer;
+        }
+
+        button:hover{
+            background-color: #1280a9;
+            color: white;
+        }
+        @keyframes fade-in {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .error-message {
+            font-size: 24px;
+            font-weight: bold;
+            font-size: 3em;
+        }
+
+        .error-logo {
+            /* display: block; */
+            /* margin: 0 auto; */
+            height: 1000px;
         }
     </style>
 </head>
 <body>
+    <img src="../static/404-error.png" alt="error" class="error-logo" style="width: 100px; height: 100px; display: block; margin: 0 auto;">
     <div class="error-box">
-        {{ error_message }}
+        <p class="error-message">{{ error_message }}</p>
+    </div>
+    <div class="back-link-container">
+        <button class="back-link" onclick="window.history.back()">Go back to previous page</button>
     </div>
 </body>
 </html>

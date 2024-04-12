@@ -150,7 +150,7 @@ def login_student():
                 </script>
             """)
         else:
-            return redirect(url_for("errorpage"))
+            return render_template("errorpage.html", error_message="Bad Credentials! Change password or email, and try again.")
 
     return render_template('student.html')
 
@@ -185,9 +185,9 @@ def login_professor():
 
 
 @app.route("/errorpage")
-def errorpage(error_message="Bad Credentials!"):
+def errorpage(error_message):
     # error_message = "Bad Credentials!"
-    return render_template("errorpage.html", error_message=error_message)
+    return render_template("errorpage.html", error_message=error_message if error_message else "You are not authorised to view this page. Please login first.")
 
 
 # -----------AUTHORISED ACCESS ONLY----------------------------------------------------------------
@@ -305,6 +305,7 @@ def student_edit_bank_details():
                 update_query = f"UPDATE bank_details SET bank_name = '{bank_name}', account_number = {account_number}, IFSC_code = '{ifsc_code}' WHERE roll_number = {roll_number};"
                 cursor.execute(update_query)
             else:
+                update_query = f"INSERT INTO bank_details (roll_number, bank_name, account_number, IFSC_code) VALUES ({roll_number}, '{bank_name}', {account_number}, '{ifsc_code}');"
                 cursor.execute(f"INSERT INTO bank_details (roll_number, bank_name, account_number, IFSC_code) VALUES ({roll_number}, '{bank_name}', {account_number}, '{ifsc_code}');")
             # --------------------
 
