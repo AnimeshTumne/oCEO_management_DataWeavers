@@ -695,9 +695,9 @@ def after_login_professor():
 def professor_personal_info():
     if "faculty_id" in session:
         if request.method == 'POST':
-            if request.form['submit_button'] == 'Update_Profile':
+            if request.form['submit_button'] == 'Update Profile':
                 return redirect(url_for('professor_personal_info_change'))
-            elif request.form['submit_button'] == 'Change_Password':
+            elif request.form['submit_button'] == 'Change Password':
                 return redirect(url_for('professor_change_password'))
             
         cursor = db.connection.cursor()
@@ -719,6 +719,16 @@ def professor_personal_info_change():
             last_name = request.form.get('last_name')
             dept_name = request.form.get('department_name')
             voip_id = request.form.get('voip_id')
+            print("############################################################")
+            print("############################################################")
+            print(faculty_id)
+            print(first_name)
+            print(middle_name)
+            print(last_name)
+            print(dept_name)
+            print(voip_id)
+            print("############################################################")
+            print("############################################################")
             cursor = db.connection.cursor()
             cursor.execute(f"UPDATE faculty SET first_name = '{first_name}', middle_name = '{middle_name}', last_name = '{last_name}', dept_name = '{dept_name}', voip_id = {voip_id} WHERE faculty_id = {faculty_id}")
             db.connection.commit()

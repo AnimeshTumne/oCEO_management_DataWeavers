@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Personal Info</title>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/professor/personal_info.css">
+    <title>Professor Personal Information</title>
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet"> -->
+    <!-- <style>
         body {
             font-family: 'Open Sans', sans-serif;
             margin: 50px;
@@ -74,7 +76,7 @@
         }
 
         
-    </style>
+    </style> -->
 </head>
 <body>
     <div class="menu-icon" onclick="toggleMenu()">
@@ -90,7 +92,12 @@
         <a href="/professor/timecard_for_review">Timecards for review</a><br>
         <a href="/professor/logout">Logout</a><br>
     </div>
+    <div id="main-content-above" class="main-content-above">
+        <!-- <p type="hidden">For space above the main form</p> -->
+    </div>
+
     <div id="main-content" class="main-content">
+        <h1 class="main-content-heading">Personal Information</h1>
         <div class="user-info">
             <p>Faculty ID: {{professor_data[0][0]}}</p>
             <p>First Name:{{ professor_data[0][1]}}</p>
@@ -102,18 +109,18 @@
         </div>
 
         <form action="{{url_for('professor_personal_info')}}" method="POST">
-            <input type="submit" name="submit_button"  value="Update_Profile" class="update-profile">
+            <input type="submit" name="submit_button"  value="Update Profile" class="update-profile">
         </form>
         <form action="{{url_for('professor_personal_info')}}" method="POST">
-            <input type="submit" name="submit_button"  value="Change_Password" class="update-profile">
+            <input type="submit" name="submit_button"  value="Change Password" class="update-profile">
         </form>
-        <script>
-            function toggleMenu() {
-                var sidebar = document.getElementById('sidebar');
-                var mainContent = document.getElementById('main-content');
-                sidebar.classList.toggle('open');
-            }
-        </script>
     </div>
+    <script src="../../static/professor/personal_info.js">
+        // function toggleMenu() {
+        //     var sidebar = document.getElementById('sidebar');
+        //     var mainContent = document.getElementById('main-content');
+        //     sidebar.classList.toggle('open');
+        // }
+    </script>
 </body>
 </html>

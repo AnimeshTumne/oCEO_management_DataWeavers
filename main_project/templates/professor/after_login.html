@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Professor Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-<style>
+    <link rel="stylesheet" href="../../static/professor/after_login.css">
+<!-- <style>
         body {
             background-color: #f0f0f0;
             font-family: 'Open Sans', sans-serif;
@@ -41,9 +44,14 @@
             display: block;
             text-align: right;
         }
-</style>
+</style> -->
 </head>
 <body>
+    <header>
+        <h1>Professor Portal</h1>
+        <img src="../../static/logo.png" class="logo" alt="IITGN logo">
+    </header>
+
     <form action="{{url_for('after_login_professor')}}" method="post">
         <!-- <button class='btn' name="submit_button" value="personal_info" type="submit">Personal Info</button>
         <button class='btn' name="submit_button" value="jobs_available" type="submit">Jobs Available</button>
@@ -58,6 +66,10 @@
             <button class='btn' name="submit_button" value="timecard_for_review" type="submit">Timecards for review</button>
             <button class='btn' name="submit_button" value="logout" type="submit">Logout</button>
         </div>
-        </form>
+    </form>
+    <footer>
+        <p>&copy; 2024, DataWeavers, CS432 Databases, IIT Gandhinagar, Gujarat, India</p>
+    </footer>
+    <script src="../../static/professor/after_login.js"></script>
 </body>
 </html>
