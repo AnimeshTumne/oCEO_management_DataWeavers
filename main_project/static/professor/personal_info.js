@@ -31,3 +31,8 @@ function toggleMenu() {
     sidebar.classList.toggle('open');
     menuIcon.classList.toggle('open');
 }
+
+function toggleSubLinks() {
+    var subLinks = document.getElementById('sub-links');
+    subLinks.classList.toggle('open');
+}

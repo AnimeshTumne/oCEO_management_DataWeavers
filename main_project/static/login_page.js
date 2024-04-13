@@ -46,6 +46,10 @@ function toggleSubmitButton() {
     }
 }
 
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+  }  
+
 document.addEventListener("DOMContentLoaded", function() {
     var inputFields = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]');
     inputFields.forEach(function(field) {

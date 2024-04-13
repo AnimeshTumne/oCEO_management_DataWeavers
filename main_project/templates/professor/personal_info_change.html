@@ -4,7 +4,7 @@
     <title>Update Personal Information</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../static/professor/personal_info.css">
+    <link rel="stylesheet" href="../../static/personal_info.css">
 </head>
 <body>
     <div class="menu-icon" onclick="toggleMenu()">
@@ -12,11 +12,21 @@
         <span></span>
         <span></span>
     </div>
+    <!-- professor sidebar -->
     <div id="sidebar" class="sidebar">
         <h2>Dashboard</h2>
         <a href="/professor">Home Page</a><br>
-        <a href="/professor/personal_info">Personal Info</a><br>
+        <a href="/professor/personal_info">Personal Info</a>
+        <!-- <button onclick="toggleSubLinks()"></button> -->
+        <br>
+        <div class="sub-links">
+            <a href="/professor/change_password">Change Password</a><br>
+            <a href="/professor/personal_info_change">Personal Info Change</a><br>
+        </div>
         <a href="/professor/jobs_created" >Jobs Created</a><br>
+        <div class="sub-links">
+            <a href="/professor/create_job">Create New Jobs</a><br>
+        </div>
         <a href="/professor/timecard_for_review">Timecards for review</a><br>
         <a href="/professor/logout">Logout</a><br>
     </div>
@@ -56,12 +66,6 @@
             <input type="submit" name="submit_button" value="Update Profile" class="update-profile">
         </form>
     </div>
-    <script>
-        function toggleMenu() {
-            var sidebar = document.getElementById('sidebar');
-            var mainContent = document.getElementById('main-content');
-            sidebar.classList.toggle('open');
-        }
-    </script>
+    <script src="../../static/personal_info.js"></script>
 </body>
 </html>

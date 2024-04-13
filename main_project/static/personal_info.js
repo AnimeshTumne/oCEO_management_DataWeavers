@@ -38,3 +38,8 @@ function toggleMenu() {
         }
     });
 }
+// iska kaam abhi nahi hai, ignore it.
+function toggleSubLinks() {
+    var subLinks = document.getElementById('sub-links');
+    subLinks.classList.toggle('open');
+}

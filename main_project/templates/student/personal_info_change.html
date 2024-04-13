@@ -4,7 +4,7 @@
     <title>Update Personal Information</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../static/student/personal_info.css">
+    <link rel="stylesheet" href="../../static/personal_info.css">
 </head>
 <body>
     <div class="menu-icon" onclick="toggleMenu()">
@@ -12,15 +12,20 @@
         <span></span>
         <span></span>
     </div>
+    <!-- student sidebar -->
     <div id="sidebar" class="sidebar">
         <h2>Dashboard</h2>
         <a href="/student">Home Page</a><br>
         <a href="/student/personal_info">Personal Info</a><br>
-        <a href="/student/applied_jobs" >Applied Jobs</a><br>
+        <div class="sub-links">
+            <a href="/student/personal_info">Personal Info</a><br>
+            <a href="/student/bank_details">Bank Details</a><br>
+            <a href="/student/change_password">Change Password</a><br>
+        </div>
+        <a href="/student/applied_jobs">Applied Jobs</a><br>
         <a href="/student/jobs_available">Jobs Available</a><br>
         <a href="/student/my_jobs">My Jobs</a><br>
         <a href="/student/logout">Logout</a><br>
-
     </div>
     <div id="main-content-above" class="main-content-above">
         <!-- <p type="hidden">For space above the main form</p> -->
@@ -59,7 +64,7 @@
             
         </form>
     </div>
-    <script src="../../static/student/personal_info.js">
+    <script src="../../static/personal_info.js">
         // function toggleMenu() {
         //     var sidebar = document.getElementById('sidebar');
         //     var mainContent = document.getElementById('main-content');

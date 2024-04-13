@@ -100,6 +100,18 @@ body {
     animation: slide-up 0.5s ease;
 }
 
+.main-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.main-content > .bank-details {
+    /* display: flex; */
+    /* flex-direction: column; */
+    margin-top: 20px;
+}
+
 .main-content-heading{
     font-size: 50px;
     font-weight: bold;

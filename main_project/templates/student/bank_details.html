@@ -3,104 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/personal_info.css">
     <title>Bank details</title>
-    <style>
-        body {
-            font-family: 'Courier New', Courier, monospace;
-            margin: 0;
-            padding: 0;
-        }
-        
-        h1 {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        
-        button {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        button:hover {
-            background-color: #45a049;
-        }
-        .sidebar {
-            background-color: #333;
-            color: white;
-            width: 200px;
-            height: 100vh;
-            position: fixed;
-            line-height: 30px;
-            padding: 20px;
-            left: -300px;
-            transition: left 0.3s ease;
-        }
-        .sidebar.open {
-            left: 2px;
-        }
-        .menu-icon {
-            cursor: pointer;
-            display: block;
-            width: 30px;
-            height: 20px;
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-        .menu-icon span {
-            display: block;
-            width: 100%;
-            height: 4px;
-            background-color: #333;
-            margin: 5px 0;
-        }
-        a{
-            color: white;
-            text-decoration: none;
-        }
-    </style>
 </head>
 <body>
-    <h1>Bank Details</h1>
     <div class="menu-icon" onclick="toggleMenu()">
         <span></span>
         <span></span>
         <span></span>
     </div>
+    <!-- student sidebar -->
     <div id="sidebar" class="sidebar">
         <h2>Dashboard</h2>
         <a href="/student">Home Page</a><br>
         <a href="/student/personal_info">Personal Info</a><br>
-        <a href="/student/applied_jobs" >Applied Jobs</a><br>
+        <div class="sub-links">
+            <a href="/student/personal_info">Personal Info</a><br>
+            <a href="/student/bank_details">Bank Details</a><br>
+            <a href="/student/change_password">Change Password</a><br>
+        </div>
+        <a href="/student/applied_jobs">Applied Jobs</a><br>
         <a href="/student/jobs_available">Jobs Available</a><br>
         <a href="/student/my_jobs">My Jobs</a><br>
         <a href="/student/logout">Logout</a><br>
-
     </div>
-    <div>
-        <table>
+    <div id="main-content-above" class="main-content-above">
+        <!-- <p type="hidden">For space above the main form</p> -->
+    </div>
+    <div id="main-content" class="main-content">
+        <h1>Bank Details</h1>
+        <table class="bank-details">
             <tr>
                 <th>Bank Name</th>
                 <th>Account Number</th>
@@ -116,14 +49,11 @@
                 {% endif %}
             </tr>
         </table>
-        <button onclick="window.location.href = '/student/edit_bank_details';" name="submit_button" value="Edit">Edit Bank Details</button>
+        <form action="{{url_for('student_bank_details')}}" method="POST">
+            <input type="submit" name="submit_button" value="Update Bank Details" class="update-profile">
+        </form>
+        <!-- <button onclick="window.location.href = '/student/edit_bank_details';" name="submit_button" value="Edit">Edit Bank Details</button> -->
     </div>
-    <script>
-        function toggleMenu() {
-            var sidebar = document.getElementById('sidebar');
-            var mainContent = document.getElementById('main-content');
-            sidebar.classList.toggle('open');
-        }
-    </script>
+    <script src="../../static/personal_info.js"></script>
 </body>
 </html>
