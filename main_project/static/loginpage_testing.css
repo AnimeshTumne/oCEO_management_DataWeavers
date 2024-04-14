@@ -16,6 +16,8 @@ body {
 
 /* */
 html {
+  /* the final font family to be used */
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   background-image: url(IITGN-campus.jpeg);
   background-size: cover;
   background-repeat: no-repeat;
@@ -29,7 +31,8 @@ html {
 }
 
 body {
-  font-family: Arial, sans-serif;
+  /* the final font family to be used */
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   text-align: center;
   margin-block-start: 15rem;
   color: rgba(255, 255, 255, 0.903); /* Change the text color to white for better contrast */
@@ -50,14 +53,14 @@ body {
 
 h1 {
   margin-bottom: 20px;
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
+  /* the final font family to be used */
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   font-size: 35px;
 }
 
 h2 {
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
+  /* the final font family to be used */
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   margin-bottom: 20px;
   font-size: 25px;
 }
@@ -70,7 +73,8 @@ h2 {
 }
 
 .btn {
-  font-family: "Courier New", Courier, monospace;
+  /* the final font family to be used */
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   
   margin: 10px 10px;
   padding: 10px 20px;

@@ -1,0 +1,236 @@
+body {
+    /* the final font family to be used */
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+.sidebar {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-color: #333;
+    color: white;
+    width: 15vw;
+    height: 100vh;
+    position: fixed;
+    line-height: 40px;
+    padding: 80px 20px 20px; /* Adjust the top padding for the dashboard heading */
+    /* padding-top: -80px; */
+    left: -300px;
+    transition: left 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+    font-weight: normal;
+}
+.sidebar.open {
+    left: 0;
+}
+.sidebar h2 {
+    font-weight: normal;
+    font-size: 2rem;
+    margin-top: 0; /* Remove the top margin for the dashboard heading */
+    margin-bottom: 10px;
+}
+
+/* .sidebar > button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: inline;
+    margin-top: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease;
+}
+
+.sidebar > button::after {
+    content: '\25BC';
+    display: inline-block;
+    margin-left: 5px;
+    transition: transform 0.3s ease;
+}
+
+.sidebar > button.collapsed::after {
+    transform: rotate(-90deg);
+}
+
+.sidebar > .sub-links {
+    display: none;
+}
+
+.sidebar > button.collapsed ~ .sub-links {
+    display: block;
+    animation: slide-down 0.3s ease;
+}
+
+@keyframes slide-down {
+    0% {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+*/
+
+.sidebar > .sub-links{
+    color: white;
+    text-decoration: none;
+    display: block;
+    /* padding: 10px 20px; */
+    margin-left: 30px;
+    /* padding-bottom: 10px; */
+    background-color: #333;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+} 
+
+.main-content-above{
+    /* margin-top: 80px; */
+    padding-top: 80px;
+} 
+.main-content {
+    margin-left: 10vw;
+    padding: 20px;
+    margin-right: 15vw;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    /* border-radius: 50px; */
+    /* border-top: 100px solid #f5f5f5; */
+    animation: slide-up 0.5s ease;
+    transition: transform 0.3s ease;
+}
+.main-content-shift {
+    transform: translateX(10vw);
+    /* transition: transform 0.3s ease; */
+}
+
+.main-content-table, .main-content-table-head, .main-content-table-body {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    /* add table-like properties */
+    /* border: 1px solid #333; */
+    border-collapse: collapse;
+    padding: 10px;
+    text-align: left;
+}
+
+.main-content-table-body-row{
+    /* margin-top: 10px; */
+    /* margin-bottom: 10px; */
+    border-top: 10px;
+    border-bottom: 10px;
+    border-radius: 10px;
+}
+
+.main-content-table-head {
+    font-size: larger;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+
+.table-container {
+    overflow-x: auto;
+    size: 80vw;
+}
+
+.main-content table, .main-content th, .main-content td {
+    border-collapse: collapse;
+    padding: 7px;
+    text-align: left;
+}
+
+.main-content > .bank-details {
+    margin-top: 20px;
+}
+
+.main-content-heading{
+    font-size: 50px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+
+}
+.menu-icon {
+    cursor: pointer;
+    display: block;
+    width: 30px;
+    height: 20px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 3;
+}
+.menu-icon span {
+    display: block;
+    width: 100%;
+    height: 4px;
+    background-color: #333;
+    margin: 5px 0;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+.menu-icon.open span {
+    background-color: white;
+}
+a {
+    /* the final font family to be used */
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+
+.update-profile {
+    background-color: #179cd9;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 0px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease;
+}
+.update-profile:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    background-color: #1280a9;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+a:hover {
+    color: #aaa;
+}
+
+@media (max-width: 600px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        left: 0;
+    }
+    .main-content {
+        margin-left: 10px;
+    }
+}
+@keyframes slide-up {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

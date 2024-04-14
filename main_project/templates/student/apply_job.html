@@ -4,71 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apply for a Job</title>
-    <style>
-        body {
-            font-family: 'Courier New', Courier, monospace;
-            margin: 0;
-            padding: 0;
-            background-color: #f2f2f2;
-        }
-        
-        h1 {
-            text-align: center;
-            margin-top: 50px;
-        }
-        
-        form {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-        
-        input[type="text"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            margin-bottom: 20px;
-        }
-        
-        input[type="submit"] {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-    </style>
+
+    <link rel="stylesheet" href="../../static/newuser.css">
+    <!-- <link rel="stylesheet" href="../../static/login_page.css"> -->
+    <!-- <link rel="stylesheet" href="../../static/personal_info.css"> -->
+    <link rel="stylesheet" href="../../static/sidebar.css">
 </head>
 <body>
+    <!-- working student sidebar -->
+    <div class="menu-icon" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <!-- student sidebar -->
+    <div id="sidebar" class="sidebar">
+        <h2>Dashboard</h2>
+        <a href="/student">Home Page</a><br>
+        <a href="/student/personal_info">Personal Info</a><br>
+        <div class="sub-links">
+            <a href="/student/personal_info">Personal Info Change</a><br>
+            <a href="/student/personal_info/bank_details">Bank Details</a><br>
+            <a href="/student/change_password">Change Password</a><br>
+        </div>
+        <a href="/student/applied_jobs">Applied Jobs</a><br>
+        <a href="/student/jobs_available">Jobs Available</a><br>
+        <a href="/student/my_jobs">My Jobs</a><br>
+        <a href="/student/logout">Logout</a><br>
+    </div>
+
     <h1>Job Application</h1>
     <form action="/student/apply_job/{{job_id}}" method="post">
+        
         <label for="job_id">Job:</label><br>
         <input type="text" id="job_id" name="job_id" value="{{job_id}}:{{job_role}}"  readonly><br>
+
         <label for="cpi">Current CPI:</label><br>
         <input type="text" id="cpi" name="cpi" required><br>
+
         <label for="last_sem_spi">Last Semester SPI:</label><br>
         <input type="text" id="last_sem_spi" name="last_sem_spi" required><br>
+
         <label for="statement_of_motivation">Statement of Motivation:</label><br>
         <textarea id="statement_of_motivation" name="statement_of_motivation" required></textarea><br>
-        <input type="submit" value="Submit Application">
+
+        <input type="submit" id="submit-btn" value="Submit Application">
     </form>
+    <script>
+        function toggleSubmitButton() {            
+            var cpi = document.getElementById("cpi").value.trim();
+            var lastSemSPI = document.getElementById("last_sem_spi").value.trim();
+            var statementOfMotivation = document.getElementById("statement_of_motivation").value.trim();
+
+            var submitButton = document.getElementById("submit-btn");
+
+            if (cpi && lastSemSPI && statementOfMotivation) {
+                submitButton.classList.add("enabled");
+            } else {
+                submitButton.classList.remove("enabled");
+            }
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            var inputFields = document.querySelectorAll('input[type="text"], textarea');
+            inputFields.forEach(function(field) {
+                field.addEventListener("input", toggleSubmitButton);
+            });
+        });
+    </script>
+    <script src="../../static/personal_info.js"></script>
 </body>
 </html>

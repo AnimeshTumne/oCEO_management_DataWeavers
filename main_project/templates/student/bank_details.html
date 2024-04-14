@@ -43,13 +43,14 @@
                 {% if bank_data %}
                     <td>{{ bank_data[0][0] }}</td>
                     <td>{{ bank_data[0][1] }}</td>
-                    <td>{{ bank_data[0][1] }}</td>
+                    <td>{{ bank_data[0][2] }}</td>
                 {% else %}
                     <td colspan="3">No bank details found</td>
                 {% endif %}
             </tr>
         </table>
-        <form action="{{url_for('student_bank_details')}}" method="POST">
+        <!-- redirect to ./edit_bank_details when the below form is submitted -->
+        <form action="{{url_for('student_edit_bank_details', bank_data = bank_data )}}" class="update-profile-form">
             <input type="submit" name="submit_button" value="Update Bank Details" class="update-profile">
         </form>
         <!-- <button onclick="window.location.href = '/student/edit_bank_details';" name="submit_button" value="Edit">Edit Bank Details</button> -->

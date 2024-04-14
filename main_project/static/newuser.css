@@ -70,8 +70,9 @@ label {
 }
 
 input[type="text"],
-input[type="email"] {
-     width: 100%;
+input[type="email"], textarea {
+    
+    width: 100%;
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid #cccccc;
@@ -80,8 +81,16 @@ input[type="email"] {
     transition: border-color 0.3s ease;
 }
 
+textarea {
+    resize: vertical;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: 1px;
+    color: #555555;
+}
+
 input[type="text"]:focus,
-input[type="email"]:focus {
+input[type="email"]:focus,
+textarea:focus{
      border-color: #666666;
     outline: none;
 }

@@ -51,11 +51,11 @@
 <body>
     <form action="/student/edit_bank_details" method="POST">
         <label for="bank_name">Bank Name:</label>
-        <input type="text" id="bank_name" name="bank_name" ><br><br>
+        <input type="text" id="bank_name" name="bank_name" value="{{bank_data[0][2]}}" ><br><br>
         <label for="account_number">Account Number:</label>
-        <input type="text" id="account_number" name="account_number" ><br><br>
+        <input type="text" id="account_number" name="account_number" value="{{bank_data[0][0]}}"><br><br>
         <label for="ifsc_code">IFSC Code:</label>
-        <input type="text" id="ifsc_code" name="ifsc_code" ><br><br>
+        <input type="text" id="ifsc_code" name="ifsc_code" value="{{bank_data[0][1]}}"><br><br>
         <input type="submit" value="Submit">
     </form>
 </body>
