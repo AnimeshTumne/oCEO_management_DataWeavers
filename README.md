@@ -7,11 +7,11 @@ Our frontend, developed using Flask, Flex and Bootstrap, facilitates easy user e
 
 
 ## Back End:
-Our backend is based on flask in python. It uses flask inbuilt methods to redirect and route our pages on the webapp.\
+Our backend is based on flask in python. It uses flask inbuilt methods to redirect and route our pages on the webapp.
 
 *How to use?* 
 
-Import into mySQL, the final version of our database, ```oCEO_v5.sql```. Import this file into your database using server>import>import from sql file option.
+Import into mySQL, the final version of our database, ```oCEO_v6.sql```. Import this file into your database using server>import>import from self-contained file option.
 
 Go into the ```main_project``` folder. After this, run ```main_app.py``` file, and create a new student/professor user using the ```New User``` button. After this, login using created credentials through the ```Student``` or ```Professor``` buttons. After login, you can view various operations that can be done for that particular usertype.
 
@@ -19,7 +19,7 @@ For logging-in using others, which contains Admin, oCEO coordinator, Dean SA and
 
 - dean@iitgn.ac.in
 - sa_js@iitgn.ac.in
-- oceo_coordinator@iitgn.ac.in
+- joycee@iitgn.ac.in (as the oCEO coordinator)
 - admin@iitgn.ac.in
 
 password is same for all - 'admin'. Please select correct user type, or otherwise you would be redirected to a "bad credentials" page.
