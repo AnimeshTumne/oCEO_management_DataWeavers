@@ -15,6 +15,46 @@ app.config["MYSQL_PASSWORD"] = "oceoAdmin"
 app.config["MYSQL_DB"] = "oceo_management"
 
 db = MySQL(app)
+
+# ------------------------------------------------------------------------------------------------------
+
+# google auth
+
+from authlib.integrations.flask_client import OAuth
+oauth = OAuth(app)
+app.config['SERVER_NAME'] = '127.0.0.1:5000'
+
+
+@app.route('/google/<user_type>')
+def google(user_type):
+   GOOGLE_CLIENT_ID="" # added the generated CLIENT ID
+   GOOGLE_CLIENT_SECRET = "" # added the generated CLIENT SECRET
+   CONF_URL = 'https://accounts.google.com/.well-known/openid-configuration'
+   oauth.register(
+       name='google',
+       client_id=GOOGLE_CLIENT_ID,
+       client_secret=GOOGLE_CLIENT_SECRET,
+       server_metadata_url=CONF_URL,
+       client_kwargs={
+           'scope': 'openid email profile'
+       }
+   )
+   redirect_uri = url_for('google_auth',user_type=user_type, _external=True)
+   return oauth.google.authorize_redirect(redirect_uri)
+
+
+@app.route('/google/auth/<user_type>', methods =['GET', 'POST'])
+def google_auth(user_type):
+   if user_type=="student":
+       redirect_uri = url_for('login_student')
+   elif user_type=="professor":
+       redirect_uri = url_for('login_professor')
+   elif user_type=="others":
+       redirect_uri = url_for('others_login')
+   elif user_type=="new_user":
+       redirect_uri = url_for('register')
+   return redirect(redirect_uri)
+
 # ------------------------------------------------------------------------------------------------------
 #syntax for locking and unclockign
 # cursor.execute('LOCK TABLES mytable WRITE')
@@ -865,7 +905,7 @@ def professor_job_page(job_id):
                 return redirect(url_for('professor_stop_accepting_applications', job_id=job_id))
                         
         cursor = db.connection.cursor()
-        query_get_students_under_job = f"SELECT roll_number,first_name,middle_name,last_name,email_id FROM applied_student WHERE roll_number IN (SELECT roll_number FROM application_status WHERE job_id = {job_id} and approval='approved');"
+        query_get_students_under_job = f"SELECT roll_number,first_name,middle_name,last_name,email_id FROM applied_student WHERE roll_number IN (SELECT roll_number FROM application_status WHERE job_id = '{job_id}' and approval='approved');"
         cursor.execute(query_get_students_under_job)
         student_under_job_data = cursor.fetchall()
         # cursor.execute("SHOW COLUMNS FROM job")
@@ -1314,6 +1354,8 @@ def after_login_other(type):
                     return redirect(url_for('timecard_for_payment', type = type))
                 case 'pending_payments':
                     return redirect(url_for('pending_payments', type = type))
+                case "time_card_approve":
+                    return redirect(url_for("timecard_for_oceo_coordinator", type=type))
                 case _:
                     return render_template('others/admin/admin.html', type = type)
         return render_template( 'others/admin/admin.html', type = type ) 
@@ -1442,7 +1484,7 @@ def timecard_for_payment(type):
         
         
         cursor = db.connection.cursor()
-        cursor.execute("select job_id, roll_number, month, job_description, pay_per_hour, hours_worked, pay_per_hour*hours_worked, account_number, IFSC_code, bank_name from job natural join time_card natural join bank_details where faculty_approval='approved' and payment_status ='pending' order by job_id;")
+        cursor.execute("select job_id, roll_number, month, job_description, pay_per_hour, hours_worked, pay_per_hour*hours_worked, account_number, IFSC_code, bank_name from job natural join time_card natural join bank_details where faculty_approval='approved' and oceo_coordinator_approval = 'approved' and payment_status ='pending' order by job_id;")
         # cursor.execute("SELECT job_id, roll_number, month, year, work_description, pay_per_hour*hours_worked, hours_worked FROM job NATURAL JOIN time_card WHERE SA_approval='pending' ORDER BY job_id;")
         timecard_data = cursor.fetchall()
         timecard_head = cursor.description
@@ -1455,7 +1497,6 @@ def timecard_for_payment(type):
 @app.route('/<type>/jobs_approved', methods=['GET','POST'] )
 def jobs_approved(type):
     if "email" in session: 
-
         # if request.method == 'POST':
         cursor = db.connection.cursor()
         if type =='admin':
@@ -1533,6 +1574,40 @@ def review_application(type):
         return render_template('others/admin/review_application.html', application_data=application_data, application_head=column_names, type = type)
     else:
         return redirect(url_for('errorpage'))
+    
+@app.route("/<type>/timecard_for_oceo_coordinator", methods=["GET", "POST"])
+def timecard_for_oceo_coordinator(type):
+    if "email" in session:
+        if request.method == "POST":
+            if request.form["submit_button"] == "approve":
+                job_id = request.form["job_id"]
+                roll_number = request.form["roll_number"]
+                month = request.form["month"]
+                cursor = db.connection.cursor()
+                cursor.execute(
+                    f"UPDATE time_card SET oceo_coordinator_approval='approved' WHERE job_id = {job_id} AND roll_number = {roll_number} AND month = '{month}';"
+                )
+                db.connection.commit()
+                cursor.close()
+            return redirect(url_for("timecard_for_oceo_coordinator", type=type))
+
+        cursor = db.connection.cursor()
+        cursor.execute(
+            "select job_id, roll_number, month, job_description, pay_per_hour, hours_worked from job natural join time_card where oceo_coordinator_approval='pending' order by job_id;"
+        )
+        timecard_data = cursor.fetchall()
+        timecard_head = cursor.description
+        column_names = tuple(row[0] for row in timecard_head)
+        cursor.close()
+        return render_template(
+            "others/admin/timecard_for_oceo.html",
+            timecard_data=timecard_data,
+            timecard_head=column_names,
+            type=type,
+        )
+    else:
+        return redirect(url_for("errorpage"))
+
  #---------------------------------------------Accounts---------------------------------------------------------  
 
 @app.route('/<type>/logout')
