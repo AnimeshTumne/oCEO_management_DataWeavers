@@ -61,6 +61,7 @@ def register():
                 cursor.execute(sql)
                 db.connection.commit()
                 cursor.close()
+                return redirect(url_for("index"))
                 return render_template_string(f"""
                     <script>
                         alert("User registered successfully! Query Executed: {sql}");
@@ -144,6 +145,7 @@ def login_student():
             # ACTIVATES THE SESSION (logged in)
             session["roll_number"] = roll_number
             # Render a template with JavaScript to show a popup
+            return redirect(url_for('after_login_student'))
             return render_template_string(f"""
                 <script>
                     // Show popup
@@ -172,6 +174,7 @@ def login_professor():
             faculty_id = cursor.fetchone()[0]
             cursor.close()
             session["faculty_id"] = faculty_id
+            return redirect(url_for('after_login_professor'))
             return render_template_string(f"""
                 <script>
                     // Show popup
@@ -188,7 +191,7 @@ def login_professor():
 
 
 @app.route("/errorpage")
-def errorpage(error_message):
+def errorpage(error_message="Bad Credentials! Go back and try again."):
     # error_message = "Bad Credentials!"
     return render_template("errorpage.html", error_message=error_message if error_message else "You are not authorised to view this page. Please login first.")
 
@@ -315,6 +318,7 @@ def student_edit_bank_details():
             db.connection.commit()
             cursor.close()
             # return redirect(url_for('student_bank_details'))
+            return redirect(url_for('student_bank_details'))
             return render_template_string(f"""
                 <script>
                     alert("Bank details updated successfully! Query Executed: {update_query}");
@@ -525,7 +529,7 @@ def student_applied_jobs():
                 cursor.execute(sql_delete_application)
                 db.connection.commit()
                 cursor.close()
-
+                return redirect(url_for('student_applied_jobs'))
                 return render_template_string(f"""
                     <script>
                         alert("Application deleted successfully! Query Executed: {sql_delete_application}");
