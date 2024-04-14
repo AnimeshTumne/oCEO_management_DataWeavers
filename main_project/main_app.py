@@ -16,7 +16,10 @@ app.config["MYSQL_DB"] = "oceo_management"
 
 db = MySQL(app)
 # ------------------------------------------------------------------------------------------------------
-
+#syntax for locking and unclockign
+# cursor.execute('LOCK TABLES mytable WRITE')
+# make some updates
+# cursor.execute('UNLOCK TABLES')
 # Home Page - Select User Type
 @app.route("/")
 def index():
@@ -1385,9 +1388,11 @@ def pending_payments(type):
                 job_id = request.form['job_id']
                 roll_number = request.form['roll_number']
                 month = request.form['month']
-                cursor = db.connection.cursor()
+                cursor = db.connection.cursor() 
+                cursor.execute("LOCK TABLES time_card WRITE")
                 cursor.execute(f"UPDATE time_card SET payment_status ='done'  WHERE job_id = {job_id} AND roll_number = {roll_number} AND month = '{month}';")
                 db.connection.commit()
+                cursor.execute('UNLOCK TABLES')
                 cursor.close()
             return redirect(url_for('pending_payments',type=type))
         
@@ -1415,8 +1420,10 @@ def timecard_for_payment(type):
                 print("#"*10)
 
                 cursor = db.connection.cursor()
+                cursor.execute("LOCK TABLES time_card  WRITE")
                 cursor.execute(f"UPDATE time_card SET payment_status ='done'  WHERE job_id = {job_id} AND roll_number = {roll_number} AND month = '{month}';")
                 db.connection.commit()
+                cursor.execute("UNLOCK TABLES")
                 cursor.close()
 
             # elif request.form['submit_button'] == 'reject':
@@ -1482,21 +1489,24 @@ def review_application(type):
             if request.form['submit_button'] == 'Approve':
                 application_id = request.form['application_id']
                 cursor = db.connection.cursor()
-
+                cursor.execute("LOCK TABLES application_status WRITE")
                 # cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
                 cursor.execute(f"UPDATE application_status SET {perm} = 1 WHERE application_id = {application_id};")
                 if perm == 'dean_approved':
                     cursor.execute(f"UPDATE application_status SET approval = 'approved' WHERE application_id = {application_id};")
                 db.connection.commit()
+                cursor.execute("UNLOCK TABLES")
                 cursor.close()
                 return redirect(url_for('review_application',type=type))
             elif request.form['submit_button'] == 'Reject':
                 application_id = request.form['application_id']
                 cursor = db.connection.cursor()
+                cursor.execute("LOCK TABLES application_status WRITE")
                 # cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
                 cursor.execute(f"UPDATE application_status SET {perm}= 0 WHERE application_id = {application_id};")
                 cursor.execute(f"UPDATE application_status SET approval = 'rejected' WHERE application_id = {application_id};")
                 db.connection.commit()
+                cursor.execute("UNLOCK TABLES")
                 cursor.close()
                 return redirect(url_for('review_application',type=type))
             
