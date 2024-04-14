@@ -7,6 +7,25 @@
     <!-- <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet"> -->
 </head>
 <body>
+    <!-- <header style="background-color: blue;" > -->
+        <!-- <nav style="color: blue;"> -->
+            <!-- <div class="menu" style="color: blue;"> -->
+                <!-- <a href="/professor">Home Page</a> -->
+                <!-- <a href="/professor/personal_info">Personal Info</a> -->
+                <!-- <div class="sub-links"> -->
+                    <!-- <a href="/professor/change_password">Change Password</a> -->
+                    <!-- <a href="/professor/update_profile">Personal Info Change</a> -->
+                <!-- </div> -->
+                <!-- <a href="/professor/jobs_created" >Jobs Created</a> -->
+                <!-- <div class="sub-links"> -->
+                    <!-- <a href="/professor/add_job">Create New Jobs</a> -->
+                <!-- </div> -->
+                <!-- <a href="/professor/timecard_for_review">Timecards for review</a> -->
+                <!-- <a href="/professor/logout">Logout</a> -->
+            <!-- </div> -->
+        <!-- </nav> -->
+    <!-- </header> -->
+
     <div class="menu-icon" onclick="toggleMenu()">
         <span></span>
         <span></span>
@@ -21,11 +40,11 @@
         <br>
         <div class="sub-links">
             <a href="/professor/change_password">Change Password</a><br>
-            <a href="/professor/personal_info_change">Personal Info Change</a><br>
+            <a href="/professor/update_profile">Personal Info Change</a><br>
         </div>
         <a href="/professor/jobs_created" >Jobs Created</a><br>
         <div class="sub-links">
-            <a href="/professor/create_job">Create New Jobs</a><br>
+            <a href="/professor/add_job">Create New Jobs</a><br>
         </div>
         <a href="/professor/timecard_for_review">Timecards for review</a><br>
         <a href="/professor/logout">Logout</a><br>
@@ -38,9 +57,9 @@
         <h1 class="main-content-heading">Personal Information</h1>
         <div class="user-info">
             <p>Faculty ID: {{professor_data[0][0]}}</p>
-            <p>First Name:{{ professor_data[0][1]}}</p>
-            <p>Middle Name:{{ professor_data[0][2] }}</p>
-            <p>Last Name:{{ professor_data[0][3] }}</p>
+            <p>First Name: {{ professor_data[0][1]}}</p>
+            <p>Middle Name: {{ professor_data[0][2] }}</p>
+            <p>Last Name: {{ professor_data[0][3] }}</p>
             <p>Department name: {{professor_data[0][4]}} </p>
             <p>Email ID: {{ professor_data[0][5] }}</p>
             <p>VOIP ID: {{ professor_data[0][6] }}</p>

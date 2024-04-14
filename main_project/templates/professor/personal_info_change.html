@@ -21,11 +21,11 @@
         <br>
         <div class="sub-links">
             <a href="/professor/change_password">Change Password</a><br>
-            <a href="/professor/personal_info_change">Personal Info Change</a><br>
+            <a href="/professor/update-profile">Personal Info Change</a><br>
         </div>
         <a href="/professor/jobs_created" >Jobs Created</a><br>
         <div class="sub-links">
-            <a href="/professor/create_job">Create New Jobs</a><br>
+            <a href="/professor/add_job">Create New Jobs</a><br>
         </div>
         <a href="/professor/timecard_for_review">Timecards for review</a><br>
         <a href="/professor/logout">Logout</a><br>
@@ -40,20 +40,27 @@
                 <p>Faculty ID: {{professor_data[0][0]}}
                     <!-- <input type="text" name="faculty_id" value="{{professor_data[0][0]}}" readonly > -->
                 </p>
-                <p>First Name:<input type="text" name="first_name" value="{{professor_data[0][1]}}"required ></p>
-                <p>Middle Name:<input type="text" name="middle_name" value="{{professor_data[0][2]}}" ></p>
-                <p>Last Name:<input type="text" name="last_name" value="{{professor_data[0][3]}}" ></p>
+                <p>First Name: <input type="text" name="first_name" value="{{professor_data[0][1]}}"required ></p>
+                <p>Middle Name: <input type="text" name="middle_name" value="{{professor_data[0][2]}}" ></p>
+                <p>Last Name: <input type="text" name="last_name" value="{{professor_data[0][3]}}" ></p>
                 <p>Department Name: 
                     <!-- dropdown of CSE, MSE, BE, EE, CE, ME, CL, etc -->
                     <select name="department_name" id="department_name">
-                        <option value="CSE">CSE</option>
-                        <option value="MSE">MSE</option>
-                        <option value="BE">BE</option>
-                        <option value="EE">EE</option>
-                        <option value="CE">CE</option>
-                        <option value="ME">ME</option>
-                        <option value="CL">CL</option>
+                        <option value="" selected disabled>Select Department</option>
+                        <option value="Computer Science and Engineering">Computer Science and Engineering</option>
+                        <option value="Material Science and Engineering">Material Science and Engineering</option>
+                        <option value="Biological Engineering">Biological Engineering</option>
+                        <option value="Electrical Engineering">Electrical Engineering</option>
+                        <option value="Civil Engineering">Civil Engineering</option>
+                        <option value="Mechanical Engineering">Mechanical Engineering</option>
+                        <option value="Chemical Engineering">Chemical Engineering</option>
                     </select>
+                        <!-- <option value="BE">BE</option> -->
+                        <!-- <option value="EE">EE</option> -->
+                        <!-- <option value="CE">CE</option> -->
+                        <!-- <option value="ME">ME</option> -->
+                        <!-- <option value="CL">CL</option> -->
+                    <!-- </select> -->
                     <!-- <input type="text" name="department_name" value="{{professor_data[0][4]}}"> -->
                 </p>
                 <p>Email: {{professor_data[0][5]}}
