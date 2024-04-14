@@ -4,59 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Bank Details</title>
-    <style>
-        body {
-            font-family: 'Courier New', Courier, monospace;
-            background-color: #f2f2f2;
-        }
-        
-        form {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-        
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        
-        input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <link rel="stylesheet" href="../../static/personal_info.css">
 </head>
 <body>
-    <form action="/student/edit_bank_details" method="POST">
-        <label for="bank_name">Bank Name:</label>
-        <input type="text" id="bank_name" name="bank_name" value="{{bank_data[0][2]}}" ><br><br>
-        <label for="account_number">Account Number:</label>
-        <input type="text" id="account_number" name="account_number" value="{{bank_data[0][0]}}"><br><br>
-        <label for="ifsc_code">IFSC Code:</label>
-        <input type="text" id="ifsc_code" name="ifsc_code" value="{{bank_data[0][1]}}"><br><br>
-        <input type="submit" value="Submit">
-    </form>
+    <div class="menu-icon" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <!-- student sidebar -->
+    <div id="sidebar" class="sidebar">
+        <h2>Dashboard</h2>
+        <a href="/student">Home Page</a><br>
+        <a href="/student/personal_info">Personal Info</a><br>
+        <div class="sub-links">
+            <a href="/student/personal_info">Personal Info</a><br>
+            <a href="/student/bank_details">Bank Details</a><br>
+            <a href="/student/change_password">Change Password</a><br>
+        </div>
+        <a href="/student/applied_jobs">Applied Jobs</a><br>
+        <a href="/student/jobs_available">Jobs Available</a><br>
+        <a href="/student/my_jobs">My Jobs</a><br>
+        <a href="/student/logout">Logout</a><br>
+    </div>
+    <div id="main-content-above" class="main-content-above">
+        <!-- <p type="hidden">For space above the main form</p> -->
+    </div>
+    <div id="main-content" class="main-content">
+        <h1 class="main-content-heading">Edit Bank Details</h1>
+        <form action="/student/edit_bank_details" method="POST">
+            <label for="bank_name">Bank Name:</label>
+            <input type="text" id="bank_name" name="bank_name" value="{{bank_data[0][2]}}" required><br><br>
+            <label for="account_number">Account Number:</label>
+            <input type="text" id="account_number" name="account_number" value="{{bank_data[0][0]}}" required><br><br>
+            <label for="ifsc_code">IFSC Code:</label>
+            <input type="text" id="ifsc_code" name="ifsc_code" value="{{bank_data[0][1]}}" required><br><br>
+            <input type="submit" class="update-profile" value="Submit">
+        </form>
+    </div>
+    <script src="../../static/personal_info.js"></script>
 </body>
 </html>

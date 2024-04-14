@@ -32,11 +32,12 @@ h1 {
     text-align: center;
     margin-bottom: 30px;
     color: #333333;
+    animation: fadeIn 1s ease;
 }
 
 label {
     display: block;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
     font-weight: bold;
     color: #555555;
 }
@@ -70,7 +71,7 @@ label {
 }
 
 input[type="text"],
-input[type="email"], textarea {
+input[type="email"], textarea, input[type="number"], select {
     
     width: 100%;
     padding: 10px;
@@ -115,7 +116,7 @@ textarea:focus{
     }
 }
 
-input[type="submit"] {
+input[type="submit"], .submit-btn{
     background-color: #179cd9;
     color: #ffffff;
     padding: 10px 20px;

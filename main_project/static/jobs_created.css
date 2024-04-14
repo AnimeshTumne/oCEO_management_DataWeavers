@@ -91,7 +91,16 @@ body {
 .main-content-above{
     /* margin-top: 80px; */
     padding-top: 80px;
+    animation: slide-up 0.5s ease;
+    transition: transform 0.3s ease;
 } 
+
+.main-content-above > form {
+    margin-left: 10vw;
+    margin-bottom: 20px;
+    border-left: 20vw;
+}
+
 .main-content {
     margin-left: 10vw;
     padding: 20px;

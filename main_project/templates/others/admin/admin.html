@@ -2,47 +2,16 @@
 <html>
 <head>
     <title>Others Login</title>
-<style>
-        body {
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            width: 300px;
-            padding: 16px;
-            background-color: white;
-            margin: 0 auto;
-            margin-top: 100px;
-            box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
-        }
-        .container h2 {
-            text-align: center;
-            color: #603939;
-        }
-        .container button {
-        display: block;
-        width: 100%;
-        height: 40px;
-        margin: 20px 0;
-        font-size: 18px;
-        border: none;
-        background-color: #4CAF50;
-        color: white;
-        transition: background-color 0.3s ease;
-        }
-
-        .container button:hover {
-          background-color: #45a049;
-        }
-        .container a {
-            text-decoration: none;
-            color: #4CAF50;
-            display: block;
-            text-align: right;
-        }
-</style> 
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/professor/after_login.css">
 </head>
 <body>
+    <header>
+        <h1>{{(type.replace("_", " ")).upper()}} Portal</h1>
+        <img src="../../static/logo.png" class="logo" alt="IITGN logo">
+    </header>
+
+
     <form action="/{{type}}/after_login_other" method="post">
         <!-- <button class='btn' name="submit_button" value="personal_info" type="submit">Personal Info</button>
         <button class='btn' name="submit_button" value="jobs_available" type="submit">Jobs Available</button>
@@ -50,21 +19,22 @@
         <button class='btn' name="submit_button" value="logout" type="submit">Logout</button>
          -->
         <div class="container">
-            <h2>Welcome, {{type}}!</h2>
+            <h2>Welcome, {{(type.replace("_", " ")).upper() }}!</h2>
             <button class='btn' name="submit_button" value="applications_to_review" type="submit">Applications to review</button>
             <button class='btn' name="submit_button" value="approved_jobs" type="submit">Approved Jobs</button>
             {% if type == 'sa_js' %}
             <!-- render time_card table sent by backend -->
             <button class='btn' name="submit_button" value="time_card" type="submit">Pending Timecard Payments</button>
             <!-- <button class='btn' name="submit_button" value="pending_payments" type="submit">Pending Payments</button>  -->
+            {% elif type == 'oceo_coordinator'%}
+            <button class='btn' name="submit_button" value="time_card_approve" type="submit">Pending Timecards to Approve</button>
             {% endif %}
             <button class='btn' name="submit_button" value="logout" type="submit">Logout</button>
-            
-
         </div>
         </form>
-
-        
-
+        <footer>
+            <p>&copy; 2024, DataWeavers, CS432 Databases, IIT Gandhinagar, Gujarat, India</p>
+        </footer>
+        <script src="../../static/professor/after_login.js"></script>
 </body>
 </html>

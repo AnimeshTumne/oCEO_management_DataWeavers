@@ -4,64 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Time Card</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1 {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        form {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        label {
-            display: block;
-            margin-top: 10px;
-        }
-
-        input[type="text"],
-        input[type="number"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-            margin-top: 5px;
-        }
-
-        button[type="submit"] {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        button[type="submit"]:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <link rel="stylesheet" href="../../static/newuser.css">
+    <link rel="stylesheet" href="../../static/sidebar.css">
 </head>
 <body>
+    <!-- working student sidebar -->
+    <div class="menu-icon" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <!-- student sidebar -->
+    <div id="sidebar" class="sidebar">
+        <h2>Dashboard</h2>
+        <a href="/student">Home Page</a><br>
+        <a href="/student/personal_info">Personal Info</a><br>
+        <div class="sub-links">
+            <a href="/student/personal_info">Personal Info Change</a><br>
+            <a href="/student/personal_info/bank_details">Bank Details</a><br>
+            <a href="/student/change_password">Change Password</a><br>
+        </div>
+        <a href="/student/applied_jobs">Applied Jobs</a><br>
+        <a href="/student/jobs_available">Jobs Available</a><br>
+        <a href="/student/my_jobs">My Jobs</a><br>
+        <a href="/student/logout">Logout</a><br>
+    </div>
     <h1>Time Card for oCEO Job</h1>
     <form action="/student/submit_timecard/{{job_id}}" method="post">
         <label for="job_id">Job:</label><br>
         <input type="text" id="job_id" name="job_id" value="{{job_id}}" readonly><br>
-        <!-- <label for="month">Month:</label><br> -->
-        <!-- <input type="month" id="month" name="month" required><br> -->
+
         <label for="month">Month:</label><br>
         <select id="month" name="month" required>
             <option value="JAN">January</option>
@@ -77,14 +49,39 @@
             <option value="NOV">November</option>
             <option value="DEC">December</option>
         </select><br>
+
         <label for="year" >Year:</label><br>
         <input type="text" id="year" name="year" value="{{current_year}}" readonly><br>
+
         <label for="hours_worked">Hours Worked:</label><br>
         <input type="number" id="hours_worked" name="hours_worked" required><br>
+
         <label for="work_description">Work Description:</label><br>
         <textarea id="work_description" name="work_description" required></textarea><br>
+
         <label for="submit_button"></label><br>
-        <button type="submit" name="submit_button" value="submit_timecard">Submit Time Card</button>
+        <input type="submit" name="submit_button" class="submit-btn" id="submit-btn" value="Submit Timecard">
     </form>
+    <script>
+        function toggleSubmitButton() {            
+            var hoursWorked = document.getElementById("hours_worked").value.trim();
+            var workDescription = document.getElementById("work_description").value.trim();
+            var month = document.getElementById("month").value.trim();
+            var submitButton = document.getElementById("submit-btn");
+
+            if (hoursWorked && workDescription && month) {
+                submitButton.classList.add("enabled");
+            } else {
+                submitButton.classList.remove("enabled");
+            }
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            var inputFields = document.querySelectorAll('input[type="text"], input[type="number"], select, textarea');
+            inputFields.forEach(function(field) {
+                field.addEventListener("input", toggleSubmitButton);
+            });
+        });
+    </script>
+    <script src="../../static/personal_info.js"></script>
 </body>
 </html>

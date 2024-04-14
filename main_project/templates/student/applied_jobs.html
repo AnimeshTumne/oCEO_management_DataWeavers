@@ -3,84 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Applied Jobs</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .apply-job {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 20px;
-        }
-        .sidebar {
-            background-color: #333;
-            color: white;
-            width: 200px;
-            height: 100vh;
-            position: fixed;
-            line-height: 30px;
-            padding: 20px;
-            left: -300px;
-            transition: left 0.3s ease;
-        }
-        .sidebar.open {
-            left: 2px;
-        }
-        .menu-icon {
-            cursor: pointer;
-            display: block;
-            width: 30px;
-            height: 20px;
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-        .menu-icon span {
-            display: block;
-            width: 100%;
-            height: 4px;
-            background-color: #333;
-            margin: 5px 0;
-        }
-        a{
-            color: white;
-            text-decoration: none;
-        }
-    </style>
+    <title>Available Jobs</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/jobs_created.css">
 </head>
 <body>
-    <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Applied Jobs</h1>
+    <!-- working student sidebar -->
     <div class="menu-icon" onclick="toggleMenu()">
         <span></span>
         <span></span>
         <span></span>
     </div>
+
     <div id="sidebar" class="sidebar">
         <h2>Dashboard</h2>
         <a href="/student">Home Page</a><br>
         <a href="/student/personal_info">Personal Info</a><br>
-        <a href="/student/applied_jobs" >Applied Jobs</a><br>
+        
+            <div class="sub-links">
+                <a href="/student/personal_info">Personal Info Change</a><br>
+                <a href="/student/personal_info/bank_details">Bank Details</a><br>
+                <a href="/student/change_password">Change Password</a><br>
+            </div>
+
+        <a href="/student/applied_jobs">Applied Jobs</a><br>
         <a href="/student/jobs_available">Jobs Available</a><br>
         <a href="/student/my_jobs">My Jobs</a><br>
         <a href="/student/logout">Logout</a><br>
-
     </div>
-    <table>
+
+    <div id="main-content-above" class="main-content-above">
+        <!-- <p type="hidden">For space above the main form</p> -->
+    </div>
+    
+    <div id="main-content" class="main-content table-container">
+        <h1 class="main-content-heading">Applied Jobs</h1>
+        <div class="table-container">
+            <table class="main-content-table">
+                <thead class="main-content-table-head">
+                    <tr class="main-content-table-head-row">
+                    {% for columnName in job_head %}
+                        {% if columnName == "job_description" %}
+                            <th><div style="width: 500px;">Job Description</div></th>
+                        {% elif columnName == "additional_info" %}
+                            <th><div style="width: 250px;">Additional Info</div></th>
+                        {% elif columnName == "prerequisites"%}
+                            <th><div style="width: 250px;">Prerequisites</div></th>
+                        {% else %}
+                            <th>{{ (columnName.replace("_", " ")).capitalize() }}</th>
+                        {% endif %}
+                    {% endfor %}
+                    <th>Action button</th>
+                    </tr>
+                </thead>
+                <tbody class="main-content-table-body">
+                    {%set i = namespace(value=0)%}
+                    {% for job in job_data %}
+                        {% if i.value % 2 == 0 %}
+                            <tr class="main-content-table-body-row">
+                                {% for field in job %}
+                                    <td><div class="scrollable-content" style="margin: 20px 0px 20px 0px;">{{ field }}</div></td>
+                                {% endfor %}
+                                <td>
+                                    <form action="/student/applied_jobs" method="post">
+                                        <input type="hidden" name="application_id" value="{{ job[0] }}">
+                                        <button type="submit" class="update-profile" name="submit_button" value="cancel_application">Cancel</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr class="main-content-table-body-row" style="background-color: #e9e9e9;">
+                                {% for field in job %}
+                                    <td><div class="scrollable-content" style="margin: 20px 0px 20px 0px;">{{ field }}</div></td>
+                                {% endfor %}
+                                <td>
+                                    <form action="/student/applied_jobs" method="post">
+                                        <input type="hidden" name="application_id" value="{{ job[0] }}">
+                                        <button type="submit" class="update-profile" name="submit_button" value="cancel_application">Cancel</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% set i.value = i.value + 1 %}
+                        <!-- {% for field in job %}
+                            <td><div class="scrollable-content" style="margin: 20px 0px 20px 0px;">{{ field }}</div></td>
+                        {% endfor %} -->
+                        <!-- <td>
+                            <form action="/student/applied_jobs" method="post">
+                                <input type="hidden" name="application_id" value="{{ job[0] }}">
+                                <button type="submit" name="submit_button" value="cancel_application">Cancel Application</button>
+                            </form>
+                        </td> -->
+                    <!-- </tr> -->
+
+                    <!-- <tr class="main-content-table-body-row">
+                        {% for field in job %}
+                            <td><div class="scrollable-content" style="margin: 20px 0px 20px 0px;">{{ field }}</div></td>
+                        {% endfor %}
+                        <td>
+                            <form action="/student/applied_jobs" method="post">
+                                <input type="hidden" name="application_id" value="{{ job[0] }}">
+                                <button type="submit" name="submit_button" value="cancel_application">Cancel Application</button>
+                            </form>
+                        </td>
+                    </tr> -->
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
+
+    <!-- <table>
     <thead>
         <tr>
         {% for columnName in job_head %}
@@ -104,7 +137,8 @@
         </tr>
         {% endfor %}
     </tbody>
-    </table>
+    </table> -->
+
     <script>
         function toggleMenu() {
             var sidebar = document.getElementById('sidebar');
@@ -112,5 +146,7 @@
             sidebar.classList.toggle('open');
         }
     </script>
+    <script src="../../static/jobs_created.js"></script>
+
 </body>
 </html>
