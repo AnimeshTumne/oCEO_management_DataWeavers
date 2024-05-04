@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <!-- <link rel="stylesheet" href="../../static/template.css"> -->
     <link rel="stylesheet" href="../../static/jobs_created.css">
+    <!-- <link rel="stylesheet" href="../../static/sidebar.css"> -->
 </head>
 <body>
     <div class="menu-icon" onclick="toggleMenu()">
@@ -34,10 +35,15 @@
     </div>
     <div id="main-content-above" class="main-content-above">
         <!-- <p type="hidden">For space above the main form</p> -->
+        <a href="/professor/add_job" class="apply-job">Create a new job</a>
+        <form action="/professor/add_job" method="get">
+            <!-- <input type="hidden" name="job_id" value="{{ job_id }}"> -->
+            <button type="submit" class="update-profile" name="submit_button" value="create_job">Create a new job</button>
+        </form>
     </div>
     <div id="main-content" class="main-content table-container"> 
         <!-- style="padding-top: 40px; text-align:center; border: 1px #e9e9e9;"> -->
-        <a href="/professor/add_job" class="apply-job">Create a new job</a>
+        
         <h1 class="main-content-heading">Jobs Created</h1>
         <table class="main-content-table">
             <thead class="main-content-table-head">
