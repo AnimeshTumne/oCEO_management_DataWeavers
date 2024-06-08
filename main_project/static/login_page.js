@@ -46,9 +46,21 @@ function toggleSubmitButton() {
     }
 }
 
+// function toggleDarkMode() {
+//     document.body.classList.toggle('dark-mode');
+//   }  
+
 function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-  }  
+    const body = document.body;
+    body.classList.toggle('dark-mode');
+  
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    if (body.classList.contains('dark-mode')) {
+      darkModeToggle.textContent = 'Toggle Light Mode';
+    } else {
+      darkModeToggle.textContent = 'Toggle Dark Mode';
+    }
+  }
 
 document.addEventListener("DOMContentLoaded", function() {
     var inputFields = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]');

@@ -15,6 +15,51 @@ body {
     margin: 0;
     padding: 20px;
     box-sizing: border-box;
+
+    /* dark mode trials start*/
+
+    --light-bg-color: #E9E9E9;
+    --light-text-color: #333333;
+    --light-input-bg-color: #ffffff;
+    --light-input-border-color: #cccccc;
+    --light-input-focus-border-color: #666666;
+    --light-submit-bg-color: #179cd9;
+    --light-submit-hover-bg-color: #1280a9;
+
+    /* 
+    --dark-bg-color: #1a1a1a;
+    --dark-text-color: #e0e0e0;
+    --dark-input-bg-color: #2d2d2d;
+    --dark-input-border-color: #3d3d3d;
+    --dark-input-focus-border-color: #999999;
+    --dark-submit-bg-color: #2196f3;
+    --dark-submit-hover-bg-color: #1976d2; */
+
+    /* --light-bg-color: #000000; 
+    --light-text-color: #ffffff; 
+    --light-input-bg-color: #1a1a1a;
+    --light-input-border-color: #333333; 
+    --light-input-focus-border-color: #4d90fe; 
+    --light-submit-bg-color: #4d90fe;
+    --light-submit-hover-bg-color: #3a78d8; */
+
+    --dark-bg-color: #000000;
+    /* Black background for dark mode (same as light mode) */
+    --dark-text-color: #c6c6c6;
+    /* White text for dark mode (same as light mode) */
+    --dark-input-bg-color: #1a1a1a;
+    /* Dark input background for dark mode (same as light mode) */
+    --dark-input-border-color: #333333;
+    /* Dark input border color for dark mode (same as light mode) */
+    --dark-input-focus-border-color: #4d90fe;
+    /* Blue input focus border color for dark mode (same as light mode) */
+    --dark-submit-bg-color: #4d90fe;
+    /* Blue submit button background for dark mode (same as light mode) */
+    --dark-submit-hover-bg-color: #3a78d8;
+    /* Darker blue submit button hover background for dark mode (same as light mode) */
+
+
+    /* dark mode trials end */
 }
 
 .logo {
@@ -35,6 +80,8 @@ form {
     max-width: 500px;
     width: 100%;
     animation: fadeIn 1s ease;
+    /* Add a subtle white box-shadow */
+    /* box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);  */
 }
 
 /* 
@@ -176,11 +223,111 @@ input[type="submit"]:hover.enabled {
     }
 } */
 
+/* ----------------------------------------------------------------------------------------- */
+/* dark mode button styles */
+
+#dark-mode-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 1;
+    /* Ensure the button is on top of other elements */
+}
+
+/* Styles for dark mode */
+body.dark-mode #dark-mode-toggle {
+    background-color: #ccc;
+    color: #333;
+}
+
+/* ----------------------------------------------------------------------------------------- */
+/* dark mode trial start */
+body {
+    background-color: var(--light-bg-color);
+    color: var(--light-text-color);
+}
+
+form {
+    background-color: var(--light-input-bg-color);
+    /* ... existing styles ... */
+}
+
+/* ... existing styles ... */
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    background-color: var(--light-input-bg-color);
+    border-color: var(--light-input-border-color);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: var(--light-input-focus-border-color);
+}
+
+input[type="submit"] {
+    background-color: var(--light-submit-bg-color);
+    /* ... existing styles ... */
+}
+
+input[type="submit"]:hover.enabled {
+    background-color: var(--light-submit-hover-bg-color);
+}
+
+/* Add this for dark mode */
+body.dark-mode {
+    background-color: var(--dark-bg-color);
+    color: var(--dark-text-color);
+}
+
+body.dark-mode form {
+    background-color: var(--dark-input-bg-color);
+    color: var(--dark-text-color);
+}
+
+body.dark-mode h1 {
+    color: var(--dark-text-color);
+}
+
+body.dark-mode input[type="text"],
+body.dark-mode input[type="email"],
+body.dark-mode input[type="password"] {
+    background-color: var(--dark-input-bg-color);
+    border-color: var(--dark-input-border-color);
+    color: var(--dark-text-color);
+}
+
+body.dark-mode input[type="text"]:focus,
+body.dark-mode input[type="email"]:focus,
+body.dark-mode input[type="password"]:focus {
+    border-color: var(--dark-input-focus-border-color);
+}
+
+body.dark-mode input[type="submit"] {
+    background-color: var(--dark-submit-bg-color);
+}
+
+body.dark-mode input[type="submit"]:hover.enabled {
+    background-color: var(--dark-submit-hover-bg-color);
+}
+
+/* ----------------------------------------------------------------------------------------- */
+/* dark mode trial end */
+
 @keyframes fadeIn {
     0% {
         opacity: 0;
         transform: translateY(-20px);
     }
+
     100% {
         opacity: 1;
         transform: translateY(0);
