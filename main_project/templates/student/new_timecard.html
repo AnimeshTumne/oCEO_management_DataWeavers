@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Time Card</title>
     <link rel="stylesheet" href="../../static/newuser.css">
-    <link rel="stylesheet" href="../../static/sidebar.css">
+    <!-- <link rel="stylesheet" href="../../static/jobs_created.css"> -->
+    <link rel="stylesheet" href="../../static/sidebar/sidebar.css">
 </head>
 <body>
     <!-- working student sidebar -->
@@ -29,39 +30,47 @@
         <a href="/student/my_jobs">My Jobs</a><br>
         <a href="/student/logout">Logout</a><br>
     </div>
-    <h1>Time Card for oCEO Job</h1>
-    <form action="/student/submit_timecard/{{job_id}}" method="post">
-        <label for="job_id">Job:</label><br>
-        <input type="text" id="job_id" name="job_id" value="{{job_id}}" readonly><br>
 
-        <label for="month">Month:</label><br>
-        <select id="month" name="month" required>
-            <option value="JAN">January</option>
-            <option value="FEB">February</option>
-            <option value="MAR">March</option>
-            <option value="APR">April</option>
-            <option value="MAY">May</option>
-            <option value="JUN">June</option>
-            <option value="JUL">July</option>
-            <option value="AUG">August</option>
-            <option value="SEP">September</option>
-            <option value="OCT">October</option>
-            <option value="NOV">November</option>
-            <option value="DEC">December</option>
-        </select><br>
+    <div id="main-content-above" class="main-content-above">
+        <!-- <p type="hidden">For space above the main form</p> -->
+    </div>
 
-        <label for="year" >Year:</label><br>
-        <input type="text" id="year" name="year" value="{{current_year}}" readonly><br>
+    <div id="main-content" class="main-content">
+        
+        <form action="/student/submit_timecard/{{job_id}}" method="post">
+            <h1>Time Card for oCEO Job</h1>
+            <label for="job_id">Job:</label><br>
+            <input type="text" id="job_id" name="job_id" value="{{job_id}}" readonly><br>
 
-        <label for="hours_worked">Hours Worked:</label><br>
-        <input type="number" id="hours_worked" name="hours_worked" required><br>
+            <label for="month">Month:</label><br>
+            <select id="month" name="month" required>
+                <option value="JAN">January</option>
+                <option value="FEB">February</option>
+                <option value="MAR">March</option>
+                <option value="APR">April</option>
+                <option value="MAY">May</option>
+                <option value="JUN">June</option>
+                <option value="JUL">July</option>
+                <option value="AUG">August</option>
+                <option value="SEP">September</option>
+                <option value="OCT">October</option>
+                <option value="NOV">November</option>
+                <option value="DEC">December</option>
+            </select><br>
 
-        <label for="work_description">Work Description:</label><br>
-        <textarea id="work_description" name="work_description" required></textarea><br>
+            <label for="year" >Year:</label><br>
+            <input type="text" id="year" name="year" value="{{current_year}}" readonly><br>
 
-        <label for="submit_button"></label><br>
-        <input type="submit" name="submit_button" class="submit-btn" id="submit-btn" value="Submit Timecard">
-    </form>
+            <label for="hours_worked">Hours Worked:</label><br>
+            <input type="number" id="hours_worked" name="hours_worked" required><br>
+
+            <label for="work_description">Work Description:</label><br>
+            <textarea id="work_description" name="work_description" required></textarea><br>
+
+            <label for="submit_button"></label><br>
+            <input type="submit" name="submit_button" class="submit-btn" id="submit-btn" value="Submit Timecard">
+        </form>
+    </div>
     <script>
         function toggleSubmitButton() {            
             var hoursWorked = document.getElementById("hours_worked").value.trim();
