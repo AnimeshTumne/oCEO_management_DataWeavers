@@ -43,13 +43,13 @@ def google(user_type):
    return oauth.google.authorize_redirect(redirect_uri)
 
 
-@app.route('/google/auth/<user_type>', methods =['GET', 'POST'])
-def google_auth(user_type):
-   if user_type=="student":
+@app.route('/google/auth/<user_type>', methods =['GET', 'POST'])        
+def google_auth(user_type):     
+   if user_type=="student":     
        redirect_uri = url_for('login_student')
-   elif user_type=="professor":
+   elif user_type=="professor":         
        redirect_uri = url_for('login_professor')
-   elif user_type=="others":
+   elif user_type=="others":        
        redirect_uri = url_for('others_login')
    elif user_type=="new_user":
        redirect_uri = url_for('register')
@@ -65,6 +65,9 @@ def google_auth(user_type):
 def index():
     return render_template("index.html")
 
+
+
+# ---------------------------------------------- NEW USER REGISTRATION--------------------------------------------------------
 # NEW USER REGISTRATION
 @app.route("/login/new_user", methods=["GET", "POST"])
 def register():
@@ -130,7 +133,11 @@ def register():
     
     return render_template("newuser.html")
 
-# ------------------------------------------------------------------------------------------------------
+
+
+
+
+# -------------------------------------------------AUTHENTICATION-----------------------------------------------------
 # check the credentials of the user 
 def authenticate(email, password, userType):
     cursor = db.connection.cursor()
@@ -167,7 +174,7 @@ def authenticate(email, password, userType):
         return True
     else:
         return False
-
+# -------------------------------------------------LOGIN PAGE-----------------------------------------------------
 @app.route('/login/student', methods=['GET', 'POST'])
 def login_student():
     if request.method == 'POST':
@@ -236,8 +243,8 @@ def errorpage(error_message="Bad Credentials! Go back and try again."):
     return render_template("errorpage.html", error_message=error_message if error_message else "You are not authorised to view this page. Please login first.")
 
 
-# -----------AUTHORISED ACCESS ONLY----------------------------------------------------------------
-
+# -----------AUTHORISED ACCESS ONLY(AFTER LOGIN)----------------------------------------------------------------
+# ---------------------------------------------- STUDENT --------------------------------------------------------
 @app.route('/student', methods=['GET', 'POST']) # student homepage
 def after_login_student():
     if "roll_number" in session:
@@ -1250,8 +1257,8 @@ def professor_stop_accepting_applications(job_id):
 def professor_logout():
     session.pop('faculty_id', None)
     return redirect(url_for('index'))
-# ------------------------------------------------------------------------------------------------------
-#----------------------Others-----------------------------------------------------------------
+# ---------------------------------------------END OF PROFESSOR---------------------------------------------------------
+#----------------------START OF Others-----------------------------------------------------------------
 
 @app.route('/login/others',  methods=['GET', 'POST'])
 def others_login(): 

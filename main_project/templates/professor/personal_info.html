@@ -65,10 +65,10 @@
             <p>VOIP ID: {{ professor_data[0][6] }}</p>
         </div>
 
-        <form action="{{url_for('professor_personal_info')}}" method="POST">
+        <form action="{{url_for('professor_bp.professor_personal_info')}}" method="POST">
             <input type="submit" name="submit_button"  value="Update Profile" class="update-profile">
         </form>
-        <form action="{{url_for('professor_personal_info')}}" method="POST">
+        <form action="{{url_for('professor_bp.professor_personal_info')}}" method="POST">
             <input type="submit" name="submit_button"  value="Change Password" class="update-profile">
         </form>
     </div>

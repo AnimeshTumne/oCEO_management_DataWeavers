@@ -72,12 +72,15 @@
     </div>
     <div id="sidebar" class="sidebar">
         <h2>Dashboard</h2>
-        <a href="/{{type}}/after_login_other">Home Page</a><br>
-        <a href="/{{type}}/review_application">Review Application</a><br>
+        <a href="/other/{{type}}/after_login_other">Home Page</a><br>
+        <a href="/other/{{type}}/review_application">Review Application</a><br>
         {% if type == 'sa_js' %}
-        <a href="/{{type}}/timecard_for_payment">Time Card for Review</a><br>
+        <a href="/other/{{type}}/timecard_for_payment">Time Card for Review</a><br>
         {% endif %}
-        <a href="/{{type}}/logout">Logout</a><br>
+        {%if type == 'oceo_coordinator' %}
+        <a href="/other/{{type}}/timecard_for_oceo_coordinator">Pending Time Card To approve</a><br>
+        {% endif %}
+        <a href="/other/{{type}}/logout">Logout</a><br>
 
     </div>
     <table>

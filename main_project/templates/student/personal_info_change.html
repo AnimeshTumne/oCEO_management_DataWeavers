@@ -31,7 +31,7 @@
         <!-- <p type="hidden">For space above the main form</p> -->
     </div>
     <div id="main-content" class="main-content">
-        <form action="{{url_for('student_personal_info_change')}}" method="post">
+        <form action="{{url_for('student_bp.student_personal_info_change')}}" method="post">
 
             <h1 class="main-content-heading">Update Personal Information</h1>
             <div class="user-info">
@@ -56,10 +56,11 @@
                 
                 <p>Contact Number: <input type="text" name="contact_number" value="{{ student_phone[0][0] if student_phone[0][0] != 'Not Added' else '' }}" ></p>
                 <p>Alternate Contact Number: <input type="text" name="alternate_contact_number" placeholder="{{ student_phone[1][0] if student_phone[1] else 'Not Added' }}" value="{{ student_phone[1][0] if student_phone[1]}}"></p>
+                <!--display image here and option to upload other image-->
+
+                
+        
             </div>
-            <!-- <form action="{{url_for('student_personal_info')}}" method="POST"> -->
-                <!-- <input type="submit" name="submit_button" value="Update Profile" class="update-profile"> -->
-            <!-- </form> -->
             <input type="submit" name="submit_button" value="Update Profile" class="update-profile">
             
         </form>

@@ -97,10 +97,10 @@
     </div>
     <div id="sidebar" class="sidebar">
         <h2>Dashboard</h2>
-        <a href="/{{type1}}/after_login_other">Home Page</a><br>
-        <a href="/{{type1}}/review_application">Review Application</a><br>
-        <a href="/{{type1}}/timecard_for_payment">Time Card for Review</a><br>
-        <a href="/{{type1}}/logout">Logout</a><br>
+        <a href="/other/{{type1}}/after_login_other">Home Page</a><br>
+        <a href="/other/{{type1}}/review_application">Review Application</a><br>
+        <a href="/other/{{type1}}/timecard_for_payment">Time Card for Review</a><br>
+        <a href="/other/{{type1}}/logout">Logout</a><br>
     </div>
 
     </div>
@@ -129,7 +129,7 @@
                    
                 {% endfor %}
                 <td>
-                    <form action="/{{type1}}/timecard_for_payment" method="post">
+                    <form action="/other/{{type1}}/timecard_for_payment" method="post">
                         <input type="hidden" name="job_id" value="{{ job[0] }}">
                         <input type="hidden" name="roll_number" value="{{ job[1] }}">
                         <input type="hidden" name="month" value="{{ job[2] }}">

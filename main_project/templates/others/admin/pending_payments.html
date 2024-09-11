@@ -72,9 +72,9 @@
     </div>
     <div id="sidebar" class="sidebar">
         <h2>Dashboard</h2>
-        <a href="/{{type}}/after_login_other">Home Page</a><br>
-        <a href="/{{type}}/review_application">Pending Payments</a><br>
-        <a href="/{{type}}/logout">Logout</a><br>
+        <a href="/other/{{type}}/after_login_other">Home Page</a><br>
+        <a href="/other/{{type}}/review_application">Pending Payments</a><br>
+        <a href="/other/{{type}}/logout">Logout</a><br>
 
     </div>
 <body>
@@ -94,7 +94,7 @@
                    
                 {% endfor %}
                 <td>
-                    <form action="/{{type}}/pending_payments" method="post">
+                    <form action="/other/{{type}}/pending_payments" method="post">
                         <input type="hidden" name="job_id" value="{{ job[0] }}">
                         <input type="hidden" name="roll_number" value="{{ job[1] }}">
                         <input type="hidden" name="month" value="{{ job[2] }}">

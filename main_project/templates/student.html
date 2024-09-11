@@ -13,7 +13,7 @@
     <!-- <div class="container"> -->
         <!-- <button onclick="toggleDarkMode()" style="position: fixed; top: 10px; right: 10px;">Toggle Dark Mode</button> -->
         <img src="{{url_for('static', filename='logo.png')}}" alt="logo" class="logo">
-        <form id="form-body" onsubmit="return errorMessage('{{error_message}}')" action="{{ url_for('login_student')}}" method="post">
+        <form id="form-body" onsubmit="return errorMessage('{{error_message}}')" action="{{ url_for('auth_bp.login_student')}}" method="post">
             <h1>Student Login </h1>
             <label for="username">Email ID:</label>
             <input type="email" id="username" name="username" required>

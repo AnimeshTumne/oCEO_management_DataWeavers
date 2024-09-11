@@ -48,15 +48,16 @@
             {% else %}
                 <p>Alternate Contact Number: Not Added</p>
             {% endif %}
+            <img src="data:image/png;base64,{{ image_data }}" alt="Student Image" class="student-image">
             
         </div>
-        <form action="{{url_for('student_personal_info')}}" method="POST">
+        <form action="{{url_for('student_bp.student_personal_info')}}" method="POST">
             <input type="submit" name="submit_button" value="Update Profile" class="update-profile">
         </form>
-        <form action="{{url_for('student_personal_info')}}" method="POST">
+        <form action="{{url_for('student_bp.student_personal_info')}}" method="POST">
             <input type="submit" name="submit_button" value="Change Password" class="update-profile">
         </form>
-        <form action="{{url_for('student_bank_details')}}" method="POST">
+        <form action="{{url_for('student_bp.student_bank_details')}}" method="POST">
             <input type="submit" name="submit_button" value="Bank Details" class="update-profile">
         </form>
     </div>

@@ -13,7 +13,7 @@
         <img src="../../static/logo.png" class="logo" alt="IITGN logo">
     </header>
 
-    <form action="{{url_for('after_login_student')}}" method="post">
+    <form action="{{url_for('student_bp.after_login_student')}}" method="post">
         <div class="container">
             <h2>Welcome, {{student_name}}!</h2>
             <button class='btn' name="submit_button" value="personal_info" type="submit">Personal Information</button>

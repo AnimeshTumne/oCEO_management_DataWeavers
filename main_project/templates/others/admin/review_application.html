@@ -72,12 +72,16 @@
     </div>
     <div id="sidebar" class="sidebar">
         <h2>Dashboard</h2>
-        <a href="/{{type}}/after_login_other">Home Page</a><br>
-        <a href="/{{type}}/jobs_approved">Approved Jobs</a><br>
+        <a href="/other/{{type}}/after_login_other">Home Page</a><br>
+        <a href="/other/{{type}}/jobs_approved">Approved Jobs</a><br>
         {% if type == 'sa_js' %}
-        <a href="/{{type}}/timecard_for_payment">Time Card for Review</a><br>
+        <a href="/other/{{type}}/timecard_for_payment">Time Card for Review</a><br>
         {% endif %}
-        <a href="/{{type}}/logout">Logout</a><br>
+        {%if type == 'oceo_coordinator' %}
+        <a href="/other/{{type}}/timecard_for_oceo_coordinator">Pending Time Card To approve</a><br>
+        {% endif %}
+
+        <a href="/other/{{type}}/logout">Logout</a><br>
 
     </div>
     <table>
@@ -96,7 +100,7 @@
                    
                 {% endfor %}
                 <td>
-                    <form action="/{{type}}/review_application" method="post">
+                    <form action="/other/{{type}}/review_application" method="post">
                         <input type="hidden" name="application_id" value="{{ job[0] }}">
                         <button type="submit" name="submit_button" value="Approve">Approve</button>
                         <button type="submit" name="submit_button" value="Reject">Reject</button>

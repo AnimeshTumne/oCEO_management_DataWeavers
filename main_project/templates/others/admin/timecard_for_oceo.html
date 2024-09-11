@@ -97,11 +97,11 @@
     </div>
     <div id="sidebar" class="sidebar">
         <h2>Dashboard</h2>
-        <a href="/professor">Home Page</a><br>
-        <a href="/professor/personal_info">Personal Info</a><br>
-        <a href="/professor/jobs_created" >Jobs Created</a><br>
-        <a href="/professor/timecard_for_review">Timecards for review</a><br>
-        <a href="/professor/logout">Logout</a><br>
+        <a href="/other/{{type}}/after_login_other">Home Page</a><br>
+        <a href="/other/{{type}}/review_application">Review Application</a><br>
+        <a href="/other/{{type}}/jobs_approved">Approved Jobs</a><br>
+        <a href="/other/{{type}}/timecard_for_oceo_coordinator">Pending Time Card To approve</a><br>
+        <a href="/other/{{type}}/logout">Logout</a><br>
     </div>
 
     </div>
@@ -121,7 +121,7 @@
                    
                 {% endfor %}
                 <td>
-                    <form action="/{{type}}/timecard_for_oceo_coordinator" method="post">
+                    <form action="/other/{{type}}/timecard_for_oceo_coordinator" method="post">
                         <input type="hidden" name="job_id" value="{{ job[0] }}">
                         <input type="hidden" name="roll_number" value="{{ job[1] }}">
                         <input type="hidden" name="month" value="{{ job[2] }}">

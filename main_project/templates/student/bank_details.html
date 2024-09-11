@@ -50,7 +50,7 @@
             </tr>
         </table>
         <!-- redirect to ./edit_bank_details when the below form is submitted -->
-        <form action="{{url_for('student_edit_bank_details', bank_data = bank_data )}}" class="update-profile-form">
+        <form action="{{url_for('student_bp.student_edit_bank_details', bank_data = bank_data )}}" class="update-profile-form">
             <input type="submit" name="submit_button" value="Update Bank Details" class="update-profile">
         </form>
         <!-- <button onclick="window.location.href = '/student/edit_bank_details';" name="submit_button" value="Edit">Edit Bank Details</button> -->
