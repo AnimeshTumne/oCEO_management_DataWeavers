@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timecards for Review</title>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
+    <!-- <style>
         table {
             width: 100%;
             border-collapse: collapse;
@@ -86,10 +86,11 @@
             padding: 0;
             width: 100vw;
         }
-    </style>
+    </style> -->
+    <link rel="stylesheet" href="../../static/jobs_created.css">
 </head>
 <body>
-    <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Timecards for Review</h1>
+    
     <div class="menu-icon" onclick="toggleMenu()">
         <span></span>
         <span></span>
@@ -104,41 +105,54 @@
         <a href="/other/{{type}}/logout">Logout</a><br>
     </div>
 
+    <div id="main-content-above">
+        <!-- <p type="hidden">For space above the main form</p> -->
     </div>
-    <table>
-        <thead>
-            <tr>
-            {% for columnName in timecard_head %}
-                <th>{{ columnName.replace("_", " ") }}</th>
-            {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for job in timecard_data %}
-            <tr>
-                {% for field in job %}
-                    <td>{{ field }}</td>
-                   
+    <div id="main-content" class="main-content table-container">    
+        <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Timecards for Review</h1>
+        <table class="main-content-table">
+            <thead class="main-content-table-head">
+                <tr class="main-content-table-row">
+                {% for columnName in timecard_head %}
+                    <th>{{ columnName.replace("_", " ").capitalize() }}</th>
                 {% endfor %}
-                <td>
-                    <form action="/other/{{type}}/timecard_for_oceo_coordinator" method="post">
-                        <input type="hidden" name="job_id" value="{{ job[0] }}">
-                        <input type="hidden" name="roll_number" value="{{ job[1] }}">
-                        <input type="hidden" name="month" value="{{ job[2] }}">
-                        <button type="submit" name="submit_button" value="approve">Approve</button>
-                        <button type="submit" name="submit_button" value="reject">Reject</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
+                </tr>
+            </thead>
+            <tbody class="main-content-table-body">
+                {%set i = namespace(value=0)%}
+                {% for job in timecard_data %}
+                {% if i.value % 2 == 0 %}
+                <tr class="main-content-table-body-row">
+                {% else %}
+                <tr class="main-content-table-body-row" style="background-color: #f2f2f2;">
+                {% endif %}
+                {%set i.value = i.value + 1%}
+
+                    {% for field in job %}
+                        <td>{{ field }}</td>
+                    
+                    {% endfor %}
+                    <td>
+                        <form action="/other/{{type}}/timecard_for_oceo_coordinator" method="post">
+                            <input type="hidden" name="job_id" value="{{ job[0] }}">
+                            <input type="hidden" name="roll_number" value="{{ job[1] }}">
+                            <input type="hidden" name="month" value="{{ job[2] }}">
+                            <button type="submit" name="submit_button" value="approve" class="update-profile">Approve</button>
+                            <button type="submit" name="submit_button" value="reject" class="update-profile">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
-        <script>
+    </div>
+        <!-- <script>
             function toggleMenu() {
                 var sidebar = document.getElementById('sidebar');
                 var mainContent = document.getElementById('main-content');
                 sidebar.classList.toggle('open');
             }
-        </script>
+        </script> -->
+        <script src="../../static/jobs_created.js"></script>
 </body>
 </html>
