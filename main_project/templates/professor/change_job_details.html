@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add a Job</title>
+    <title>Change Job Details</title>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 
-    <style>
+    <!-- <style>
         html{
             font-family: 'Open Sans', sans-serif;
             font-size:large;
@@ -56,10 +56,40 @@
         input[type="submit"]:hover {
             background-color: #45a049;
         }
-    </style>
+    </style> -->
+    <link rel="stylesheet" href="../../static/newuser.css">
+    <link rel="stylesheet" href="../../static/sidebar.css">
 </head>
+
 <body>
-    <h1>Job Application</h1>
+
+    <div id="professor-sidebar">
+        <div class="menu-icon" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <!-- professor sidebar -->
+        <div id="sidebar" class="sidebar">
+            <h2>Dashboard</h2>
+            <a href="/professor">Home Page</a><br>
+            <a href="/professor/personal_info">Personal Info</a>
+            <!-- <button onclick="toggleSubLinks()"></button> -->
+            <br>
+            <div class="sub-links">
+                <a href="/professor/change_password">Change Password</a><br>
+                <a href="/professor/update_profile">Personal Info Change</a><br>
+            </div>
+            <a href="/professor/jobs_created" >Jobs Created</a><br>
+            <div class="sub-links">
+                <a href="/professor/add_job">Create New Jobs</a><br>
+            </div>
+            <a href="/professor/timecard_for_review">Timecards for review</a><br>
+            <a href="/professor/logout">Logout</a><br>
+        </div>
+    </div>
+
+    <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Change Job Details for {{job_data[0][0]}}:{{job_data[0][2]}} </h1>
     <form action="/professor/change_job_details/{{job_data[0][0]}}" method="post">
         <!-- <b><p>Job ID: {{job_data[0][0]}}</p></b> -->
         <!-- <b><p>Job Type: {{job_data[0][1]}}</p></b> -->
@@ -67,7 +97,7 @@
         <input type="text" id="job_id" name="job_id" value="{{job_data[0][0]}}" readonly>
         <label for="job_type">Job Type:</label>
         <input type="text" id="job_type" name="job_type" value="{{job_data[0][1]}}" readonly>
-
+        
         <label for="job_description">Job Description:</label>
         <textarea rows="4" id="job_description" name="job_description" required>{{job_data[0][2]}}</textarea>
         <label for="minimum_qualification">Minimum qualification:</label>
@@ -90,13 +120,49 @@
         <input type="text" id="tenure" name="tenure" value='{{job_data[0][11]}}' required>
         <label for="application_deadline">Application Deadline:</label>
         <input type="date" id="application_deadline" name="application_deadline" value='{{job_data[0][14]}}' required>
-        <input type="submit" value="Submit Application">
+        <input id="submit_button" type="submit" value="Submit Application">
     </form>
     <script>
         function toggleTextField(cb, id) {
             var input = document.getElementById(id);
             input.style.display = cb.checked ? 'block' : 'none';
         }
+
+        function toggleSubmitButton() {
+            var job_type = document.querySelector('input[name="job_type"]:checked').value;
+            var course_id = document.getElementById("course_id").value.trim();
+            var course_name = document.getElementById("course_name").value.trim();
+            var subject_to_teach = document.getElementById("subject_to_teach1").value.trim();
+            var role_name = document.getElementById("role_name1").value.trim();
+            var job_description = document.getElementById("job_description").value.trim();
+            var minimum_qualification = document.getElementById("minimum_qualification").value.trim();
+            var job_criteria = document.getElementById("job_criteria").value.trim();
+            var prerequisites = document.getElementById("prerequisites").value.trim();
+            // var additional_information = document.getElementById("additional_information").value.trim();
+            // above is optional
+            var pay_per_hour = document.getElementById("pay_per_hour").value.trim();
+            var number_of_positions = document.getElementById("number_of_positions").value.trim();
+            var start_date = document.getElementById("start_date").value.trim();
+            var end_date = document.getElementById("end_date").value.trim();
+            var tenure = document.getElementById("tenure").value.trim();
+            var application_deadline = document.getElementById("application_deadline").value.trim();
+            
+            var submitButton = document.getElementById("submit_button");
+
+            if ( ((course_id && course_name) || subject_to_teach || role_name) && job_description && minimum_qualification && job_criteria && prerequisites && pay_per_hour && number_of_positions && start_date && end_date && tenure && application_deadline) {
+                submitButton.classList.add("enabled");
+            } else {
+                submitButton.classList.remove("enabled");
+            }
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            var inputFields = document.querySelectorAll('input[type="text"], textarea, input[type="date"], input[type="radio"]');
+            inputFields.forEach(function(field) {
+                field.addEventListener("input", toggleSubmitButton);
+            });
+        });
+
     </script>
+    <script src="../../static/sidebar.js"></script>
 </body>
 </html>

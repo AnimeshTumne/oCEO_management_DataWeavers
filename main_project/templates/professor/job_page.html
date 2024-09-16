@@ -5,24 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Page</title>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../static/job_page.css">
+    <!-- <link rel="stylesheet" href="../../static/job_page.css"> -->
     <link rel="stylesheet" href="../../static/jobs_created.css">
-    <link rel="stylesheet" href="../../static/sidebar.css">
+    <!--    <link rel="stylesheet" href="../../static/sidebar.css"> -->
 </head>
 <body>
-    <h1>Job Page</h1>
-    
-    <div id="main-content" class="main-content">
+
+    <div class="menu-icon" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <!-- professor sidebar -->
+    <div id="sidebar" class="sidebar">
+        <h2>Dashboard</h2>
+        <a href="/professor">Home Page</a><br>
+        <a href="/professor/personal_info">Personal Info</a>
+        <!-- <button onclick="toggleSubLinks()"></button> -->
+        <br>
+        <div class="sub-links">
+            <a href="/professor/change_password">Change Password</a><br>
+            <a href="/professor/update_profile">Personal Info Change</a><br>
+        </div>
+        <a href="/professor/jobs_created" >Jobs Created</a><br>
+        <div class="sub-links">
+            <a href="/professor/add_job">Create New Jobs</a><br>
+        </div>
+        <a href="/professor/timecard_for_review">Timecards for review</a><br>
+        <a href="/professor/logout">Logout</a><br>
+    </div>
+
+    <div id="main-content-above" class="main-content-above">
         <form action="/professor/job_page/{{job_id}}" method="post">
             <input type="hidden" name="job_id" value="{{ job_id }}">
-            <button type="submit" name="submit_button" value="change_job_details">Change job details</button>
-            <button type="submit" name="submit_button" value="delete_job">Delete Job</button>
-            <button type="submit" name="submit_button" value="view_applications">View Applications</button>
-            <button type="submit" name="submit_button" value="approved_applications">Approved Applications</button>
-            <button type="submit" name="submit_button" value="stop_accepting_applications">Stop Accepting Applications</button>
+            <button type="submit" class="update-profile" name="submit_button" value="change_job_details">Change job details</button>
+            <button type="submit" class="update-profile" name="submit_button" value="delete_job">Delete Job</button>
+            <button type="submit" class="update-profile" name="submit_button" value="view_applications">View Applications</button>
+            <button type="submit" class="update-profile" name="submit_button" value="approved_applications">Approved Applications</button>
+            <button type="submit" class="update-profile" name="submit_button" value="stop_accepting_applications">Stop Accepting Applications</button>
         </form>
+    </div>
 
-        <div class="job-details">
+    <div id="main-content" class="main-content table-container">
+        <div id="main-content-details" class="job-details">
             <div class="detail"><b>Job ID:</b> <span>{{job[0][0]}}</span></div>
             <div class="detail"><b>Job Type:</b> <span>{{job[0][1]}}</span></div>
             <div class="detail"><b>Job Description:</b> <span>{{job[0][2]}}</span></div>
@@ -38,40 +63,65 @@
             <div class="detail"><b>Application Deadline:</b> <span>{{job[0][14]}}</span></div>
         </div>
 
-        <h2>Employed Students</h2>
+        <h2 >Employed Students</h2>
         <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
+            <table class="main-content-table">
+                <thead class="main-content-table-head">
+                    <tr class="main-content-table-head-row">
                         {% for columnName in student_under_job_head %}
-                        <th>{{ columnName.replace("_", " ") }}</th>
+                            <th>{{ (columnName.replace("_", " ")).capitalize() }}</th>
                         {% endfor %}
-                        <th>Action</th>
+                            <th>Action</th> 
                     </tr>
                 </thead>
-                <tbody>
-                    {% for student in student_under_job_data %}
-                    <tr>
-                        {% for field in student %}
-                        <td>{{ field }}</td>
-                        {% endfor %}
-                        <td>
-                            {% if job_type == 'PAL' %}
-                            <form action="/professor/job_page/{{job_id}}" method="post">
-                                <input type="hidden" name="roll_number" value="{{ student[0] }}">
-                                <button type="submit" name='submit_button' value="assign_mentees">Assign Mentees</button>
-                            </form>
+
+                <tbody class="main-content-table-body">
+
+                    {% set i = namespace (value=0) %}
+                        {% for student in student_under_job_data %}
+                            {% if i.value % 2 == 0 %}
+                                <tr class="main-content-table-body-row">
+                                    {% for field in student %}
+                                        <td>{{ field }}</td>
+                                    {% endfor %}
+                                    <td>
+                                        {% if job_type == 'PAL' %}
+                                        <form action="/professor/job_page/{{job_id}}" method="post">
+                                            <input type="hidden" name="roll_number" value="{{ student[0] }}">
+                                            <button type="submit" name='submit_button' value="assign_mentees">Assign Mentees</button>
+                                        </form>
+                                        {% else %}
+                                        {{ pass }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
                             {% else %}
-                            {{ pass }}
+                                <tr class="main-content-table-body-row" style="background-color: #e9e9e9;">
+                                    {% for field in student %}
+                                        <td>{{ field }}</td>
+                                    {% endfor %}
+                                    <td>
+                                        {% if job_type == 'PAL' %}
+                                        <form action="/professor/job_page/{{job_id}}" method="post">
+                                            <input type="hidden" name="roll_number" value="{{ student[0] }}">
+                                            <button type="submit" name='submit_button' value="assign_mentees">Assign Mentees</button>
+                                        </form>
+                                        {% else %}
+                                        {{ pass }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
                             {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
+                            
+                            {% set i.value = i.value + 1 %}
+
+                        {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
-    <script src="../../static/job_page.js"></script>
-    <script src="../../static/login_page.js"></script>
+    <!-- <script src="../../static/job_page.js"></script> -->
+    <!-- <script src="../../static/login_page.js"></script> -->
+    <script src="../../static/jobs_created.js"></script>
 </body>
 </html>

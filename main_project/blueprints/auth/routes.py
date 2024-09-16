@@ -34,8 +34,8 @@ def google(user_type):
    CONF_URL = 'https://accounts.google.com/.well-known/openid-configuration'
    oauth.register(
        name='google',
-       client_id="",
-       client_secret="",
+       client_id="483725292816-7o6i235adoidqqhfv1hi0738paa4cfvr.apps.googleusercontent.com",
+       client_secret="GOCSPX_JN9R4EpLa0Xx2V_bdqv02X9cqzTM",
        server_metadata_url=CONF_URL,
        client_kwargs={
            'scope': 'openid email profile'

@@ -43,9 +43,12 @@
                 <p>First Name: <input type="text" name="first_name" value="{{professor_data[0][1]}}"required ></p>
                 <p>Middle Name: <input type="text" name="middle_name" value="{{professor_data[0][2]}}" ></p>
                 <p>Last Name: <input type="text" name="last_name" value="{{professor_data[0][3]}}" ></p>
+                <!-- <p>professor data: {{professor_data}}</p> -->
                 <p>Department Name: 
                     <!-- dropdown of CSE, MSE, BE, EE, CE, ME, CL, etc -->
                     <select name="department_name" id="department_name">
+                        <!-- default option should be {{professor_data[0][4]}} -->
+                        <!-- <option value="{{professor_data[0][4]}}" selected>{{professor_data[0][4]}}</option> -->
                         <option value="" selected disabled>Select Department</option>
                         <option value="Computer Science and Engineering">Computer Science and Engineering</option>
                         <option value="Material Science and Engineering">Material Science and Engineering</option>

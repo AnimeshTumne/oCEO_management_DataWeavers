@@ -22,7 +22,7 @@ body {
     /* Adjust the top padding for the dashboard heading */
 
     /* padding-top: -80px; */
-    left: -19vw;
+    left: -25vw;
     transition: left 0.3s ease;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     z-index: 2;
@@ -211,7 +211,8 @@ a:hover {
     padding: 10px 20px;
     text-decoration: none;
     display: inline-block;
-    margin-top: 0px;
+    margin: 3px;
+    /* width: 100%; */
     border-radius: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     transition: box-shadow 0.3s ease;
@@ -223,6 +224,9 @@ a:hover {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
+td > form > .update-profile{
+    width: 100%;
+}
 
 @media (max-width: 600px) {
     .sidebar {
