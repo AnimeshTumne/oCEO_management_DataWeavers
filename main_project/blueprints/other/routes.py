@@ -34,7 +34,7 @@ def after_login_other(type):
                 case 'approved_jobs':
                     return redirect(url_for('others_bp.jobs_approved', type =type))
                 case 'logout':
-                    return redirect(url_for('others_bp.professor_logout'), type = type)
+                    return redirect(url_for('others_bp.logout', type = type))
                 case 'time_card':
                     return redirect(url_for('others_bp.timecard_for_payment', type = type))
                 case 'pending_payments':
@@ -295,7 +295,7 @@ def timecard_for_oceo_coordinator(type):
         return redirect(url_for("auth_bp.errorpage"))
     
 @others_bp.route('/<type>/logout')
-def professor_logout(type):
+def logout(type):
     session.pop('faculty_id', None)
     return redirect(url_for('auth_bp.index'))
 #----------------------END OF Others-----------------------------------------------------------------
