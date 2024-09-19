@@ -60,6 +60,13 @@ function toggleDarkMode() {
     } else {
       darkModeToggle.textContent = 'Toggle Dark Mode';
     }
+    // change the image with id "IITGN-logo" on the page to the dark mode image
+    const logo = document.getElementById('IITGN-logo');
+    if (body.classList.contains('dark-mode')) {
+      logo.src = '../static/Final_IITGN-Logo-symmetric-White.png';
+    } else {
+      logo.src = '../static/Final_IITGN-Logo-symmetric-Black.png';
+    } 
   }
 
 document.addEventListener("DOMContentLoaded", function() {
