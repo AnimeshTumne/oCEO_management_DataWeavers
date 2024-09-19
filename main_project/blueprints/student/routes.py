@@ -470,14 +470,13 @@ def student_timecard(job_id):
         cursor = get_db_connection()
         if request.method == 'POST':
             if request.form['submit_button'] == 'submit_timecard':
-                return redirect(url_for('submit_timecard',job_id=job_id))
+                return redirect(url_for('student_bp.submit_timecard',job_id=job_id))
 
         # fetch timecard data
         sql = f"SELECT * FROM time_card WHERE roll_number = {roll_number} AND job_id = {job_id};"
         result=cursor.execute(text(sql))
         timecard_data = result.fetchall()
-        timecard_head = result.description
-        column_names = tuple(row[0] for row in timecard_head)
+        column_names = ['job_id','roll_number', 'month', 'year', 'hours_worked', 'work_description', 'faculty_approval', 'payment_status','oceo_coordinator_approval']
         cursor.close()
         return render_template('student/timecard.html', timecard_data = timecard_data, timecard_head = column_names,job_id=job_id)
 
