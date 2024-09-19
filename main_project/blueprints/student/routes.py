@@ -451,10 +451,9 @@ def student_mentees():
         mentees = cursor.execute(text(sql)).fetchall()
 
         # fetch column names
-        column_names = cursor.description
         # cursor.execute("SHOW COLUMNS FROM mentor_mentee")
         # mentee_head = cursor.fetchall()
-        column_names = tuple(row[0] for row in column_names)
+        column_names = ['Mentee Roll Number', 'First Name', 'Middle Name', 'Last Name']
         cursor.close()
 
         return render_template('student/mentees.html', mentee_data = mentees, mentee_head = column_names)
