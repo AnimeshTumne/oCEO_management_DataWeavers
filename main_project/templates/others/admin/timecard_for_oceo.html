@@ -116,6 +116,8 @@
                 {% for columnName in timecard_head %}
                     <th>{{ columnName.replace("_", " ").capitalize() }}</th>
                 {% endfor %}
+                    <th>Total compensation</th>
+                    <th>Approve/Reject</th>
                 </tr>
             </thead>
             <tbody class="main-content-table-body">
@@ -132,6 +134,7 @@
                         <td>{{ field }}</td>
                     
                     {% endfor %}
+                    <td>₹ {{ job[4]*job[5] }}</td>
                     <td>
                         <form action="/other/{{type}}/timecard_for_oceo_coordinator" method="post">
                             <input type="hidden" name="job_id" value="{{ job[0] }}">
