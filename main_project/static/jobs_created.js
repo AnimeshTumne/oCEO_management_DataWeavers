@@ -1,3 +1,20 @@
+let scriptElement = document.createElement('script');
+scriptElement.src = "../../static/sorting.js";
+
+// Can specify whether the script should be executed asynchronously
+// scriptElement.async = true;  // or false
+
+// Appending the script to the <head> or <body>
+document.body.appendChild(scriptElement); // or document.head.appendChild(script);
+console.log("Script element added to the body");
+
+// to add class "sortable" to each table with class "main-content-table"
+var tables = document.getElementsByClassName('main-content-table');
+for (var i = 0; i < tables.length; i++) {
+	tables[i].classList.add('sortable');
+}
+
+// toggles menu open or close, and shifts main content if needed
 function toggleMenu() {
     var sidebar = document.getElementById('sidebar');
     var mainContent = document.getElementById('main-content');
@@ -18,6 +35,7 @@ function toggleMenu() {
     });
 }
 
+// toggles menu open or close, and shifts main content if needed
 function templateToggleMenu() {
     const sidebar = documenttemplate.getElementById('sidebar');
     sidebar.classList.toggle('show');
