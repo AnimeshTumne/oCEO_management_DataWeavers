@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Approved Jobs</title>
+    <title>Jobs Approved by {{(type.replace("_", " ")).upper() }}</title>
     <!-- <style>
         table {
             width: 100%;
@@ -91,7 +91,7 @@
 
     <div id="main-content" class="main-content table-container">
         <h1 style="padding-top: 50px; text-align:center; border: 1px #e9e9e9;" >Approved Jobs</h1>
-        <table class="main-content-table">
+        <table class="main-content-table sortable">
             <thead class="main-content-table-head">
                 <tr class="main-content-table-row">
                 {% for columnName in application_head %}
@@ -136,5 +136,7 @@
             }
         </script> -->
         <script src="../../static/jobs_created.js"></script>
+        <script src="../../static/sorting.js"></script>
+        
 </body>
 </html>

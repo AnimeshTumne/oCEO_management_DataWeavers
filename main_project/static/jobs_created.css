@@ -102,7 +102,7 @@ body {
     transition: transform 0.3s ease;
 } 
 
-.main-content-above > form {
+.main-content-above > form, .main-content-above > div {
     margin-left: 10vw;
     margin-bottom: 20px;
     border-left: 20vw;
@@ -227,6 +227,46 @@ a:hover {
 td > form > .update-profile{
     width: 100%;
 }
+
+
+/* sorting logic */
+
+.sortable th {
+    cursor: pointer;
+}
+
+.sortable th.no-sort {
+   pointer-events: none;
+}
+
+.sortable th::after, 
+.sortable th::before {
+    transition: color 0.2s ease-in-out;
+    font-size: 1.2em;
+    color: transparent;
+}
+
+.sortable th::after {
+   margin-left: 3px;
+   content: '\025B8';
+}
+
+.sortable th:hover::after {
+   color: inherit;
+}
+
+.sortable th.dir-d::after {
+   color: inherit;
+   content: '\025BE';
+}
+
+.sortable th.dir-u::after {
+   color: inherit;
+   content: '\025B4';
+}
+
+/* table, table td{border: 1px solid #333;border-collapse: collapse} */
+/* th{background: coral;border: 1px solid #333} */
 
 @media (max-width: 600px) {
     .sidebar {
