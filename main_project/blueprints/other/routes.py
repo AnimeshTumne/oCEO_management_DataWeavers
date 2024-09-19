@@ -22,7 +22,7 @@ def get_db_connection():
 #----------------------START OF Others-----------------------------------------------------------------
 
 
-@others_bp.route('/<type>/after_login_other', methods=['GET', 'POST'])
+@others_bp.route('/<type>/', methods=['GET', 'POST'])
 def after_login_other(type):
     # db=get_db()
     if "email" in session:
