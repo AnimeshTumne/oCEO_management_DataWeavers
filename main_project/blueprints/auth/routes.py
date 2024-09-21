@@ -92,7 +92,7 @@ def register():
             
             # remove integrity constraint on "on_probation" field
             on_probation_alter = "ALTER TABLE applied_student MODIFY on_probation BOOLEAN;"
-            cursor.execute(on_probation_alter)
+            cursor.execute(text(on_probation_alter))
             #db.connection.commit()
 
             # user already exists
@@ -104,21 +104,21 @@ def register():
             else:
                 hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
                 sql = f"INSERT INTO applied_student (roll_number, first_name, middle_name, last_name, email_id, password) VALUES ({new_roll_number},'{first_name}','{middle_name}','{last_name}','{email}','{hashed_password}');"
-                cursor.execute(sql)
+                cursor.execute(text(sql))
                 #db.connection.commit()
                 #cursor.close()
-                return redirect(url_for("index"))
+                return redirect(url_for("auth_bp.index"))
                 return render_template_string(f"""
                     <script>
                         alert("User registered successfully! Query Executed: {sql}");
-                        window.location.href = "{{{{ url_for('index') }}}}";
+                        window.location.href = "{{{{ url_for('auth_bp.index') }}}}";
                     </script>
                 """)
 
         elif userType == "professor":
             sql = f"SELECT count(*) FROM faculty WHERE email_id='{email}'"
            
-            isPresent =  cursor.execute(sql).fetchone()[0]
+            isPresent =  cursor.execute(text(sql)).fetchone()[0]
 
             if isPresent==1:
                 error_message = ("User already exists. Please choose a different username.")
@@ -129,7 +129,7 @@ def register():
                 cursor.execute(sql)
                 #db.connection.commit()
                 cursor.close()
-                return redirect(url_for("index"))
+                return redirect(url_for("auth_bp.index"))
         # TODO non-student new user
         else:
             return redirect(url_for("auth_bp.errorpage"))
