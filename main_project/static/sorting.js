@@ -16,7 +16,32 @@ document.addEventListener('click', function (e) {
         function reClassify(element, dir) {
             element.className = element.className.replace(regex_dir, '') + dir
         }
+
+        let monthMap = {
+            "JAN": 1,
+            "FEB": 2,
+            "MAR": 3,
+            "APR": 4,
+            "MAY": 5,
+            "JUN": 6,
+            "JUL": 7,
+            "AUG": 8,
+            "SEP": 9,
+            "OCT": 10,
+            "NOV": 11,
+            "DEC": 12
+        }
+
         function getValue(element) {
+            let value = (
+                (alt_sort && element.getAttribute('data-sort-alt')) ||
+                element.getAttribute('data-sort') || element.innerText
+            );
+
+            if (monthMap[value]) {
+                return monthMap[value];
+            }
+            
             return (
                 (alt_sort && element.getAttribute('data-sort-alt')) ||
                 element.getAttribute('data-sort') || element.innerText
