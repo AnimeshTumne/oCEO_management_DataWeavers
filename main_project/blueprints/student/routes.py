@@ -496,7 +496,7 @@ def submit_timecard(job_id):
                 cursor.execute(text(sql))
                 cursor.commit()
                 cursor.close()  
-                return redirect(url_for('student_timecard', job_id=job_id, current_year=current_year))
+                return redirect(url_for('student_bp.student_timecard', job_id=job_id))
         return render_template('student/new_timecard.html', job_id=job_id, current_year=current_year)
     else:
         return redirect(url_for('auth_bp.errorpage'))    
