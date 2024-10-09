@@ -62,7 +62,7 @@ def after_login_professor():
         cursor.close()
         return render_template('professor/after_login.html', faculty_name=faculty_name)
     else:
-        return render_template('errorpage.html')
+        return redirect(url_for('auth_bp.errorpage'))
 
 @professor_bp.route('/personal_info', methods=['GET', 'POST'])
 def professor_personal_info():
@@ -321,8 +321,20 @@ def professor_jobs_change_details(job_id):
         job_data = cursor.execute(text(f"SELECT job.* FROM job WHERE job.job_id = {job_id};")).fetchall()
         job_head = cursor.execute(text("SHOW COLUMNS FROM job")).fetchall()
         column_names = tuple(row[0] for row in job_head)
+        # fetch data if job type is adh or pal
+        # print("888888888888888", job_data, "455555555555555555555555555555")
+        job_type = job_data[0][1]
+        if job_type == 'ADH':
+            extra_data = cursor.execute(text(f"SELECT * FROM adh WHERE job_id = {job_id};")).fetchall()
+            # column_names = column_names + ('course_id', 'course_name')
+        elif job_type == 'PAL':
+            extra_data = cursor.execute(text(f"SELECT * FROM subjects_under_pal WHERE job_id = {job_id};")).fetchall()
+            # column_names = column_names + ('subjects_to_teach',)
+        else:
+            extra_data = cursor.execute(text(f"SELECT * FROM others WHERE job_id = {job_id};")).fetchall()
+            # column_names = column_names + ('role_name',)
         cursor.close()
-        return render_template('professor/change_job_details.html', job_data=job_data, job_head=column_names)
+        return render_template('professor/change_job_details.html', job_data=job_data, job_head=column_names, extra_data=extra_data)
     else:
         return redirect(url_for('auth_bp.errorpage'))
 
