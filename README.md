@@ -1,7 +1,7 @@
 # oCEO Management System
 **Status:** Final Improvements and Deployment in Progress
 
-##Descripton:
+## Descripton:
 This repository contains a simple yet elegant implementation of the on-Campus Employment Opportunities (oCEO) at IITGN. It facilitates easy creation and deletion of jobs by the faculty offering them, and an easy view of payment processing status for a student availing the opportunity.
 
 ## Front End:
