@@ -1,11 +1,12 @@
 
-from flask import Flask, render_template, request, redirect, url_for, session, Blueprint,current_app,g
+from flask import  render_template, request, redirect, url_for, session, Blueprint,current_app,flash
 from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
 from flask import session, redirect, url_for, render_template_string
 from authlib.integrations.flask_client import OAuth
 from sqlalchemy import create_engine, text
 from main_project import db
+from functools import wraps
 
 
 auth_bp = Blueprint('auth_bp', __name__,template_folder='templates',static_url_path='/static',static_folder='static')
@@ -15,8 +16,8 @@ auth_bp = Blueprint('auth_bp', __name__,template_folder='templates',static_url_p
 
 # ------------------------------------------------------------------------------------------------------
 
-# google auth
-# print(current_app.extensions)
+
+
 oauth = OAuth(current_app)
 bcrypt = Bcrypt(current_app)
 
@@ -25,37 +26,55 @@ def get_db_connection():
     print("Engine created")
     return engine.connect()
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        # Check if the user is logged in by verifying 'email' in session
+        if 'email' not in session:
+            flash('You need to log in first.', 'danger')
+            # Save the next path to redirect after login
+            session['next'] = request.url
+            return redirect(url_for('auth_bp.google'))
+        
+        return f(*args, **kwargs)
+    
+    return decorated_function
 
 
-@auth_bp.route('/google/<user_type>')
-def google(user_type):
-   GOOGLE_CLIENT_ID="" # added the generated CLIENT ID
-   GOOGLE_CLIENT_SECRET = "" # added the generated CLIENT SECRET
-   CONF_URL = 'https://accounts.google.com/.well-known/openid-configuration'
-   oauth.register(
-       name='google',
-       client_id="483725292816-7o6i235adoidqqhfv1hi0738paa4cfvr.apps.googleusercontent.com",
-       client_secret="GOCSPX_JN9R4EpLa0Xx2V_bdqv02X9cqzTM",
-       server_metadata_url=CONF_URL,
-       client_kwargs={
-           'scope': 'openid email profile'
-       }
-   )
-   redirect_uri = url_for('auth_bp.google_auth',user_type=user_type, _external=True)
-   return oauth.google.authorize_redirect(redirect_uri)
+
+@auth_bp.route('/google',methods=['GET', 'POST'])
+def google():
+    GOOGLE_CLIENT_ID = "483725292816-7o6i235adoidqqhfv1hi0738paa4cfvr.apps.googleusercontent.com"  # Your Google Client ID
+    GOOGLE_CLIENT_SECRET = "GOCSPX_JN9R4EpLa0Xx2V_bdqv02X9cqzTM"  # Your Google Client Secret
+    CONF_URL = 'https://accounts.google.com/.well-known/openid-configuration'
+
+    oauth.register(
+        name='google',
+        client_id=GOOGLE_CLIENT_ID,
+        client_secret=GOOGLE_CLIENT_SECRET,
+        acess_token_url='https://accounts.google.com/o/oauth2/token',
+        authorize_url='https://accounts.google.com/o/oauth2/auth',
+        userinfo_endpoint='https://googleapis.com/oauth2/v3/userinfo',
+        server_metadata_url=CONF_URL,
+        client_kwargs={'scope': 'openid email profile'}
+    )
+
+    # Define the redirect URI to handle Google OAuth callback
+    redirect_url = url_for('auth_bp.google_auth', _external=True)
+    return oauth.google.authorize_redirect(redirect_url)
 
 
-@auth_bp.route('/google/auth/<user_type>', methods =['GET', 'POST'])
-def google_auth(user_type):
-   if user_type=="student":
-       redirect_uri = url_for('auth_bp.login_student')
-   elif user_type=="professor":
-       redirect_uri = url_for('auth_bp.login_professor')
-   elif user_type=="others":
-       redirect_uri = url_for('auth_bp.others_login')
-   elif user_type=="new_user":
-       redirect_uri = url_for('auth_bp.register')
-   return redirect(redirect_uri)
+# Google OAuth Callback Route
+@auth_bp.route('/google/auth')
+def google_auth():
+    session['email'] = "iitgn.ac.in"
+
+    # Check if there's a next path and redirect after login
+    next_path = session.pop('next', None)
+    if next_path:
+        return redirect(next_path)
+    
+    return redirect(url_for('auth_bp.index'))
 
 # ------------------------------------------------------------------------------------------------------
 #syntax for locking and unclockign
@@ -71,7 +90,9 @@ def index():
 
 # ---------------------------------------------- NEW USER REGISTRATION--------------------------------------------------------
 # NEW USER REGISTRATION
+
 @auth_bp.route("/login/new_user", methods=["GET", "POST"])
+@login_required
 def register():
     cursor = get_db_connection()
   
@@ -181,6 +202,7 @@ def authenticate(email, password, userType):
         return False
 # -------------------------------------------------LOGIN PAGE-----------------------------------------------------
 @auth_bp.route('/login/student', methods=['GET', 'POST'])
+@login_required   
 def login_student():
     cursor = get_db_connection()
     if request.method == 'POST':
@@ -213,6 +235,7 @@ def login_student():
     return render_template('student.html')
 
 @auth_bp.route('/login/professor', methods=['GET', 'POST'])
+@login_required
 def login_professor():
     cursor = get_db_connection()
     if request.method == 'POST':
@@ -243,6 +266,7 @@ def login_professor():
     return render_template('professor.html')
 
 @auth_bp.route('/login/others',  methods=['GET', 'POST'])
+@login_required
 def others_login():
     cursor = get_db_connection()
     if request.method == 'POST':
@@ -305,25 +329,8 @@ def others_login():
                     return redirect(url_for("others_bp.after_login_other", type = 'oceo_coordinator'))
                 else:
                     return redirect(url_for("auth_bp.errorpage"))
-            # elif userType =='accounts':
-            #     cursor = db.connection.cursor()
-            #     sql = "SELECT email FROM other WHERE user_type = 'accounts';"
-            #     cursor.execute(sql)
-            #     admin_email =  cursor.fetchone()[0]
-            #     # admin_email = cursor.fetchall()[0]
-            #     print("33333333333333333333333333333333333333333333333333333333333333333333333")
-            #     print("33333333333333333333333333333333333333333333333333333333333333333333333")
-            #     print(admin_email)
-            #     print("33333333333333333333333333333333333333333333333333333333333333333333333")
-            #     print("33333333333333333333333333333333333333333333333333333333333333333333333")
-            #     cursor.close()
-
-            #     if admin_email == email :
-            #         return redirect(url_for("after_login_other", type = 'accounts'))
-            #     else:
-            #         return redirect(url_for("auth_bp.errorpage", message="Invalid Credentials for accounts login"))    
-                
-            
+     
+                       
         else:
             return redirect(url_for("auth_bp.errorpage", message="Invalid Credentials for <type> login"))
     return render_template('others.html')
@@ -334,4 +341,3 @@ def others_login():
 def errorpage(error_message="Bad Credentials! Go back and try again."):
     # error_message = "Bad Credentials!"
     return render_template("errorpage.html", error_message=error_message if error_message else "You are not authorised to view this page. Please login first.")
-

@@ -11,13 +11,28 @@ import base64
 
 student_bp = Blueprint('student_bp', __name__,template_folder='templates',static_url_path='/static',static_folder='static')
 
-# print(current_app.extensions['mysql'])
+@student_bp.before_request
+def login_required():
+    if 'email' not in session:
+        # Redirect to the Google OAuth flow if the user is not authenticated
+        return redirect(url_for('auth_bp.google',user_type='student'))
+
+
 
 def get_db_connection():
     engine = create_engine('mysql://oceoAdmin:oceoAdmin@localhost/oceo_management')
     print("Engine created")
     return engine.connect()
 
+def check_authorization(roll_number,job_id):
+    cursor = get_db_connection()
+    sql = f"SELECT * FROM application_status WHERE roll_number = {roll_number} AND job_id = {job_id};"
+    result = cursor.execute(text(sql))
+    if result.fetchone() is not None:
+        return True
+    else:
+        return False
+    
 
 
 
@@ -464,7 +479,7 @@ def student_mentees():
 @student_bp.route('/timecard/<job_id>', methods=['GET', 'POST'])
 def student_timecard(job_id):
     # db=get_db()
-    if "roll_number" in session:
+    if "roll_number" in session and check_authorization(session['roll_number'],job_id):
         roll_number = session['roll_number']
         cursor = get_db_connection()
         if request.method == 'POST':
@@ -482,7 +497,7 @@ def student_timecard(job_id):
 @student_bp.route('/submit_timecard/<job_id>', methods=['GET', 'POST'])
 def submit_timecard(job_id):
     # db=get_db()
-    if "roll_number" in session:
+    if "roll_number" in session and check_authorization(session['roll_number'],job_id): 
         current_year = datetime.datetime.now().year
         roll_number = session['roll_number']
         cursor = get_db_connection()

@@ -13,10 +13,27 @@ from flask import session, redirect, url_for, render_template_string
 
 professor_bp = Blueprint('professor_bp', __name__,template_folder='templates',static_url_path='/static',static_folder='static')
 
+#Authentication Check
+@professor_bp.before_request
+def login_required():
+    if 'email' not in session:
+        # Redirect to the Google OAuth flow if the user is not authenticated
+        return redirect(url_for('auth_bp.google',user_type='professor'))
+
+
 def get_db_connection():
     engine = create_engine('mysql://oceoAdmin:oceoAdmin@localhost/oceo_management')
     print("Engine created")
     return engine.connect()
+
+def check_authorization(faculty_id,job_id):
+    cursor =get_db_connection()
+    result=cursor.execute(text(f"SELECT faculty_id FROM job WHERE job_id = {job_id};"))
+    faculty_id_of_job = result.fetchone()[0]
+    cursor.close()
+    if faculty_id != faculty_id_of_job:
+        return False
+    return True
 
 
 
@@ -25,7 +42,7 @@ def get_db_connection():
 
 @professor_bp.route('', methods=['GET', 'POST']) # professor homepage
 def after_login_professor():
-    if "faculty_id" in session:
+    if "faculty_id" in session :
         if request.method == 'POST':
             testvar = request.form['submit_button']
             match testvar:
@@ -195,7 +212,15 @@ def professor_add_job():
 
 @professor_bp.route('/job_page/<job_id>', methods=['GET', 'POST'])
 def professor_job_page(job_id):
-    if "faculty_id" in session:
+    if "faculty_id" in session and check_authorization(session['faculty_id'],job_id):
+        cursor =get_db_connection()
+        faculty_id = session['faculty_id']
+        result=cursor.execute(text(f"SELECT faculty_id FROM job WHERE job_id = {job_id};"))
+        faculty_id_of_job = result.fetchone()[0]
+        cursor.close()
+        if faculty_id != faculty_id_of_job:
+            return redirect(url_for('auth_bp.errorpage'))
+
         if request.method == 'POST':
             if request.form.get('submit_button') == 'change_job_details':
                 return redirect(url_for('professor_bp.professor_jobs_change_details', job_id=job_id))
@@ -211,6 +236,7 @@ def professor_job_page(job_id):
                 return redirect(url_for('professor_bp.professor_assign_mentees', job_id=job_id, roll_number=roll_number))
             elif request.form.get('submit_button') == "stop_accepting_applications":
                 return redirect(url_for('professor_bp.professor_stop_accepting_applications', job_id=job_id))
+
                         
         cursor =get_db_connection()
         query_get_students_under_job = f"SELECT roll_number,first_name,middle_name,last_name,email_id FROM applied_student WHERE roll_number IN (SELECT roll_number FROM application_status WHERE job_id = '{job_id}' and approval='approved');"
@@ -231,7 +257,7 @@ def professor_job_page(job_id):
 
 @professor_bp.route('/assign_mentees/<job_id>&<roll_number>', methods=['GET', 'POST'])
 def professor_assign_mentees(job_id, roll_number):
-    if "faculty_id" in session:
+    if "faculty_id" in session  and check_authorization(session['faculty_id'],job_id):
         if request.method == 'POST':
             if request.form['submit_button'] == 'assign_mentees':
                 
@@ -249,34 +275,6 @@ def professor_assign_mentees(job_id, roll_number):
                 cursor.close()
                 return redirect(url_for('professor_bp.professor_job_page', job_id=job_id, roll_number=roll_number))
                 
-            # elif request.form['submit_button'] == 'import':
-            #     file = request.files['file']
-            #     if file:
-            #         # Read the file data using pandas
-            #         if file.filename.endswith('.csv'):
-            #             df = pd.read_csv(file)
-            #         elif file.filename.endswith('.xlsx'):
-            #             df = pd.read_excel(file)
-            #         else:
-            #             return "Invalid file format"
-
-            #         # Iterate over each row and add it to the database
-            #         for index, row in df.iterrows():
-            #             # Access the data from each column using row['column_name']
-            #             # Add the data to the database using appropriate SQL queries
-            #             mentee_roll_number = row['roll_number']
-            #             first_name = row['first_name']
-            #             middle_name = row['middle_name']
-            #             last_name = row['last_name']
-
-            #             cursor = db.connection.cursor()
-            #             cursor.execute(f"insert into mentees (mentee_roll_number, first_name, middle_name, last_name) values ({mentee_roll_number}, '{first_name}', '{middle_name}', '{last_name}');")
-            #             db.connection.commit()
-            #             cursor.execute(f"INSERT INTO mentor_mentee (mentee_roll_number, roll_number, job_id) VALUES ({mentee_roll_number}, {roll_number}, {job_id});")
-            #             db.connection.commit()
-            #             cursor.close()
-
-            #         return redirect(url_for('professor_job_page', job_id=job_id))
             
         cursor =get_db_connection()
         result=cursor.execute(text(f"SELECT roll_number, first_name, middle_name, last_name FROM applied_student WHERE roll_number IN (SELECT roll_number FROM application_status WHERE job_id = {job_id} AND approval = 'approved');"))
@@ -288,7 +286,7 @@ def professor_assign_mentees(job_id, roll_number):
 
 @professor_bp.route('/change_job_details/<job_id>', methods=['GET', 'POST'])
 def professor_jobs_change_details(job_id):
-    if "faculty_id" in session:
+    if "faculty_id" in session  and check_authorization(session['faculty_id'],job_id):
         if request.method == 'POST':
             faculty_id = session['faculty_id']
             job_type = request.form.get('job_type')
@@ -330,7 +328,7 @@ def professor_jobs_change_details(job_id):
 
 @professor_bp.route('/delete_job/<job_id>', methods=['GET', 'POST'])
 def professor_delete_job(job_id):
-    if "faculty_id" in session:
+    if "faculty_id" in session  and check_authorization(session['faculty_id'],job_id):
         cursor =get_db_connection()
         
         result=cursor.execute(text(f"select job_type from job where job_id = {job_id};"))
@@ -353,7 +351,7 @@ def professor_delete_job(job_id):
 
 @professor_bp.route('/view_applications/<job_id>', methods=['GET', 'POST'])
 def professor_view_applications(job_id):
-    if "faculty_id" in session:
+    if "faculty_id" in session and check_authorization(session['faculty_id'],job_id):
         if request.method == 'POST':
             if request.form['submit_button'] == 'approve':
                 application_id = request.form['application_id']
@@ -405,7 +403,7 @@ def professor_view_applications(job_id):
         return redirect(url_for('auth_bp.errorpage'))
 
 def other_view_applications(job_id):
-    if "other_id" in session:
+    if "other_id" in session and check_authorization(session['faculty_id'],job_id):
         if request.method == 'POST':
             if request.form['submit_button'] == 'approve':
                 application_id = request.form['application_id']
@@ -461,30 +459,8 @@ def other_view_applications(job_id):
 @professor_bp.route('/approved_applications/<job_id>', methods=['GET', 'POST'])
 def professor_approved_applications(job_id):  # cHanged this.
 
-    if "faculty_id" in session:
-        # if request.method == 'POST':
-            # if request.form['submit_button'] == 'approve':
-            #     application_id = request.form['application_id']
-            #     cursor = db.connection.cursor()
-            #     cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
-
-            #     # cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
-            #     cursor.execute(f"UPDATE application_status SET faculty_approved = 1 WHERE application_id = {application_id};")
-            #     db.connection.commit()
-            #     cursor.close()
-            #     return redirect(url_for('professor_view_applications', job_id=job_id))
-            
-        #     if request.form['submit_button'] == 'reject':
-        #         application_id = request.form['application_id']
-        #         cursor = db.connection.cursor()
-        #         cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
-        #         cursor.execute(f"UPDATE application_status SET faculty_approved = 0 WHERE application_id = {application_id};")
-        #         db.connection.commit()
-        #         cursor.close()
-        #         return redirect(url_for('professor_view_applications', job_id=job_id))
-        # cursor = db.connection.cursor()
-        # cursor.execute(f"SELECT application_status.application_id, application_status.roll_number, applied_student.first_name, applied_student.middle_name, applied_student.last_name, applied_student.cpi, applied_student.last_sem_spi, applied_student.on_probation, application_status.approval, application_status.statement_of_motivation FROM application_status JOIN applied_student ON application_status.roll_number = applied_student.roll_number WHERE application_status.job_id = {job_id} and application_status.faculty_approved = 0;")
-        
+    if "faculty_id" in session and check_authorization(session['faculty_id'],job_id) :
+  
         if request.method == 'POST':
             if request.form['submit_button'] == 'remove':
                 application_id = request.form['application_id']
@@ -543,7 +519,7 @@ def professor_timecard_for_review():
 @professor_bp.route('/stop_accepting_applications/<job_id>', methods=['GET', 'POST'])
 def professor_stop_accepting_applications(job_id):
 
-    if "faculty_id" in session:
+    if "faculty_id" in session and check_authorization(session['faculty_id'],job_id):
         cursor =get_db_connection()
         cursor.execute(text(f"UPDATE job SET is_available = 'no' WHERE job_id = {job_id};"))
         cursor.commit()

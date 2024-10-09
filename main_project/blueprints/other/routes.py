@@ -11,6 +11,18 @@ from main_project.blueprints.auth.routes import authenticate
 
 others_bp = Blueprint('others_bp', __name__,template_folder='templates',static_url_path='/static',static_folder='static')
 
+
+@others_bp.before_request
+def login_required():
+    if 'email' not in session:
+        # Redirect to the Google OAuth flow if the user is not authenticated
+        return redirect(url_for('auth_bp.google',user_type='others'))
+
+
+
+
+
+
 def get_db_connection():
     engine = create_engine('mysql://oceoAdmin:oceoAdmin@localhost/oceo_management')
     print("Engine created")
@@ -45,70 +57,6 @@ def after_login_other(type):
                     return render_template('others/admin/admin.html', type = type)
         return render_template( 'others/admin/admin.html', type = type ) 
 
-
-# @app.route('/admin/admin.html', methods=['GET', 'POST'])
-# def after_login_admin():
-#     if "email" in session:
-#         if request.method == 'POST':
-#             testvar = request.form['submit_button']
-#             match testvar:
-#                 case 'applications_to_review':
-#                     return redirect(url_for('review_application', type = 'admin'))
-#                 case 'approved_jobs':
-#                     return redirect(url_for('jobs_approved', type ='admin'))
-#                 case 'logout':
-#                     return redirect(url_for('professor_logout'))
-#                 case _:
-#                     return render_template('others/admin/admin.html')
-#     return render_template( 'others/admin/admin.html' ) 
-
-# @app.route('/dean/admin.html', methods=['GET', 'POST'])
-# def after_login_dean():
-#     if "email" in session:
-#         if request.method == 'POST':
-#             testvar = request.form['submit_button']
-#             match testvar:
-#                 case 'applications_to_review':
-#                     return redirect(url_for('review_application', type = 'dean'))
-#                 case 'approved_jobs':
-#                     return redirect(url_for('jobs_approved', type ='dean'))
-#                 case 'logout':
-#                     return redirect(url_for('professor_logout'))
-#                 case _:
-#                     return render_template('others/admin/admin.html')
-#     return render_template( 'others/admin/admin.html' ) 
-
-# @app.route('/oceo_coordinator', methods=['GET', 'POST'])
-# def after_login_oceo_coordinator():
-#     if "email" in session:
-#         if request.method == 'POST':
-#             testvar = request.form['submit_button']
-#             match testvar:
-#                 case 'applications_to_review':
-#                     return redirect(url_for('review_application', type = 'oceo_coordinator'))
-#                 case 'approved_jobs':
-#                     return redirect(url_for('jobs_approved'), type = 'oceo_coordinator')
-#                 case 'logout':
-#                     return redirect(url_for('professor_logout'))
-#                 case _:
-#                     return render_template('others/oceo_coordinator/admin.html')
-#     return render_template( 'others/oceo_coordinator/admin.html' )
-
-# @app.route('/oceo_coordinator', methods=['GET', 'POST'])
-# def after_login_sa_js():
-    # if "email" in session:
-    #     if request.method == 'POST':
-    #         testvar = request.form['submit_button']
-    #         match testvar:
-    #             case 'applications_to_review':
-    #                 return redirect(url_for('review_application', type = 'sa_js'))
-    #             case 'approved_jobs':
-    #                 return redirect(url_for('jobs_approved', type = 'sa_js'))
-    #             case 'logout':
-    #                 return redirect(url_for('professor_logout'))
-    #             case _:
-    #                 return render_template('others/admin/admin.html')
-    # return render_template( 'others/admin/admin.html' )
 
 
 @others_bp.route('/<type>/pending_payments', methods=['GET', 'POST'])
@@ -158,14 +106,6 @@ def timecard_for_payment(type):
                 cursor.execute(text("UNLOCK TABLES"))
                 cursor.close()
 
-            # elif request.form['submit_button'] == 'reject':
-            #     job_id = request.form['job_id']
-            #     roll_number = request.form['roll_number']
-            #     month = request.form['month']
-            #     cursor = db.connection.cursor()
-            #     cursor.execute(f"UPDATE time_card SET SA_approval ='rejected' WHERE job_id = {job_id} AND roll_number = {roll_number} AND month = '{month}';")
-            #     db.connection.commit()
-            #     cursor.close()
             return redirect(url_for('others_bp.timecard_for_payment',type=type))
         
         
