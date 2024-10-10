@@ -137,6 +137,13 @@ input[type="submit"]:hover.enabled {
     background-color: #1280a9;
 }
 
+.eye-icon {
+    width: 30px;
+    /* height: 30px; */
+    fill: currentColor;
+    opacity: 0.5;
+}
+
 @keyframes fadeIn {
     0% {
         opacity: 0;

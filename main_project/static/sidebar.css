@@ -9,7 +9,7 @@
     line-height: 40px;
     padding: 100px 20px 20px; /* Adjust the top padding for the dashboard heading */
     padding-top: -80px; 
-    left: -300px;
+    left: -20vw;
     transition: left 0.3s ease;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     z-index: 2;

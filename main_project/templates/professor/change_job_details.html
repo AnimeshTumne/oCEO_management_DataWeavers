@@ -44,20 +44,31 @@
         <input type="text" id="job_id" name="job_id" value="{{job_data[0][0]}}" readonly>
         <label for="job_type">Job Type:</label>
         <input type="text" id="job_type" name="job_type" value="{{job_data[0][1]}}" readonly>
-        <div id="course-fields"></div>
+        <!-- <p>job data: {{job_data}}</p> -->
+        <p>extra data: {{extra_data}}</p>
+        {% if job_data[0][1] == "ADH"%}
+        <!-- <div id="course-fields"></div> -->
             <label for="course_id">Course ID:</label><br>
-            <input type="text" id="course_id" name="course_id" placeholder="Enter Course ID"><br>
+            <input type="text" id="course_id" name="course_id" value="{{extra_data[0][1]}}"><br>
             <label for="course_name">Course Name:</label><br>
-            <input type="text" id="course_name" name="course_name" placeholder="Enter Course Name"><br>
-        </div>
-        <div id="subject_to_teach">
+            <input type="text" id="course_name" name="course_name" value="{{extra_data[0][2]}}"><br>
+        <!-- </div> -->
+        {% elif job_data[0][1] == "PAL"%}
+        <!-- <div id="subject_to_teach"> -->
             <label for="subject_to_teach">Subjects To Teach:</label><br>
-            <input type="text" id="subject_to_teach1" name="subjects_to_teach" placeholder="Enter Subjects To Teach"><br>
-        </div>
-        <div id="role_name">
+            {%set i = [] %}
+            {%for subject in extra_data%}
+                {{ i.append(subject[1])}}
+            {%endfor%}
+
+            <input type="text" id="subject_to_teach1" name="subjects_to_teach" value="{{i}}" ><br>
+        <!-- </div> -->
+        {% else %}
+        <!-- <div id="role_name"> -->
             <label for="role_name">Role Name:</label><br>
             <input type="text" id="role_name1" name="role_name" placeholder="Enter Role Name"><br>
-        </div>        
+        <!-- </div>     -->
+        {% endif %}    
         <label for="job_description">Job Description:</label>
         <textarea rows="4" id="job_description" name="job_description" required>{{job_data[0][2]}}</textarea>
         <label for="minimum_qualification">Minimum qualification:</label>

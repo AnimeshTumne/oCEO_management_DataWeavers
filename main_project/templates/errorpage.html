@@ -20,6 +20,14 @@
             max-width: 500px; /* Adjust max-width for large screens */
         }
 
+        .error-details {
+            margin-top: 20px;
+        }
+
+        .error-details-text {
+            font-size: 1.2em;
+        }
+
         @keyframes fade-in {
             0% { opacity: 0; transform: scale(0.95); }
             100% { opacity: 1; transform: scale(1); }
@@ -65,7 +73,13 @@
     <img src="../static/404-error.png" alt="error" class="error-logo">
     <div class="error-box">
         <p class="error-message">{{ error_message }}</p>
+        {% if error_details %}
+        <div class="error-details">
+            <p class="error-details-text" >{{ error_details }}</p>
+        </div>    
+        {% endif %}
     </div>
+
     <div class="back-link-container">
         <button class="back-link" onclick="window.history.back()">Go back to previous page</button>
     </div>

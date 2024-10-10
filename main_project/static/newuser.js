@@ -46,11 +46,11 @@ function togglePasswordVisibility(inputId) {
     if (passwordInput.type === "password") {
         passwordInput.type = "text";
         toggleIcon.textContent = "hide";
-        // toggleIcon.innerHTML = '<img src="{url_for("static", filename="eye_close.png")}" alt="hide">';
+        toggleIcon.innerHTML = '<img src="../static/eye_close.png" alt="hide" class="eye-icon" id="show-confirmPassword-icon">';
     } else {
         passwordInput.type = "password";
         toggleIcon.textContent = "show";
-        // toggleIcon.innerHTML = '<img src="{url_for("static", filename="eye_open.png")}" alt="show">';
+        toggleIcon.innerHTML = '<img src="../static/eye_open.png" alt="show" class="eye-icon" id="show-confirmPassword-icon">';
     }
 }
 
