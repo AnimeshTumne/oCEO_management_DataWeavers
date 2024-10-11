@@ -28,6 +28,7 @@ def check_authorization(roll_number,job_id):
     cursor = get_db_connection()
     sql = f"SELECT * FROM application_status WHERE roll_number = {roll_number} AND job_id = {job_id};"
     result = cursor.execute(text(sql))
+    cursor.close()
     if result.fetchone() is not None:
         return True
     else:
@@ -41,7 +42,7 @@ def check_authorization(roll_number,job_id):
 def after_login_student():
     # db=get_db()
     if "roll_number" in session:
-        cursor = get_db_connection()
+
         # roll_number = session['roll_number']
         # studen_name = 
         if request.method == 'POST':
@@ -133,7 +134,7 @@ def student_bank_details():
         roll_number = session['roll_number']
         
         fetched_data = cursor.execute(text(f"SELECT bank_name, account_number, IFSC_code FROM bank_details WHERE roll_number = '{roll_number}';")).fetchall()
-        cursor.close()
+        cursor.close()  
         return render_template('student/bank_details.html', bank_data=fetched_data)
     else:
         return redirect(url_for('auth_bp.errorpage'))
@@ -145,6 +146,7 @@ def student_edit_bank_details():
         cursor = get_db_connection()
         
         bank_data = cursor.execute(text(f"SELECT * FROM bank_details WHERE roll_number = {session['roll_number']};")).fetchall()
+        cursor.close()
         if request.method == 'POST':
             roll_number = session['roll_number']
 
@@ -160,12 +162,14 @@ def student_edit_bank_details():
             if is_existing_roll_number:
                 update_query = f"UPDATE bank_details SET bank_name = '{bank_name}', account_number = {account_number}, IFSC_code = '{ifsc_code}' WHERE roll_number = {roll_number};"
                 cursor.execute(text(update_query))
+                cursor.commit()
             else:
                 update_query = f"INSERT INTO bank_details (roll_number, bank_name, account_number, IFSC_code) VALUES ({roll_number}, '{bank_name}', {account_number}, '{ifsc_code}');"
                 cursor.execute(text(f"INSERT INTO bank_details (roll_number, bank_name, account_number, IFSC_code) VALUES ({roll_number}, '{bank_name}', {account_number}, '{ifsc_code}');"))
+                cursor.commit()
             # --------------------
 
-            cursor.commit()
+           
             cursor.close()
             # return redirect(url_for('student_bank_details'))
             return redirect(url_for('student_bp.student_bank_details'))
@@ -196,35 +200,38 @@ def student_personal_info_change():
             # fetch uploaded image
             cursor = get_db_connection()
             
-            cursor.execute(text(f"UPDATE applied_student SET first_name = '{first_name}', middle_name = '{middle_name}', last_name='{last_name}',cpi = {cpi}, last_sem_spi = {last_sem_spi}, on_probation = {on_probation} WHERE roll_number = {roll_number};"))
-            cursor.commit()
-            print(request.files)
-            if 'image' in request.files:
-                image = request.files['image']
-                image_data = image.read()
-                #convert image to blob
-                image_data_blob = base64.b64encode(image_data)
+            try:
+                with cursor.begin():
 
-                cursor.execute(text(f"UPDATE applied_student SET person_img = {image_data_blob} WHERE roll_number = {roll_number};"))
-                cursor.commit()
-        
-            # check if phone number exists
-            if phone_num_exist(roll_number):
-                # update existing phone numbers
-                delete_query = f"DELETE FROM applied_student_phone WHERE roll_number={roll_number};"
-                cursor.execute(text(delete_query))
-                cursor.commit()
+                    cursor.execute(text(f"UPDATE applied_student SET first_name = '{first_name}', middle_name = '{middle_name}', last_name='{last_name}',cpi = {cpi}, last_sem_spi = {last_sem_spi}, on_probation = {on_probation} WHERE roll_number = {roll_number};"))
+                    # cursor.commit()
+                    print(request.files)
+                    if 'image' in request.files:
+                        image = request.files['image']
+                        image_data = image.read()
+                        #convert image to blob
+                        image_data_blob = base64.b64encode(image_data)
+                        cursor.execute(text(f"UPDATE applied_student SET person_img = {image_data_blob} WHERE roll_number = {roll_number};"))
+                        # cursor.commit()
 
-            # add new phone numbers
-            cursor.execute(text(f"INSERT INTO applied_student_phone (roll_number, phone_number) VALUES ({roll_number}, {phone_1});"))
-            cursor.commit()
-            if phone_2: 
-                cursor.execute(text(f"INSERT INTO applied_student_phone (roll_number, phone_number) VALUES ({roll_number}, {phone_2});"))
-                cursor.commit()
+                    if phone_num_exist(roll_number):
+                        # update existing phone numbers
+                        delete_query = f"DELETE FROM applied_student_phone WHERE roll_number={roll_number};"
+                        cursor.execute(text(delete_query))
+                        # cursor.commit()
 
-
-            cursor.commit()
-            cursor.close()
+                    # add new phone numbers
+                    cursor.execute(text(f"INSERT INTO applied_student_phone (roll_number, phone_number) VALUES ({roll_number}, {phone_1});"))
+                    # cursor.commit()
+                    if phone_2: 
+                        cursor.execute(text(f"INSERT INTO applied_student_phone (roll_number, phone_number) VALUES ({roll_number}, {phone_2});"))
+                        # cursor.commit()
+                    cursor.commit()
+            except Exception as e:
+                cursor.rollback()
+                print(f"\n==============\n==============\nError occurred: \n{e}\n==============\n==============\n")
+            finally:
+                cursor.close()
 
             return redirect(url_for('student_bp.student_personal_info'))
 
@@ -328,12 +335,13 @@ def student_apply_job(job_id):
             # fill each table with new application info
             cursor.execute(text(sql_update_cpi_spi))
             cursor.commit()
+            # cursor.close()
+
+
+            
+            # cursor = get_db_connection()
             cursor.execute(text(sql_app_id))
             cursor.commit()
-            # cursor.execute(sql_job_id)
-            # db.connection.commit()
-            # cursor.execute(sql_student_id)
-            # db.connection.commit()
             cursor.close()
 
             return redirect(url_for('student_bp.student_jobs_available'))
@@ -377,6 +385,7 @@ def student_applied_jobs():
         sql = f"SELECT application_status.application_id, job.job_id, job.job_type, job.job_description, application_status.approval FROM job JOIN application_status ON job.job_id = application_status.job_id WHERE application_status.roll_number = {roll_number};"
         
         applied_jobs = cursor.execute(text(sql)).fetchall()
+        cursor.close()
 
         # fetch column names
         # cursor.execute("SHOW COLUMNS FROM job")
@@ -438,6 +447,7 @@ def student_my_jobs():
         sql = f"SELECT application_status.application_id, job.job_id, job.job_type, job.job_description, application_status.approval FROM job JOIN application_status ON job.job_id = application_status.job_id WHERE application_status.roll_number = {roll_number} AND application_status.approval = 'approved';"
         
         my_jobs = cursor.execute(text(sql)).fetchall()
+        cursor.close()
 
         # fetch column names
         # cursor.execute("SHOW COLUMNS FROM job")
