@@ -107,9 +107,11 @@ def student_personal_info():
         # check if phone number exists
         if phone_num_exist(roll_number):
             # fetch existing phone numbers
-            phone_query = f"SELECT phone_number FROM applied_student_phone WHERE roll_number = {roll_number};"
+            phone_query = f"SELECT phone_number,isMain FROM applied_student_phone WHERE roll_number = {roll_number};"
+           
             
             fetched_phone = cursor.execute(text(phone_query)).fetchall()
+
         else:
             fetched_phone = ("Not Added", "Not Added")
 
@@ -221,10 +223,10 @@ def student_personal_info_change():
                         # cursor.commit()
 
                     # add new phone numbers
-                    cursor.execute(text(f"INSERT INTO applied_student_phone (roll_number, phone_number) VALUES ({roll_number}, {phone_1});"))
+                    cursor.execute(text(f"INSERT INTO applied_student_phone (roll_number, phone_number,isMain) VALUES ({roll_number}, {phone_1},1);"))
                     # cursor.commit()
                     if phone_2: 
-                        cursor.execute(text(f"INSERT INTO applied_student_phone (roll_number, phone_number) VALUES ({roll_number}, {phone_2});"))
+                        cursor.execute(text(f"INSERT INTO applied_student_phone (roll_number, phone_number,isMain) VALUES ({roll_number}, {phone_2},0);"))
                         # cursor.commit()
                     cursor.commit()
             except Exception as e:
@@ -328,7 +330,7 @@ def student_apply_job(job_id):
             sql_update_cpi_spi = f"UPDATE applied_student SET cpi = {cpi}, last_sem_spi = {last_sem_spi} WHERE roll_number = {roll_number};"
 
             # add new application into 3 tables
-            sql_app_id = f"INSERT INTO application_status (application_id, faculty_approved, oceo_coordinator_approved, SA_approved, dean_approved, statement_of_motivation, roll_number, job_id, approval) VALUES ({application_id}, 0, 0, 0, 0, '{so_motivation}', {roll_number}, {job_id}, 'pending');"
+            sql_app_id = f"INSERT INTO application_status (application_id, faculty_approved, oceo_coordinator_approved, SA_approved, dean_approved, statement_of_motivation, roll_number, job_id, approval) VALUES ({application_id}, 'pending', 'pending', 'pending', 'pending', '{so_motivation}', {roll_number}, {job_id}, 'pending');"
 
             # sql_job_id = f"INSERT INTO job_application (job_id, application_id) VALUES ({job_id}, {application_id});"
             # sql_student_id = f"INSERT INTO student_application (roll_number, application_id) VALUES ({roll_number}, {application_id});"

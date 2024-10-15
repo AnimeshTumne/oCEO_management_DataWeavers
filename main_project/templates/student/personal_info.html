@@ -42,11 +42,17 @@
             <p>Email: {{ student_data[0][4] }}</p>
             <p>CPI: {{ student_data[0][5] }}</p>
             <p>Last Sem SPI: {{ student_data[0][6] }}</p>
-            <p>Contact Number: {{ student_phone[0][0]}}</p>
-            {% if student_phone[1] %}
-                <p>Alternate Contact Number: {{ student_phone[1][0]}}</p>
+            {% if student_phone[0][1] == 1 %}
+            <p>Contact Number: {{ student_phone[0][0] }}</p>
+            {% elif student_phone[1][1] == 1 %}
+            <p>Contact Number: {{ student_phone[1][0] }}</p>
+            {% endif %}
+            {% if student_phone[0][1] == 0 %}
+            <p>Alternate Contact Number: {{ student_phone[0][0] }}</p>
+            {% elif student_phone[1][1] == 0 %}
+            <p>Alternate Contact Number: {{ student_phone[1][0] }}</p>
             {% else %}
-                <p>Alternate Contact Number: Not Added</p>
+            <p>Alternate Contact Number: Not Added</p>
             {% endif %}
             <img src="data:image/png;base64,{{ image_data }}" alt="Student Image" class="student-image">
             

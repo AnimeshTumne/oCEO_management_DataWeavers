@@ -28,7 +28,11 @@ def get_db_connection():
 
 def check_authorization(faculty_id,job_id):
     cursor =get_db_connection()
-    result=cursor.execute(text(f"SELECT faculty_id FROM job WHERE job_id = {job_id};"))
+    #check if job_id is present in job table
+    result=cursor.execute(text(f"SELECT faculty_id FROM job WHERE job_id = {job_id} ;"))
+    if result.rowcount == 0:
+        cursor.close()
+        return False 
     faculty_id_of_job = result.fetchone()[0]
     cursor.close()
     if faculty_id != faculty_id_of_job:
@@ -371,7 +375,7 @@ def professor_view_applications(job_id):
                 cursor.execute(text(f"SELECT application_id FROM application_status WHERE job_id = {job_id};"))
 
                 # cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
-                cursor.execute(text(f"UPDATE application_status SET faculty_approved = 1 WHERE application_id = {application_id};"))
+                cursor.execute(text(f"UPDATE application_status SET faculty_approved = 'approved' WHERE application_id = {application_id};"))
                 cursor.commit()
                 cursor.close()
                 return redirect(url_for('professor_bp.professor_view_applications', job_id=job_id))
@@ -379,33 +383,12 @@ def professor_view_applications(job_id):
                 application_id = request.form['application_id']
                 cursor =get_db_connection()
                 cursor.execute(text(f"SELECT application_id FROM application_status WHERE job_id = {job_id};"))
-                cursor.execute(text(f"UPDATE application_status SET faculty_approved = 0 WHERE application_id = {application_id};"))
+                cursor.execute(text(f"UPDATE application_status SET faculty_approved = 'rejected' WHERE application_id = {application_id};"))
                 cursor.commit()
                 cursor.close()
                 return redirect(url_for('professor_bp.professor_view_applications', job_id=job_id))
         cursor =get_db_connection()
-        cursor.execute(text(f"SELECT application_status.application_id, application_status.roll_number, applied_student.first_name, applied_student.middle_name, applied_student.last_name, applied_student.cpi, applied_student.last_sem_spi, applied_student.on_probation, application_status.approval, application_status.statement_of_motivation FROM application_status JOIN applied_student ON application_status.roll_number = applied_student.roll_number WHERE application_status.job_id = {job_id} and application_status.faculty_approved = 0;"))
-        if request.method == 'POST':
-            if request.form['submit_button'] == 'approve':
-                application_id = request.form['application_id']
-                cursor =get_db_connection()
-                cursor.execute(text(f"SELECT application_id FROM application_status WHERE job_id = {job_id};"))
-
-                # cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
-                cursor.execute(text(f"UPDATE application_status SET faculty_approved = 1 WHERE application_id = {application_id};"))
-                cursor.commit()
-                cursor.close()
-                return redirect(url_for('professor_bp.professor_view_applications', job_id=job_id))
-            elif request.form['submit_button'] == 'reject':
-                application_id = request.form['application_id']
-                cursor =get_db_connection()
-                cursor.execute(text(f"SELECT application_id FROM application_status WHERE job_id = {job_id};"))
-                cursor.execute(text(f"UPDATE application_status SET faculty_approved = 0 WHERE application_id = {application_id};"))
-                cursor.commit()
-                cursor.close()
-                return redirect(url_for('professor_bp.professor_view_applications', job_id=job_id))
-        cursor =get_db_connection()
-        result=cursor.execute(text(f"SELECT application_status.application_id, application_status.roll_number, applied_student.first_name, applied_student.middle_name, applied_student.last_name, applied_student.cpi, applied_student.last_sem_spi, applied_student.on_probation, application_status.approval, application_status.statement_of_motivation FROM application_status JOIN applied_student ON application_status.roll_number = applied_student.roll_number WHERE application_status.job_id = {job_id} and application_status.faculty_approved = 0;"))
+        result=cursor.execute(text(f"SELECT application_status.application_id, application_status.roll_number, applied_student.first_name, applied_student.middle_name, applied_student.last_name, applied_student.cpi, applied_student.last_sem_spi, applied_student.on_probation, application_status.approval, application_status.statement_of_motivation FROM application_status JOIN applied_student ON application_status.roll_number = applied_student.roll_number WHERE application_status.job_id = {job_id} and application_status.faculty_approved = 'pending';"))
         application_data = result.fetchall()
         # cursor.execute("SHOW COLUMNS FROM application_status")
         column_names = ['application_id','roll_number','first_name','middle_name','last_name','cpi','last_sem_spi','on_probation','approval','statement_of_motivation']
@@ -423,7 +406,7 @@ def other_view_applications(job_id):
                 cursor.execute(text(f"SELECT application_id FROM application_status WHERE job_id = {job_id};"))
 
                 # cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
-                cursor.execute(text(f"UPDATE application_status SET faculty_approved = 1 WHERE application_id = {application_id};"))
+                cursor.execute(text(f"UPDATE application_status SET faculty_approved = 'approved' WHERE application_id = {application_id};"))
                 cursor.commit()
                 cursor.close()
                 return redirect(url_for('professor_bp.professor_view_applications', job_id=job_id))
@@ -431,12 +414,12 @@ def other_view_applications(job_id):
                 application_id = request.form['application_id']
                 cursor =get_db_connection()
                 cursor.execute(text(f"SELECT application_id FROM application_status WHERE job_id = {job_id};"))
-                cursor.execute(text(f"UPDATE application_status SET faculty_approved = 0 WHERE application_id = {application_id};"))
+                cursor.execute(text(f"UPDATE application_status SET faculty_approved = 'rejected' WHERE application_id = {application_id};"))
                 cursor.commit()
                 cursor.close()
                 return redirect(url_for('professor_bp.professor_view_applications', job_id=job_id))
         cursor =get_db_connection()
-        cursor.execute(text(f"SELECT application_status.application_id, application_status.roll_number, applied_student.first_name, applied_student.middle_name, applied_student.last_name, applied_student.cpi, applied_student.last_sem_spi, applied_student.on_probation, application_status.approval, application_status.statement_of_motivation FROM application_status JOIN applied_student ON application_status.roll_number = applied_student.roll_number WHERE application_status.job_id = {job_id} and application_status.faculty_approved = 0;"))
+        cursor.execute(text(f"SELECT application_status.application_id, application_status.roll_number, applied_student.first_name, applied_student.middle_name, applied_student.last_name, applied_student.cpi, applied_student.last_sem_spi, applied_student.on_probation, application_status.approval, application_status.statement_of_motivation FROM application_status JOIN applied_student ON application_status.roll_number = applied_student.roll_number WHERE application_status.job_id = {job_id} and application_status.faculty_approved = 'pending';"))
         if request.method == 'POST':
             if request.form['submit_button'] == 'approve':
                 application_id = request.form['application_id']
@@ -444,7 +427,7 @@ def other_view_applications(job_id):
                 cursor.execute(text(f"SELECT application_id FROM application_status WHERE job_id = {job_id};"))
 
                 # cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
-                cursor.execute(text(f"UPDATE application_status SET faculty_approved = 1 WHERE application_id = {application_id};"))
+                cursor.execute(text(f"UPDATE application_status SET faculty_approved = 'approved' WHERE application_id = {application_id};"))
                 cursor.commit()
                 cursor.close()
                 return redirect(url_for('professor_bp.professor_view_applications', job_id=job_id))
@@ -452,12 +435,12 @@ def other_view_applications(job_id):
                 application_id = request.form['application_id']
                 cursor =get_db_connection()
                 cursor.execute(text(f"SELECT application_id FROM application_status WHERE job_id = {job_id};"))
-                cursor.execute(text(f"UPDATE application_status SET faculty_approved = 0 WHERE application_id = {application_id};"))
+                cursor.execute(text(f"UPDATE application_status SET faculty_approved = 'rejected' WHERE application_id = {application_id};"))
                 cursor.commit()
                 cursor.close()
                 return redirect(url_for('professor_bp.professor_view_applications', job_id=job_id))
         cursor =get_db_connection()
-        result=cursor.execute(text(f"SELECT application_status.application_id, application_status.roll_number, applied_student.first_name, applied_student.middle_name, applied_student.last_name, applied_student.cpi, applied_student.last_sem_spi, applied_student.on_probation, application_status.approval, application_status.statement_of_motivation FROM application_status JOIN applied_student ON application_status.roll_number = applied_student.roll_number WHERE application_status.job_id = {job_id} and application_status.faculty_approved = 0;"))
+        result=cursor.execute(text(f"SELECT application_status.application_id, application_status.roll_number, applied_student.first_name, applied_student.middle_name, applied_student.last_name, applied_student.cpi, applied_student.last_sem_spi, applied_student.on_probation, application_status.approval, application_status.statement_of_motivation FROM application_status JOIN applied_student ON application_status.roll_number = applied_student.roll_number WHERE application_status.job_id = {job_id} and application_status.faculty_approved = 'pending';"))
         application_data = result.fetchall()
         # cursor.execute("SHOW COLUMNS FROM application_status")
         application_head = result.description
@@ -483,7 +466,7 @@ def professor_approved_applications(job_id):  # cHanged this.
                 cursor.close()
                 return redirect(url_for('professor_bp.professor_approved_applications', job_id=job_id))
         cursor =get_db_connection()
-        result=cursor.execute(text(f"SELECT application_status.application_id, application_status.roll_number, applied_student.first_name, applied_student.middle_name, applied_student.last_name, applied_student.cpi, applied_student.last_sem_spi, applied_student.on_probation, application_status.approval, application_status.statement_of_motivation FROM application_status JOIN applied_student ON application_status.roll_number = applied_student.roll_number WHERE application_status.job_id = {job_id} and application_status.faculty_approved = 1;"))
+        result=cursor.execute(text(f"SELECT application_status.application_id, application_status.roll_number, applied_student.first_name, applied_student.middle_name, applied_student.last_name, applied_student.cpi, applied_student.last_sem_spi, applied_student.on_probation, application_status.approval, application_status.statement_of_motivation FROM application_status JOIN applied_student ON application_status.roll_number = applied_student.roll_number WHERE application_status.job_id = {job_id} and application_status.faculty_approved = 'approved';"))
         application_data = result.fetchall()
         # cursor.execute("SHOW COLUMNS FROM application_status")
         column_names = ['application_id','roll_number','first_name','middle_name','last_name','cpi','last_sem_spi','on_probation','approval','statement_of_motivation']

@@ -126,13 +126,13 @@ def jobs_approved(type):
         # if request.method == 'POST':
         cursor = get_db_connection()
         if type =='admin':
-            query = 'SELECT * FROM application_status WHERE faculty_approved = 1;'
+            query = 'SELECT * FROM application_status WHERE faculty_approved = "approved";'
         elif type =='dean':
-            query = 'SELECT * FROM application_status WHERE dean_approved = 1;'
+            query = 'SELECT * FROM application_status WHERE dean_approved = "approved";'
         elif type =='sa_js':
-            query = 'SELECT * FROM application_status WHERE SA_approved = 1;'
+            query = 'SELECT * FROM application_status WHERE SA_approved = "approved";'
         elif type =='oceo_coordinator':
-            query = 'SELECT * FROM application_status WHERE oceo_coordinator_approved = 1;'
+            query = 'SELECT * FROM application_status WHERE oceo_coordinator_approved = "approved";'
 
         # query  = f'SELECT * FROM application_status WHERE {type}_approved = 1;' 
         result=cursor.execute(text(query))
@@ -162,7 +162,7 @@ def review_application(type):
                 cursor = get_db_connection()
                 cursor.execute(text("LOCK TABLES application_status WRITE"))
                 # cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
-                cursor.execute(text(f"UPDATE application_status SET {perm} = 1 WHERE application_id = {application_id};"))
+                cursor.execute(text(f"UPDATE application_status SET {perm} = 'approved' WHERE application_id = {application_id};"))
                 if perm == 'dean_approved':
                     cursor.execute(text(f"UPDATE application_status SET approval = 'approved' WHERE application_id = {application_id};"))
                 cursor.commit()
@@ -174,7 +174,7 @@ def review_application(type):
                 cursor = get_db_connection()
                 cursor.execute(text("LOCK TABLES application_status WRITE"))
                 # cursor.execute(f"SELECT application_id FROM application_status WHERE job_id = {job_id};")
-                cursor.execute(text(f"UPDATE application_status SET {perm}= 0 WHERE application_id = {application_id};"))
+                cursor.execute(text(f"UPDATE application_status SET {perm}= 'rejected' WHERE application_id = {application_id};"))
                 cursor.execute(text(f"UPDATE application_status SET approval = 'rejected' WHERE application_id = {application_id};"))
                 cursor.commit()
                 cursor.execute(text("UNLOCK TABLES"))
@@ -183,13 +183,13 @@ def review_application(type):
             
         cursor = get_db_connection()
         if perm == 'faculty_approved':
-            query = f'SELECT * FROM application_status WHERE {perm} = 0;'
+            query = f"SELECT * FROM application_status WHERE {perm} = 'rejected';"
         elif perm == 'oceo_coordinator_approved':
-            query = f'SELECT * FROM application_status WHERE {perm} = 0 and faculty_approved = 1;'
+            query = f"SELECT * FROM application_status WHERE {perm} = 'rejected' and faculty_approved = 'approved';"
         elif perm == 'SA_approved':
-            query = f'SELECT * FROM application_status WHERE {perm} = 0 and faculty_approved = 1 and oceo_coordinator_approved = 1;'
+            query = f"SELECT * FROM application_status WHERE {perm} = 'rejected' and faculty_approved = 'approved' and oceo_coordinator_approved = 'approved';"
         elif perm == 'dean_approved':
-            query = f'SELECT * FROM application_status WHERE {perm} = 0 and faculty_approved = 1 and oceo_coordinator_approved = 1 and SA_approved = 1;'
+            query = f"SELECT * FROM application_status WHERE {perm} = 'rejected' and faculty_approved = 'approved' and oceo_coordinator_approved = 'approved' and SA_approved = 'approved';"
         # query = f'SELECT * FROM application_status WHERE {perm} = 0;'
        
         application_data =  cursor.execute(text(query)).fetchall()
