@@ -9,6 +9,9 @@ from sqlalchemy import create_engine, text
 import datetime
 import base64
 
+from PIL import Image
+from io import BytesIO
+
 student_bp = Blueprint('student_bp', __name__,template_folder='templates',static_url_path='/static',static_folder='static')
 
 @student_bp.before_request
@@ -185,6 +188,23 @@ def student_edit_bank_details():
     else:
         return redirect(url_for('auth_bp.errorpage'), error_message="You are not authorised to view this page. Please login first.")
 
+# ---------------------------------------------------------------
+def resize_image(image_data, max_size=(200, 200)):
+    image = Image.open(BytesIO(image_data))
+    image.thumbnail(max_size)  # Resize to max_size while maintaining aspect ratio
+    
+    output = BytesIO()
+    if image.format == 'PNG':
+        image = image.convert('RGB')  # Convert PNG to JPEG (no transparency support)
+        image.save(output, format='JPEG', quality=100)  # Save as JPEG with quality compression (if required)
+    else:
+        image.save(output, format=image.format)  # Save other formats without conversion
+    
+    return output.getvalue()
+
+# ---------------------------------------------------------------
+
+
 @student_bp.route('/update_profile', methods=['GET', 'POST'])
 def student_personal_info_change():
     # db=get_db()
@@ -207,13 +227,15 @@ def student_personal_info_change():
 
                     cursor.execute(text(f"UPDATE applied_student SET first_name = '{first_name}', middle_name = '{middle_name}', last_name='{last_name}',cpi = {cpi}, last_sem_spi = {last_sem_spi}, on_probation = {on_probation} WHERE roll_number = {roll_number};"))
                     # cursor.commit()
-                    print(request.files)
                     if 'image' in request.files:
                         image = request.files['image']
                         image_data = image.read()
+                        image_data = resize_image(image_data)
+
                         #convert image to blob
-                        image_data_blob = base64.b64encode(image_data)
-                        cursor.execute(text(f"UPDATE applied_student SET person_img = {image_data_blob} WHERE roll_number = {roll_number};"))
+                        # image_data_blob = base64.b64encode(image_data)
+                        imgQuery = text(f"UPDATE applied_student SET person_img = :imageData WHERE roll_number = :rollNo;")
+                        cursor.execute(imgQuery, {"imageData": image_data, "rollNo": roll_number})
                         # cursor.commit()
 
                     if phone_num_exist(roll_number):

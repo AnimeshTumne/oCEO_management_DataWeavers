@@ -34,28 +34,31 @@
     <div id="main-content" class="main-content">
         
         <h1 class="main-content-heading">Personal Information</h1>
-        <div class="user-info">
-            <p>Roll Number: {{ student_data[0][0]}}</p>
-            <p>First Name: {{ student_data[0][1]}}</p>
-            <p>Middle Name: {{ student_data[0][2] }}</p>
-            <p>Last Name: {{ student_data[0][3] }}</p>
-            <p>Email: {{ student_data[0][4] }}</p>
-            <p>CPI: {{ student_data[0][5] }}</p>
-            <p>Last Sem SPI: {{ student_data[0][6] }}</p>
-            {% if student_phone[0][1] == 1 %}
-            <p>Contact Number: {{ student_phone[0][0] }}</p>
-            {% elif student_phone[1][1] == 1 %}
-            <p>Contact Number: {{ student_phone[1][0] }}</p>
-            {% endif %}
-            {% if student_phone[0][1] == 0 %}
-            <p>Alternate Contact Number: {{ student_phone[0][0] }}</p>
-            {% elif student_phone[1][1] == 0 %}
-            <p>Alternate Contact Number: {{ student_phone[1][0] }}</p>
-            {% else %}
-            <p>Alternate Contact Number: Not Added</p>
-            {% endif %}
-            <img src="data:image/png;base64,{{ image_data }}" alt="Student Image" class="student-image">
-            
+        <div style="display: flex; justify-content: space-between;">
+            <div class="user-info">
+                <p>Roll Number: {{ student_data[0][0]}}</p>
+                <p>First Name: {{ student_data[0][1]}}</p>
+                <p>Middle Name: {{ student_data[0][2] }}</p>
+                <p>Last Name: {{ student_data[0][3] }}</p>
+                <p>Email: {{ student_data[0][4] }}</p>
+                <p>CPI: {{ student_data[0][5] }}</p>
+                <p>Last Sem SPI: {{ student_data[0][6] }}</p>
+                {% if student_phone[0][1] == 1 %}
+                <p>Contact Number: {{ student_phone[0][0] }}</p>
+                {% elif student_phone[1][1] == 1 %}
+                <p>Contact Number: {{ student_phone[1][0] }}</p>
+                {% endif %}
+                {% if student_phone[0][1] == 0 %}
+                <p>Alternate Contact Number: {{ student_phone[0][0] }}</p>
+                {% elif student_phone[1][1] == 0 %}
+                <p>Alternate Contact Number: {{ student_phone[1][0] }}</p>
+                {% else %}
+                <p>Alternate Contact Number: Not Added</p>
+                {% endif %}
+            </div>
+            <div>
+                <img src="data:image/png;base64,{{ image_data }}" alt="Student Image" class="student-image" width="192" height="192">
+            </div>
         </div>
         <form action="{{url_for('student_bp.student_personal_info')}}" method="POST">
             <input type="submit" name="submit_button" value="Update Profile" class="update-profile">
