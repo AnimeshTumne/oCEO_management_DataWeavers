@@ -3,9 +3,8 @@
 
 A full-stack web application that manages **On-Campus Employment Opportunities (oCEO)** at **IIT Gandhinagar**. It streamlines job creation, application, and timecard approvals, catering to various user roles including students, faculty, and administrators.
 
-Website Link: https://oceo-management.koyeb.app/ (only accessible to IIT GN email id users)
 ---
-
+Note: The portal is fully-accessible to IIT GN email id holders only. 
 ## 📌 Description
 
 This portal enables:
